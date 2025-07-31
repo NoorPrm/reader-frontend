@@ -26,6 +26,9 @@ npm-debug.*
 yarn-debug.*
 yarn-error.*
 
+# Env files
+.env
+
 # macOS
 .DS_Store
 *.pem
