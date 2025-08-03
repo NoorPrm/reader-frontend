@@ -1,20 +1,65 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import HomeScreen from './screens/HomeScreen';
+import GeneralScreen from './screens/GeneralScreen';
+import SearchScreen from './screens/SearchScreen';
+import LibraryScreen from './screens/LibraryScreen';
+import UserProfilScreen from './screens/UserProfilScreen';
+
+import { Provider } from 'react-redux';
+import { configureStore } from '@reduxjs/toolkit';
+// import user from './reducers/user';
+
+const store = configureStore({
+  reducer: {  },
+});
+
+const Stack = createNativeStackNavigator();
+const Tab = createBottomTabNavigator();
+
+const TabNavigator = () => {
+  return (
+    <Tab.Navigator screenOptions={({ route }) => ({
+      tabBarIcon: ({ color }) => {
+        let iconName = '';
+
+        if (route.name === 'General') {
+          iconName = 'home';
+        } else if (route.name === 'Search') {
+          iconName = 'search';
+        } else if (route.name === 'Library') {
+          iconName = 'book';
+        } else if (route.name === 'UserProfil') {
+          iconName = 'user-circle';
+        }
+
+        return <FontAwesome name={iconName} size={35} color={color} style={{ marginTop: 10 }}/>;
+      },
+      tabBarShowLabel: false,
+      tabBarActiveTintColor: '#ffffffff',
+      tabBarInactiveTintColor: '#82888bff',
+      tabBarStyle: { backgroundColor: '#0E0E66'},
+      headerShown: false,
+    })}>
+      <Tab.Screen name="General" component={GeneralScreen} />
+      <Tab.Screen name="Search" component={SearchScreen} />
+      <Tab.Screen name="Library" component={LibraryScreen} />
+      <Tab.Screen name="UserProfil" component={UserProfilScreen} />
+    </Tab.Navigator>
+  );
+};
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <Provider store={store}>
+      <NavigationContainer>
+        <Stack.Navigator screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="Home" component={HomeScreen} />
+          <Stack.Screen name="TabNavigator" component={TabNavigator} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </Provider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
