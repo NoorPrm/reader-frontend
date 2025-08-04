@@ -9,12 +9,14 @@
     "web": "expo start --web"
   },
   "dependencies": {
+    "@expo-google-fonts/inter": "^0.4.1",
     "@react-navigation/bottom-tabs": "6",
     "@react-navigation/native": "6",
     "@react-navigation/native-stack": "6",
     "@reduxjs/toolkit": "^2.8.2",
     "expo": "~53.0.20",
     "expo-camera": "^16.1.11",
+    "expo-font": "~13.3.2",
     "expo-status-bar": "~2.2.3",
     "react": "19.0.0",
     "react-native": "0.79.5",
