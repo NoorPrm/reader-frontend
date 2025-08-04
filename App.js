@@ -10,6 +10,7 @@ import UserProfilScreen from './screens/UserProfilScreen';
 
 import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
+import Inscription from './screens/Inscription';
 // import user from './reducers/user';
 
 const store = configureStore({
@@ -57,6 +58,7 @@ export default function App() {
       <NavigationContainer>
         <Stack.Navigator screenOptions={{ headerShown: false }}>
           <Stack.Screen name="Home" component={HomeScreen} />
+          <Stack.Screen name="Inscription" component={Inscription} />
           <Stack.Screen name="TabNavigator" component={TabNavigator} />
         </Stack.Navigator>
       </NavigationContainer>
