@@ -8,13 +8,15 @@ import SearchScreen from './screens/SearchScreen';
 import LibraryScreen from './screens/LibraryScreen';
 import UserProfilScreen from './screens/UserProfilScreen';
 
+
+
 import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 import Inscription from './screens/Inscription';
 // import user from './reducers/user';
 
 const store = configureStore({
-  reducer: {  },
+  reducer: {},
 });
 
 const Stack = createNativeStackNavigator();
@@ -36,12 +38,12 @@ const TabNavigator = () => {
           iconName = 'user-circle';
         }
 
-        return <FontAwesome name={iconName} size={35} color={color} style={{ marginTop: 10 }}/>;
+        return <FontAwesome name={iconName} size={35} color={color} style={{ marginTop: 10 }} />;
       },
       tabBarShowLabel: false,
       tabBarActiveTintColor: '#ffffffff',
       tabBarInactiveTintColor: '#82888bff',
-      tabBarStyle: { backgroundColor: '#0E0E66'},
+      tabBarStyle: { backgroundColor: '#0E0E66' },
       headerShown: false,
     })}>
       <Tab.Screen name="General" component={GeneralScreen} />
