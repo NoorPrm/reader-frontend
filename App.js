@@ -9,7 +9,8 @@ import FontAwesome from "react-native-vector-icons/FontAwesome";
 
 import HomeScreen from "./screens/HomeScreen";
 import GeneralScreen from "./screens/GeneralScreen";
-import SearchScreen from "./screens/BookLibraryScreen";
+import SearchScreen from "./screens/SearchScreen";
+// import BookLibraryScreen from "./screens/BookLibraryScreen";
 import LibraryScreen from "./screens/LibraryScreen";
 import UserProfilScreen from "./screens/UserProfilScreen";
 
@@ -20,7 +21,8 @@ import Inscription from './screens/Inscription';
 // import user from './reducers/user';
 
 const store = configureStore({
-  reducer: {},})
+  reducer: {},
+})
 
 
 const Stack = createNativeStackNavigator();
@@ -63,7 +65,6 @@ export default function App() {
           <Stack.Screen name="Home" component={HomeScreen} />
           <Stack.Screen name="Inscription" component={Inscription} />
           <Stack.Screen name="TabNavigator" component={TabNavigator} />
-          <Stack.Screen name="SearchScreen" component={SearchScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>
