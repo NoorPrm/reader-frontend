@@ -1,20 +1,20 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, TouchableOpacity, ImageBackground, Image, TextInput, Button } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, ImageBackground, Image, TextInput, KeyboardAvoidingView, Platform } from 'react-native';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 
 
 
 export default function HomeScreen({ navigation }) {
-  const handleSubmit = () => {
-    navigation.navigate("TabNavigator");
-  };
+  // const handleSubmit = () => {
+  //   navigation.navigate("TabNavigator");
+  // };
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const handleSignUp = () => {
-  fetch('http://Adresse IP3000/users/signup', {
+  fetch('http://10.188.219.101:3000/users/signup', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
@@ -32,7 +32,7 @@ export default function HomeScreen({ navigation }) {
 };
 
 const handleLogin = () => {
-  fetch('http://adresse IP:3000/users/signin', {
+  fetch('http://10.188.219.101:3000/users/signin', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ email, password }),
@@ -46,7 +46,8 @@ const handleLogin = () => {
 };
 
   return (
-    <View style={styles.container}>
+    <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+
       <ImageBackground
         source={require('../assets/images/logoBlueReader.png')}
         style={styles.logo1Container}
@@ -86,15 +87,16 @@ const handleLogin = () => {
       </TouchableOpacity>
 
       <View style={styles.ButtonGlobal}>
-        <TouchableOpacity onPress={() => navigation.navigate('Inscription')} style={styles.buttonInscription} activeOpacity={0.8}>
+        <TouchableOpacity onPress={() => navigation.navigate("Inscription")} style={styles.buttonInscription} activeOpacity={0.8}>
           <Text style={styles.text1}>Créer un compte</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => handleSubmit()} style={styles.buttonConnexion} activeOpacity={0.8}>
+        <TouchableOpacity onPress={() => handleLogin()} style={styles.buttonConnexion} activeOpacity={0.8}>
           <Text style={styles.text2}>Connexion</Text>
         </TouchableOpacity>
       </View>
       <StatusBar style="auto" />
-    </View>
+
+    </KeyboardAvoidingView>
   );
 }
 
