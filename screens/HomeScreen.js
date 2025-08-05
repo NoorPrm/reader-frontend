@@ -1,5 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, TouchableOpacity, ImageBackground, Image, TextInput, KeyboardAvoidingView, Platform } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, ImageBackground, Image, TextInput, KeyboardAvoidingView, Platform } from 'react-native';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 
@@ -7,6 +8,9 @@ const EMAIL_REGEX = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"
 
 
 export default function HomeScreen({ navigation }) {
+  // const handleSubmit = () => {
+  //   navigation.navigate("TabNavigator");
+  // };
   // const handleSubmit = () => {
   //   navigation.navigate("TabNavigator");
   // };
@@ -101,6 +105,8 @@ const handleLogin = () => {
   return (
     <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
 
+    <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+
       <ImageBackground
         source={require('../assets/images/logoBlueReader.png')}
         style={styles.logo1Container}
@@ -168,6 +174,8 @@ const handleLogin = () => {
         </TouchableOpacity>
       </View>
       <StatusBar style="auto" />
+
+    </KeyboardAvoidingView>
 
     </KeyboardAvoidingView>
   );
