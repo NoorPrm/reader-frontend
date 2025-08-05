@@ -18,12 +18,11 @@ import UserProfilScreen from "./screens/UserProfilScreen";
 import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 import Inscription from './screens/Inscription';
-// import user from './reducers/user';
+import user from './reducers/user';
 
 const store = configureStore({
-  reducer: {},
-})
-
+  reducer: {user},
+});
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
