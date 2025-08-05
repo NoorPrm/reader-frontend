@@ -21,6 +21,7 @@ import Inscription from './screens/Inscription';
 
 const store = configureStore({
   reducer: {},
+})
 
 
 const Stack = createNativeStackNavigator();
