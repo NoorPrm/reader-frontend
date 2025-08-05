@@ -1,19 +1,29 @@
 import { StatusBar } from "expo-status-bar";
+import React, { useState } from "react";
 import {
   StyleSheet,
   Text,
+  TextInput,
+  Modal,
   TouchableOpacity,
   View,
   Image,
   ScrollView,
   SafeAreaView,
 } from "react-native";
+import AvisCard from "../components/AvisCard";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 
-export default function BookScreen() {
+export default function BookScreen({ navigation }) {
+  const [modalVisible, setModalVisible] = useState(false);
+  const [rating, setRating] = useState(0);
+  const [review, setReview] = useState("");
   return (
     <SafeAreaView style={styles.container}>
-      <TouchableOpacity style={styles.returnBtn}>
+      <TouchableOpacity
+        style={styles.returnBtn}
+        onPress={() => navigation.navigate("Library")}
+      >
         <Text style={styles.txtBtn}>Retour à la bibliothèque</Text>
       </TouchableOpacity>
 
@@ -51,8 +61,11 @@ export default function BookScreen() {
           <Text>(xxxx avis en DB)</Text>
         </View>
         <View style={styles.addBtnContainer}>
-          <TouchableOpacity style={styles.addAvisBtn}>
-            <Text style={styles.txtBtn}>+</Text>
+          <TouchableOpacity
+            style={styles.addAvisBtn}
+            onPress={() => setModalVisible(true)}
+          >
+            <Text style={styles.txtAddBtn}>+</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -61,138 +74,64 @@ export default function BookScreen() {
         contentContainerStyle={styles.content}
         showsVerticalScrollIndicator={true}
       >
-        <View style={styles.avisCard}>
-          <View style={styles.avisHeader}>
-            <Image
-              source={require("../assets/images/userBryanCranston.jpg")}
-              style={styles.avatarImg}
-            />
-            <View style={styles.avisContainer}>
-              <TouchableOpacity>
-                <Text style={styles.userName}>Bryan Cranston</Text>
-              </TouchableOpacity>
-              <View style={styles.userStars}>
-                {[...Array(5)].map((_, i) => (
-                  <FontAwesome key={i} name="star" size={20} color="#0E0E66" />
-                ))}
-                <View style={styles.dateAvis}>
-                  <Text>Il y a 40 jours</Text>
-                </View>
-              </View>
-              <Text>(133 avis)</Text>
-            </View>
-          </View>
-
-          <View style={styles.avisTxt}>
-            <Text>
-              blablabla mon avis bla bla bla blablabla mon avis bla bla bla
-              blablabla mon avis bla bla bla blablabla mon avis bla bla bla
-              blablabla mon avis bla bla bla blablabla mon avis bla bla bla
-              blablabla mon avis bla bla bla blablabla mon avis bla bla bla
-              blablabla mon avis bla bla bla blablabla mon avis bla bla bla
-            </Text>
-          </View>
-        </View>
-
-        <View style={styles.avisCard}>
-          <View style={styles.avisHeader}>
-            <Image
-              source={require("../assets/images/userBryanCranston.jpg")}
-              style={styles.avatarImg}
-            />
-            <View style={styles.avisContainer}>
-              <TouchableOpacity>
-                <Text style={styles.userName}>Bryan Cranston</Text>
-              </TouchableOpacity>
-              <View style={styles.userStars}>
-                {[...Array(5)].map((_, i) => (
-                  <FontAwesome key={i} name="star" size={20} color="#0E0E66" />
-                ))}
-                <View style={styles.dateAvis}>
-                  <Text>Il y a 40 jours</Text>
-                </View>
-              </View>
-              <Text>(133 avis)</Text>
-            </View>
-          </View>
-
-          <View style={styles.avisTxt}>
-            <Text>
-              blablabla mon avis bla bla bla blablabla mon avis bla bla bla
-              blablabla mon avis bla bla bla blablabla mon avis bla bla bla
-              blablabla mon avis bla bla bla blablabla mon avis bla bla bla
-              blablabla mon avis bla bla bla blablabla mon avis bla bla bla
-              blablabla mon avis bla bla bla blablabla mon avis bla bla bla
-            </Text>
-          </View>
-        </View>
-
-        <View style={styles.avisCard}>
-          <View style={styles.avisHeader}>
-            <Image
-              source={require("../assets/images/userBryanCranston.jpg")}
-              style={styles.avatarImg}
-            />
-            <View style={styles.avisContainer}>
-              <TouchableOpacity>
-                <Text style={styles.userName}>Bryan Cranston</Text>
-              </TouchableOpacity>
-              <View style={styles.userStars}>
-                {[...Array(5)].map((_, i) => (
-                  <FontAwesome key={i} name="star" size={20} color="#0E0E66" />
-                ))}
-                <View style={styles.dateAvis}>
-                  <Text>Il y a 40 jours</Text>
-                </View>
-              </View>
-              <Text>(133 avis)</Text>
-            </View>
-          </View>
-
-          <View style={styles.avisTxt}>
-            <Text>
-              blablabla mon avis bla bla bla blablabla mon avis bla bla bla
-              blablabla mon avis bla bla bla blablabla mon avis bla bla bla
-              blablabla mon avis bla bla bla blablabla mon avis bla bla bla
-              blablabla mon avis bla bla bla blablabla mon avis bla bla bla
-              blablabla mon avis bla bla bla blablabla mon avis bla bla bla
-            </Text>
-          </View>
-        </View>
-
-        <View style={styles.avisCard}>
-          <View style={styles.avisHeader}>
-            <Image
-              source={require("../assets/images/userBryanCranston.jpg")}
-              style={styles.avatarImg}
-            />
-            <View style={styles.avisContainer}>
-              <TouchableOpacity>
-                <Text style={styles.userName}>Bryan Cranston</Text>
-              </TouchableOpacity>
-              <View style={styles.userStars}>
-                {[...Array(5)].map((_, i) => (
-                  <FontAwesome key={i} name="star" size={20} color="#0E0E66" />
-                ))}
-                <View style={styles.dateAvis}>
-                  <Text>Il y a 40 jours</Text>
-                </View>
-              </View>
-              <Text>(133 avis)</Text>
-            </View>
-          </View>
-
-          <View style={styles.avisTxt}>
-            <Text>
-              blablabla mon avis bla bla bla blablabla mon avis bla bla bla
-              blablabla mon avis bla bla bla blablabla mon avis bla bla bla
-              blablabla mon avis bla bla bla blablabla mon avis bla bla bla
-              blablabla mon avis bla bla bla blablabla mon avis bla bla bla
-              blablabla mon avis bla bla bla blablabla mon avis bla bla bla
-            </Text>
-          </View>
-        </View>
+        <AvisCard
+          avisData={{
+            username: "Bryan Cranston",
+            rating: 5,
+            date: "Il y a 40 jours",
+            totalAvis: 133,
+            comment: "blablabla mon avis bla bla bla...",
+          }}
+          isUser={true} //à remplacer plus tard avec userId === avis.userId
+          onDelete={() => console.log("yaaah")} //avis.id
+        />
       </ScrollView>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <View style={styles.modalClose}>
+              <TouchableOpacity onPress={() => setModalVisible(false)}>
+                <FontAwesome name="close" size={15} color="#E2D7C4" />
+              </TouchableOpacity>
+            </View>
+            <View style={styles.starsRow}>
+              {[1, 2, 3, 4, 5].map((i) => (
+                <TouchableOpacity key={i} onPress={() => setRating(i)}>
+                  <FontAwesome
+                    name="star"
+                    size={30}
+                    color={i <= rating ? "#0E0E66" : "#E2D7C4"}
+                  />
+                </TouchableOpacity>
+              ))}
+            </View>
+
+            <TextInput
+              style={styles.inputAvis}
+              multiline
+              placeholder="Écrivez votre avis ici..."
+              value={review}
+              onChangeText={setReview}
+            />
+
+            <TouchableOpacity
+              style={styles.sendBtn}
+              onPress={() => {
+                //route vers DB à coder
+                setModalVisible(false);
+                console.log("Avis :", rating, review);
+              }}
+            >
+              <Text style={styles.txtBtn}>Envoyer mon avis</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
       <StatusBar style="auto" />
     </SafeAreaView>
   );
@@ -215,7 +154,6 @@ const styles = StyleSheet.create({
   txtBtn: {
     color: "#ffffffff",
     fontFamily: "Inter_400Regular",
-    textAlign: "center",
   },
   btnContainer: {
     justifyContent: "center",
@@ -226,6 +164,12 @@ const styles = StyleSheet.create({
     margin: 10,
     borderRadius: 5,
     backgroundColor: "#0E0E66",
+  },
+  txtAddBtn: {
+    color: "#ffffffff",
+    fontSize: 20,
+    fontFamily: "Inter_400Regular",
+    marginTop: -3,
   },
   totalAvis: {
     margin: 5,
@@ -281,9 +225,20 @@ const styles = StyleSheet.create({
   addAvisBtn: {
     padding: 10,
     margin: 10,
-    width: 35,
-    borderRadius: 5,
+    height: 40,
+    width: 40,
+    borderRadius: 15,
+    alignItems: "center",
+
     backgroundColor: "#0E0E66",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
   avisCard: {
     backgroundColor: "#fff",
@@ -320,5 +275,100 @@ const styles = StyleSheet.create({
   avisTxt: {
     marginTop: 10,
     fontFamily: "Inter_400Regular",
+  },
+  modalOverlay: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0,0,0,0.3)",
+  },
+  modalContent: {
+    backgroundColor: "#FCF8F1",
+    padding: 20,
+    borderRadius: 10,
+    width: "90%",
+    shadowColor: "#000",
+    shadowOpacity: 0.2,
+    shadowOffset: { width: 0, height: 3 },
+    shadowRadius: 6,
+    elevation: 6,
+  },
+  modalClose: {
+    left: 310,
+
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#ffffffff",
+    width: 35,
+    height: 35,
+    borderRadius: 15,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  starsRow: {
+    flexDirection: "row",
+    justifyContent: "center",
+    marginBottom: 15,
+  },
+  inputAvis: {
+    height: 100,
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 6,
+    padding: 10,
+    backgroundColor: "#fff",
+    marginBottom: 15,
+    textAlignVertical: "top",
+  },
+  sendBtn: {
+    backgroundColor: "#0E0E66",
+    paddingVertical: 10,
+    borderRadius: 6,
+    alignItems: "center",
+  },
+  txtBtn: {
+    color: "#fff",
+    fontFamily: "Inter_700Bold",
+  },
+  deleteContainer: {
+    left: 250,
+    bottom: 30,
+  },
+  dots: {
+    fontSize: 24,
+    color: "#0E0E66",
+    fontWeight: "bold",
+    textAlign: "center",
+    width: 30,
+  },
+  overlay: {
+    flex: 1,
+    backgroundColor: "rgba(0,0,0,0.2)",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  modal: {
+    backgroundColor: "#fff",
+    padding: 20,
+    borderRadius: 10,
+    elevation: 5,
+  },
+
+  deleteBtn: {
+    backgroundColor: "#E63946",
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+  },
+  deleteText: {
+    color: "#fff",
+    fontWeight: "bold",
+    fontSize: 16,
   },
 });
