@@ -10,7 +10,7 @@ import {
 import { LinearGradient } from "expo-linear-gradient";
 import { CameraView, Camera } from "expo-camera";
 
-export default function BookedexScreen() {
+export default function BookedexScreen({navigation}) {
   const [hasPermission, setHasPermission] = useState(false);
   const [scannedCode, setScannedCode] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
