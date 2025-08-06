@@ -20,6 +20,7 @@ export default function HomeScreen({ navigation }) {
   const handleSignUp = () => {
 
   let hasError = false;
+  console.log('toto:', hasError);
 
     if (email === '') {
       setEmailError('Champ obligatoire');
