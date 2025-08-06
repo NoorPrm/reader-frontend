@@ -221,6 +221,7 @@ const styles = StyleSheet.create({
   inputContainer: {
     width: "80%",
     marginTop: 10,
+    marginTop: 10,
     marginBottom: 0,
   },
 
@@ -265,6 +266,7 @@ const styles = StyleSheet.create({
     paddingLeft: 150,
     paddingRight: 150,
     marginTop: 30,
+    marginTop: 30,
   },
 
   buttonInscription: {
@@ -285,6 +287,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#0E0E66",
     borderRadius: 30,
     marginTop: -15,
+    marginTop: -15,
     marginBottom: 70,
   },
   text1: {
@@ -301,6 +304,7 @@ const styles = StyleSheet.create({
     color: "#888c90ff",
     fontSize: 14,
     fontFamily: "Inter_400Regular",
+    marginTop: 5,
     marginTop: 5,
     textAlign: "center",
   },
