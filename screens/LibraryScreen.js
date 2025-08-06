@@ -1,7 +1,7 @@
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
 import { useState } from "react";
-// import { Image } from 'expo-image';
+import { Image } from 'expo-image';
 import { TouchableOpacity } from "react-native";
 
 export default function LibraryScreen({ navigation }) {
