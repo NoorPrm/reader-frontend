@@ -8,7 +8,8 @@ export default function BookLibraryScreen({ route }) {
   const [books, setBooks] = useState([]);
 
   useEffect(() => {
-    fetch(`https://openlibrary.org/api/books?bibkeys=ISBN:9780140328721&format=json&jscmd=data${category}`).then(data => setBooks(data));
+    fetch(`https://openlibrary.org/subject/${category}.json`).then(Response => Response.json()).then(data => {
+      console.log(data)})
   }, [category]
   )
 

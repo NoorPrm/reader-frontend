@@ -7,7 +7,7 @@ export default function Inscription({ navigation }) {
     const [username, setUsername] = useState('')
 
     const handleProfileUpdate = () => {
-        fetch('http://10.188.219.101:3000/users/:token', {
+        fetch('http://192.168.1.16:3000/users/:token', {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
