@@ -1,16 +1,13 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, TouchableOpacity, ImageBackground, Image, TextInput, KeyboardAvoidingView, Platform } from 'react-native';
-import { StyleSheet, Text, View, TouchableOpacity, ImageBackground, Image, TextInput, KeyboardAvoidingView, Platform } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, ImageBackground, Image, TextInput, KeyboardAvoidingView, Platform, Dimensions } from 'react-native';
 import { useState } from 'react';
-import { useDispatch } from 'react-redux';
+// import { useDispatch } from 'react-redux';
 
-const EMAIL_REGEX = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+.[a-zA-Z]{2,}$/;
+//const EMAIL_REGEX = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
 
 export default function HomeScreen({ navigation }) {
-  // const handleSubmit = () => {
-  //   navigation.navigate("TabNavigator");
-  // };
   // const handleSubmit = () => {
   //   navigation.navigate("TabNavigator");
   // };
@@ -105,8 +102,6 @@ const handleLogin = () => {
   return (
     <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
 
-    <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-
       <ImageBackground
         source={require('../assets/images/logoBlueReader.png')}
         style={styles.logo1Container}
@@ -176,14 +171,13 @@ const handleLogin = () => {
       <StatusBar style="auto" />
 
     </KeyboardAvoidingView>
-
-    </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    width: Dimensions.get('window').width,
+    height: Dimensions.get('window').height,
     backgroundColor: "#FCF8F1",
     alignItems: "center",
     paddingTop: 40,
@@ -213,7 +207,7 @@ const styles = StyleSheet.create({
   // styles input
   inputContainer: {
     width: "80%",
-    marginTop: 25,
+    marginTop: 10,
     marginBottom: 0,
   },
 
@@ -257,7 +251,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fffff",
     paddingLeft: 150,
     paddingRight: 150,
-    marginTop: 50,
+    marginTop: 30,
   },
 
   buttonInscription: {
@@ -277,7 +271,7 @@ const styles = StyleSheet.create({
     width: 200,
     backgroundColor: "#0E0E66",
     borderRadius: 30,
-    marginTop: -10,
+    marginTop: -15,
     marginBottom: 70,
   },
   text1: {
@@ -294,7 +288,7 @@ const styles = StyleSheet.create({
     color: "#888c90ff",
     fontSize: 14,
     fontFamily: "Inter_400Regular",
-    marginTop: 25,
+    marginTop: 5,
     textAlign: "center",
   },
 });

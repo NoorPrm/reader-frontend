@@ -40,7 +40,7 @@ export default function BookedexScreen() {
             genre: book.categories ? book.categories[0] : "Genre inconnu",
           };
 
-          fetch("http://192.168.1.102:3000/books", {
+          fetch("http://192.168.1.17:3000/books", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(bookToSave),
