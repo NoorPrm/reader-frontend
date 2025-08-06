@@ -9,6 +9,8 @@ import {
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { CameraView, Camera } from "expo-camera";
+// import { LOCAL_IP } from "@env"; 
+const backendAdress = process.env.EXPO_PUBLIC_URL_BACKEND
 
 export default function BookedexScreen({ navigation }) {
   const [hasPermission, setHasPermission] = useState(false);
@@ -40,7 +42,7 @@ export default function BookedexScreen({ navigation }) {
             genre: book.categories ? book.categories[0] : "Genre inconnu",
           };
 
-          fetch("http://192.168.1.127:3000/books", {
+          fetch(`${backendAdress}/books`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(bookToSave),

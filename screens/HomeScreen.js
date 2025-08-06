@@ -12,14 +12,21 @@ import {
   Dimensions,
 } from "react-native";
 import { useState } from "react";
-// import { useDispatch } from 'react-redux';
+// import { LOCAL_IP } from "@env"; 
+import { useDispatch } from 'react-redux';
+import { login } from '../reducers/user';
 
 const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+const backendAdress = process.env.EXPO_PUBLIC_URL_BACKEND;
+//console.log('Backend URL:', backendAdress);
 
 export default function HomeScreen({ navigation }) {
   // const handleSubmit = () => {
   //   navigation.navigate("TabNavigator");
   // };
+
+  const dispatch = useDispatch();
 
   const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState("");
@@ -27,6 +34,8 @@ export default function HomeScreen({ navigation }) {
   const [passwordError, setPasswordError] = useState("");
 
   const handleSignUp = () => {
+    //console.log("handleSignUp appelée")
+    
     let hasError = false;
 
     if (email === "") {
@@ -47,12 +56,15 @@ export default function HomeScreen({ navigation }) {
     } else {
       setPasswordError("");
     }
-
+    
     // si erreur : pas de fetch
+    // console.log("hasError:", hasError);
     if (hasError) {
       return;
     }
-    fetch("http://192.168.1.127:3000/users/signup", {
+
+    //console.log("URL fetch :", `${backendAdress}/users/signup`);
+    fetch(`${backendAdress}/users/signup`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -62,11 +74,15 @@ export default function HomeScreen({ navigation }) {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
+        console.log('data reçue:', data);
         if (data.result) {
+          dispatch(login({
+            token: data.token,
+            email: email,
+          }));
           navigation.navigate("Inscription");
         }
-      });
+      })
   };
 
   const handleLogin = () => {
@@ -93,7 +109,7 @@ export default function HomeScreen({ navigation }) {
     if (hasError) {
       return;
     }
-    fetch("http://192.168.1.127:3000/users/signin", {
+    fetch(`${backendAdress}/users/signin`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password }),
