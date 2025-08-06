@@ -1,8 +1,7 @@
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 import { useState } from "react";
-// import { Image } from 'expo-image';
-import { TouchableOpacity } from "react-native";
+//import { Image } from "expo-image";
 
 export default function LibraryScreen({ navigation }) {
   const [mangas, setMangas] = useState("mangas");
@@ -12,7 +11,6 @@ export default function LibraryScreen({ navigation }) {
   return (
     <View style={styles.container}>
       <Text>Ma Bibliothèque</Text>
-
       <TouchableOpacity
         style={styles.input}
         onPress={() =>
@@ -21,11 +19,10 @@ export default function LibraryScreen({ navigation }) {
       >
         <Text style={styles.text}>{mangas}</Text>
         <Image
-          source={require("../../assets/images/BibliothequeManga.png")}
+          source={require("../assets/images/BibliothequeManga.png")}
           style={styles.logo1}
         />
       </TouchableOpacity>
-
       <TouchableOpacity
         style={styles.input}
         onPress={() =>
@@ -34,11 +31,10 @@ export default function LibraryScreen({ navigation }) {
       >
         <Text style={styles.text}>{bd}</Text>
         <Image
-          source={require("../../assets/images/BibliothequeBD.png")}
+          source={require("../assets/images/BibliothequeBD.png")}
           style={styles.logo2}
         />
       </TouchableOpacity>
-
       <TouchableOpacity
         style={styles.input}
         onPress={() =>
@@ -47,23 +43,22 @@ export default function LibraryScreen({ navigation }) {
       >
         <Text style={styles.text}>{livre}</Text>
         <Image
-          source={require("../../assets/images/BibliothequeLivre.png")}
+          source={require("../assets/images/BibliothequeLivre.png")}
           style={styles.logo3}
         />
       </TouchableOpacity>
-
+      <TouchableOpacity
+        style={styles.input}
+        onPress={() => navigation.navigate("BookInfos")}
+      >
+        <Text style={styles.text}>BookInfos</Text>
+        {/*Image source={require('')} style={styles.logo3} />*/}
+      </TouchableOpacity>
+      ;
       <StatusBar style="auto" />
     </View>
   );
 }
-
-<TouchableOpacity
-  style={styles.input}
-  onPress={() => navigation.navigate("BookInfos")}
->
-  <Text style={styles.text}>BookInfos</Text>
-  {/*Image source={require('')} style={styles.logo3} />*/}
-</TouchableOpacity>;
 
 const styles = StyleSheet.create({
   container: {
