@@ -12,18 +12,24 @@ import {
   Dimensions,
   SafeAreaView,
 } from "react-native";
-import { useEffect, useState } from "react";
-//import { EXPO_PUBLIC_URL_BACKEND } from "@env";
-
-// import { useDispatch } from 'react-redux';
+import { useState } from "react";
+// import { LOCAL_IP } from "@env";
+import { useDispatch } from "react-redux";
+import { login } from "../reducers/user";
 
 const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-const backendAdress = process.env.EXPO_PUBLIC_URL_BACKEND;
-console.log(backendAdress);
+
+//const backendAdress = process.env.EXPO_PUBLIC_URL_BACKEND;
+const myip = process.env.MY_IP;
+const backendAdress = `${myip}`;
+console.log("Backend URL:", backendAdress);
+
 export default function HomeScreen({ navigation }) {
   // const handleSubmit = () => {
   //   navigation.navigate("TabNavigator");
   // };
+
+  const dispatch = useDispatch();
 
   const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState("");
@@ -31,8 +37,8 @@ export default function HomeScreen({ navigation }) {
   const [passwordError, setPasswordError] = useState("");
 
   const handleSignUp = () => {
-    console.log("Email envoyé :", email);
-    console.log("Mot de passe envoyé :", password);
+    //console.log("handleSignUp appelée")
+
     let hasError = false;
 
     if (email === "") {
@@ -55,9 +61,12 @@ export default function HomeScreen({ navigation }) {
     }
 
     // si erreur : pas de fetch
+    // console.log("hasError:", hasError);
     if (hasError) {
       return;
     }
+
+    console.log("URL fetch :", `${backendAdress}/users/signup`);
     fetch(`${backendAdress}/users/signup`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -68,8 +77,14 @@ export default function HomeScreen({ navigation }) {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
+        console.log("data reçue:", data);
         if (data.result) {
+          dispatch(
+            login({
+              token: data.token,
+              email: email,
+            })
+          );
           navigation.navigate("Inscription");
         }
       });
@@ -77,7 +92,7 @@ export default function HomeScreen({ navigation }) {
 
   const handleLogin = () => {
     let hasError = false;
-    console.log(email, password, URL);
+    console.log(email, password, backendAdress);
     if (email === "") {
       setEmailError("Champ obligatoire");
       hasError = true;
@@ -108,6 +123,15 @@ export default function HomeScreen({ navigation }) {
       .then((data) => {
         if (data.result) {
           navigation.navigate("TabNavigator");
+          dispatch(
+            login({
+              token: data.token,
+              username: data.username,
+              email: data.email,
+              statut: data.statut,
+              profilPicture: data.profilPicture,
+            })
+          );
         }
       });
   };
