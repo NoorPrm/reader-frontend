@@ -14,7 +14,7 @@ import {
 } from "react-native";
 import { useEffect, useState } from "react";
 //import { EXPO_PUBLIC_URL_BACKEND } from "@env";
-const URL = process.env.EXPO_PUBLIC_URL_BACKEND;
+
 // import { useDispatch } from 'react-redux';
 
 const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
