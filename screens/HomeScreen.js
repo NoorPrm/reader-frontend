@@ -10,6 +10,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   Dimensions,
+  SafeAreaView,
 } from "react-native";
 import { useState } from "react";
 // import { LOCAL_IP } from "@env"; 
@@ -43,7 +44,7 @@ export default function HomeScreen({ navigation }) {
       hasError = true;
     } else if (!EMAIL_REGEX.test(email)) {
       setEmailError("Adresse email invalide");
-      console.log(email);
+
       console.log(EMAIL_REGEX.test(email));
       hasError = true;
     } else {
@@ -87,7 +88,7 @@ export default function HomeScreen({ navigation }) {
 
   const handleLogin = () => {
     let hasError = false;
-
+    console.log(email, password, URL);
     if (email === "") {
       setEmailError("Champ obligatoire");
       hasError = true;
@@ -178,7 +179,10 @@ export default function HomeScreen({ navigation }) {
         </View>
       </View>
 
-      <TouchableOpacity onPress={() => navigation.navigate("Parametres")}>
+      <TouchableOpacity
+        onPress={() => navigation.navigate("Parametres")}
+        style={styles.forgotPasswordContainer}
+      >
         <Text style={styles.forgotPassword}>Mot de passe oublié ?</Text>
       </TouchableOpacity>
 
@@ -258,7 +262,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#E8DCCA",
     borderRadius: 10,
-    marginBottom: 16,
+    marginBottom: 0,
     height: 80,
     fontSize: 15,
     paddingLeft: 12,
@@ -323,5 +327,8 @@ const styles = StyleSheet.create({
     marginTop: 5,
     marginTop: 5,
     textAlign: "center",
+  },
+  forgotPasswordContainer: {
+    margin: -15,
   },
 });

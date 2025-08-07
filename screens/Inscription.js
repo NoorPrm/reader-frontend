@@ -55,12 +55,15 @@ export default function Inscription({ navigation }) {
             });
     };
 
-    return (
-        <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-            <View style={styles.container}>
-                <View style={styles.formulaire}>
-                    <Text style={styles.formulaireText}>Formulaire d'inscription</Text>
-                </View>
+  return (
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+    >
+      <View style={styles.container}>
+        <View style={styles.formulaire}>
+          <Text style={styles.formulaireText}>Formulaire d'inscription</Text>
+        </View>
 
                 <View style={styles.avatarContainer}>
                     <Image source={photo ? { uri: photo } : require('../assets/images/whiteUser.png')} style={styles.logoUser} />

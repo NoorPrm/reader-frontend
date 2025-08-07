@@ -2,7 +2,6 @@ import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View, Image, TouchableOpacity, Dimensions } from "react-native";
 import { useState } from "react";
 
-
 export default function LibraryScreen({ navigation }) {
   const [mangas, setMangas] = useState("mangas");
   const [bd, setBd] = useState("bd");
