@@ -9,7 +9,8 @@ import {
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { CameraView, Camera } from "expo-camera";
-
+//import { LOCAL_IP } from "@env";
+const URL = process.env.EXPO_PUBLIC_URL_BACKEND;
 export default function BookedexScreen({ navigation }) {
   const [hasPermission, setHasPermission] = useState(false);
   const [scannedCode, setScannedCode] = useState(null);
@@ -24,43 +25,76 @@ export default function BookedexScreen({ navigation }) {
 
   if (!hasPermission) return <View style={styles.container} />;
 
-  const fetchBookData = (isbn) => {
-    const url = `https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}`;
-
-    fetch(url)
+  //fonction saveBookToDB qui sera rappelée lors du fetchBookData
+  const saveBookToDB = (bookToSave) => {
+    fetch(`${URL}/books`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(bookToSave),
+    })
       .then((res) => res.json())
       .then((data) => {
-        if (data.totalItems > 0) {
-          const book = data.items[0].volumeInfo;
+        if (data.error) {
+          console.log("Info :", data.error);
+        } else {
+          console.log("Livre ajouté dans la DB :", data);
+        }
+      })
+      .catch((error) => {
+        console.log("Erreur lors de l'enregistrement :", error.message);
+      });
+  };
 
+  //Déclenchée au scan de l'ISBN du livre
+  const fetchBookData = (isbn) => {
+    const openLibraryUrl = `https://openlibrary.org/api/books?bibkeys=ISBN:${isbn}&format=json&jscmd=data`;
+
+    fetch(openLibraryUrl)
+      .then((res) => res.json())
+      .then((data) => {
+        const bookData = data[`ISBN:${isbn}`];
+
+        if (bookData) {
           const bookToSave = {
-            title: book.title || "Titre inconnu",
-            synopsis: book.description || "Pas de résumé",
-            author: book.authors ? book.authors[0] : "Auteur inconnu",
-            genre: book.categories ? book.categories[0] : "Genre inconnu",
+            title: bookData.title || "Titre inconnu",
+            synopsis: bookData.notes || "Pas de résumé",
+            author: bookData.authors?.[0]?.name || "Auteur inconnu",
+            isbn,
+            cover: `https://covers.openlibrary.org/b/isbn/${isbn}-L.jpg`,
           };
 
-          fetch("http://192.168.1.127:3000/books", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(bookToSave),
-          })
+          saveBookToDB(bookToSave);
+        } else {
+          console.log("Aucun livre trouvé dans OpenLibrary.");
+          // Si OpenLibrary ne connait pas l'ISBN, fetch sur GoogleBooks
+          const googleBooksUrl = `https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}`;
+
+          fetch(googleBooksUrl)
             .then((res) => res.json())
             .then((data) => {
-              console.log("Livre ajouté dans la DB :", data);
+              if (data.totalItems > 0) {
+                const info = data.items[0].volumeInfo;
+
+                const bookToSave = {
+                  title: info.title || "Titre inconnu",
+                  synopsis: info.description || "Pas de résumé",
+                  author: info.authors?.[0] || "Auteur inconnu",
+                  isbn: isbn,
+                  cover: info.imageLinks?.thumbnail || null,
+                };
+
+                saveBookToDB(bookToSave);
+              } else {
+                console.log("Aucun livre trouvé dans Google Books.");
+              }
             })
-            .catch((error) => {
-              console.log("Erreur lors de l'enregistrement :", error);
+            .catch((err) => {
+              console.log("Erreur avec Google Books :", err.message);
             });
-        } else {
-          console.log("Aucun livre trouvé pour cet ISBN.");
         }
       })
       .catch((err) => {
-        console.log(
-          "Erreur lors de la récupération depuis Google Books :",
-          err.message
-        );
+        console.log("Erreur avec Open Library :", err.message);
       });
   };
 
