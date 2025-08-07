@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@expo-google-fonts/inter": "^0.4.1",
+    "@expo/metro-runtime": "~5.0.4",
     "@react-native-picker/picker": "^2.11.1",
     "@react-navigation/bottom-tabs": "6",
     "@react-navigation/native": "6",
@@ -23,12 +24,14 @@
     "expo-linear-gradient": "~14.1.5",
     "expo-status-bar": "~2.2.3",
     "react": "19.0.0",
+    "react-dom": "19.0.0",
     "react-native": "0.79.5",
     "react-native-dotenv": "^3.4.11",
     "react-native-dropdown-picker": "^5.4.6",
     "react-native-element-dropdown": "^2.12.4",
     "react-native-safe-area-context": "5.4.0",
     "react-native-screens": "~4.11.1",
+    "react-native-web": "^0.20.0",
     "react-redux": "^9.2.0"
   },
   "devDependencies": {
