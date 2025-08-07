@@ -17,6 +17,7 @@ import BookedexScreen from "./screens/BookedexScreen";
 import { Provider } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
 import Inscription from "./screens/Inscription";
+import Parametres from "./screens/Parametres";
 import user from "./reducers/user";
 
 const store = configureStore({
@@ -70,6 +71,7 @@ export default function App() {
           <Stack.Screen name="TabNavigator" component={TabNavigator} />
           <Stack.Screen name="BookInfos" component={BookScreen} />
           <Stack.Screen name="Bookedex" component={BookedexScreen} />
+          <Stack.Screen name="Parametres" component={Parametres} />
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>
