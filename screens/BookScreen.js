@@ -14,7 +14,7 @@ import {
 import AvisCard from "../components/AvisCard";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 
-export default function BookScreen({ navigation }) {
+export default function BookScreen({navigation}) {
   const [modalVisible, setModalVisible] = useState(false);
   const [rating, setRating] = useState(0);
   const [review, setReview] = useState("");
@@ -22,7 +22,7 @@ export default function BookScreen({ navigation }) {
     <SafeAreaView style={styles.container}>
       <TouchableOpacity
         style={styles.returnBtn}
-        onPress={() => navigation.navigate("Library")}
+        onPress={() => navigation.navigate("BookLibrary")}
       >
         <Text style={styles.txtBtn}>Retour à la bibliothèque</Text>
       </TouchableOpacity>
@@ -42,7 +42,7 @@ export default function BookScreen({ navigation }) {
             API bla bla bla bla bla bla Texte résumé API bla bla bla bla bla bla
             Texte résumé API bla bla bla bla bla bla Texte résumé API bla bla
             bla
-          </Text>{" "}
+          </Text>
         </View>
       </View>
       <View style={styles.btnContainer}>

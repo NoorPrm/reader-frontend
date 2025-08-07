@@ -1,59 +1,50 @@
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View, Image, TouchableOpacity, Dimensions } from "react-native";
-import { useState } from "react";
+import { StatusBar } from 'expo-status-bar';
+import { StyleSheet, Text, View, Dimensions, Image, TouchableOpacity  } from 'react-native';
+import { interFontsToUse } from '../assets/fonts/fonts';
 
-export default function LibraryScreen({ navigation }) {
-  const [mangas, setMangas] = useState("mangas");
-  const [bd, setBd] = useState("bd");
-  const [livre, setLivre] = useState("livre");
+const categories = [
+  {
+    title: 'LIVRES',
+    image: require('../assets/images/BibliothequeLivre.png'),
+    componant: 'BookLibrary',
+  },
+  {
+    title: 'BD',
+    image: require('../assets/images/BibliothequeBD.png'),
+    componant: 'BookLibrary',
+  },
+  {
+    title: 'MANGAS',
+    image: require('../assets/images/BibliothequeManga.png'),
+    componant: 'BookLibrary',
+  },
+];
+
+export default function LibraryScreen({navigation}) {
 
   return (
     <View style={styles.container}>
-      <Text>Ma Bibliothèque</Text>
-      <TouchableOpacity
-        style={styles.input}
-        onPress={() =>
-          navigation.navigate("BookLibraryScreen", { category: "mangas" })
-        }
-      >
-        <Text style={styles.text}>{mangas}</Text>
-        <Image
-          source={require("../assets/images/BibliothequeManga.png")}
-          style={styles.logo1}
-        />
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={styles.input}
-        onPress={() =>
-          navigation.navigate("BookLibraryScreen", { category: "bd" })
-        }
-      >
-        <Text style={styles.text}>{bd}</Text>
-        <Image
-          source={require("../assets/images/BibliothequeBD.png")}
-          style={styles.logo2}
-        />
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={styles.input}
-        onPress={() =>
-          navigation.navigate("BookLibraryScreen", { category: "livre" })
-        }
-      >
-        <Text style={styles.text}>{livre}</Text>
-        <Image
-          source={require("../assets/images/BibliothequeLivre.png")}
-          style={styles.logo3}
-        />
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={styles.input}
-        onPress={() => navigation.navigate("BookInfos")}
-      >
-        <Text style={styles.text}>BookInfos</Text>
-        {/*Image source={require('')} style={styles.logo3} />*/}
-      </TouchableOpacity>
-      ;
+
+    <View style={styles.titleMyLibraryGlobalContent}>
+      <View style={styles.titleMyLibraryContent}>
+        <Text style={styles.titleMyLibraryText}>MA BIBLIOTHEQUE</Text>
+      </View>
+    </View> 
+
+    {categories.map(category => (
+        <View style={styles.sectionGlobalContent}>
+          <Image source={category.image} style={styles.logo1} resizeMode="contain"/>
+          <TouchableOpacity
+            style={styles.buttonNavigateToNextScreen}
+            onPress={() => navigation.navigate(category.componant)}
+          >
+            <View style={styles.titleSectionContent}>
+              <Text style={styles.titleSectionText}>{category.title}</Text>
+            </View>
+          </TouchableOpacity>
+        </View>
+    ))}
+    
       <StatusBar style="auto" />
     </View>
   );
@@ -61,26 +52,71 @@ export default function LibraryScreen({ navigation }) {
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     width: Dimensions.get("window").width,
     height: Dimensions.get("window").height,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  text: {
-    fontSize: 16,
-    color: "#0E0E66",
-    textAlign: "center",
-  },
-  input: {
-    borderColor: "#E8DCCA",
     backgroundColor: "#FCF8F1",
-    borderWidth: 2,
-    paddingVertical: 12,
-    paddingHorizontal: 20,
-    margin: 10,
-    borderRadius: 6,
     alignItems: "center",
+    justifyContent: "flex-start",
+  },
+
+  // title Content
+  titleMyLibraryGlobalContent: {
+    marginTop: 65,
+    flexDirection: "column",
+    alignItems: "flex-start",
+  },
+  titleMyLibraryContent: {
+    borderWidth: 3,
+    color: "#0E0E66",
+    borderRadius: 20,
+    height: 50,
+    width: 300,
     justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#FCF8F1",
+  },
+  titleMyLibraryText: {
+    fontSize: 18,
+    fontFamily: interFontsToUse.bold,
+    textAlign: "center",
+    color: "#0E0E66",
+  },
+
+  // section Content
+  sectionGlobalContent: {
+    alignItems: "center",
+    marginTop: 10,
+    marginBottom: 0,
+    width: "100%",
+    height: "25%",
+  },
+  logo1: {
+    marginBottom: 0.015,
+    alignItems: "flex-start",
+    width: "90%",
+    height: "70%",
+  },
+  buttonNavigateToNextScreen: {
+    alignItems: "center",
+    width: "70%",
+    height: "30%",
+  },
+  titleSectionContent: {
+    borderWidth: 2.5,
+    borderColor: "#E8DCCA",
+    borderRadius: 20,
+    height: 50,
+    width: 150,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#FCF8F1",
+    marginTop: 10,
+  },
+  titleSectionText: {
+    fontSize: 17,
+    fontFamily: interFontsToUse.italic,
+    textAlign: "center",
+    color: "#0E0E66",
   },
 });

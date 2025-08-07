@@ -12,6 +12,7 @@ import {
   Dimensions,
   SafeAreaView,
 } from "react-native";
+import { interFontsToUse } from '../assets/fonts/fonts';
 import { useState } from "react";
 // import { LOCAL_IP } from "@env"; 
 import { useDispatch } from 'react-redux';
@@ -255,7 +256,7 @@ const styles = StyleSheet.create({
     paddingLeft: 5,
     fontSize: 13,
     color: "#5c5c5c",
-    fontFamily: "Inter_400Regular",
+    fontFamily: interFontsToUse.regular,
   },
 
   input: {
@@ -266,7 +267,7 @@ const styles = StyleSheet.create({
     height: 80,
     fontSize: 15,
     paddingLeft: 12,
-    fontFamily: "Inter_400Regular",
+    fontFamily: interFontsToUse.regular,
     textAlign: "center",
   },
 
@@ -275,7 +276,7 @@ const styles = StyleSheet.create({
     top: 0,
     right: 5,
     color: "red",
-    fontFamily: "Inter_400Regular",
+    fontFamily: interFontsToUse.regular,
     fontSize: 13,
   },
 
@@ -313,17 +314,17 @@ const styles = StyleSheet.create({
   text1: {
     color: "#ffffffff",
     fontSize: 16,
-    fontFamily: "Inter_400Regular",
+    fontFamily: interFontsToUse.regular,
   },
   text2: {
     color: "#ffffffff",
     fontSize: 16,
-    fontFamily: "Inter_400Regular",
+    fontFamily: interFontsToUse.regular,
   },
   forgotPassword: {
     color: "#888c90ff",
     fontSize: 14,
-    fontFamily: "Inter_400Regular",
+    fontFamily: interFontsToUse.regular,
     marginTop: 5,
     marginTop: 5,
     textAlign: "center",

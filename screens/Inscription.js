@@ -1,6 +1,7 @@
 import { StyleSheet, Text, View, TextInput, KeyboardAvoidingView, Platform, Image, TouchableOpacity, Dimensions } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import * as ImagePicker from 'expo-image-picker';
+import { interFontsToUse } from '../assets/fonts/fonts';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
 // import { LOCAL_IP } from "@env"; 
@@ -91,7 +92,7 @@ export default function Inscription({ navigation }) {
                         selectedValue={statut}
                         onValueChange={(itemValue) => setStatut(itemValue)}
                         style={styles.picker}
-                        itemStyle={{ fontSize: 16 }}
+                        itemStyle={{ fontSize: 16, fontFamily: interFontsToUse.regular }}
                     >
                         <Picker.Item label="LECTEUR" value="LECTEUR" />
                         <Picker.Item label="AUTEUR" value="AUTEUR" />
@@ -129,7 +130,7 @@ const styles = StyleSheet.create({
     formulaireText: {
         fontSize: 16,
         fontWeight: 'bold',
-        fontFamily: "Inter_700Bold",
+        fontFamily: interFontsToUse.bold,
         textAlign: 'center',
     },
     avatarContainer: {
@@ -147,7 +148,7 @@ const styles = StyleSheet.create({
     textPhoto: {
         color: '#E8DCCA',
         fontSize: 16,
-        fontFamily: "Inter_700Bold",
+        fontFamily: interFontsToUse.bold,
     },
 
     plusButton: {
@@ -165,8 +166,7 @@ const styles = StyleSheet.create({
     plus: {
         color: '#ffffff',
         fontSize: 16,
-        fontWeight: 'bold',
-        fontFamily: "Inter_700Bold",
+        fontFamily: interFontsToUse.bold,
     },
 
     formInputs: {
@@ -191,8 +191,7 @@ const styles = StyleSheet.create({
     },
     statutText: {
         fontSize: 16,
-        fontWeight: 'bold',
-        fontFamily: "Inter_700Bold",
+        fontFamily: interFontsToUse.bold,
         textAlign: 'center',
     },
     label1: {
@@ -200,7 +199,7 @@ const styles = StyleSheet.create({
         paddingLeft: 5,
         fontSize: 13,
         color: "#5c5c5c",
-        fontFamily: "Inter_400Regular",
+        fontFamily: interFontsToUse.bold,
         
     },
     input1: {
@@ -211,7 +210,7 @@ const styles = StyleSheet.create({
         height: 80,
         fontSize: 15,
         paddingLeft: 12,
-        fontFamily: "Inter_400Regular",
+        fontFamily: interFontsToUse.regular,
         textAlign: "center",
     },
 
@@ -248,6 +247,6 @@ const styles = StyleSheet.create({
     textButton: {
         color: "#ffffffff",
         fontSize: 18,
-        fontFamily: "Inter_400Regular",
+        fontFamily: interFontsToUse.regular,
     }
 });

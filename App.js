@@ -5,12 +5,14 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 import FontAwesome from "react-native-vector-icons/FontAwesome";
+import { useFonts } from "expo-font";
+import { interFonts } from './assets/fonts/fonts';
 
 import HomeScreen from "./screens/HomeScreen";
 import GeneralScreen from "./screens/GeneralScreen";
 import SearchScreen from "./screens/SearchScreen";
-// import BookLibraryScreen from "./screens/BookLibraryScreen";
 import LibraryScreen from "./screens/LibraryScreen";
+import BookLibraryScreen from "./screens/BookLibraryScreen";
 import UserProfilScreen from "./screens/UserProfilScreen";
 import BookScreen from "./screens/BookScreen";
 import BookedexScreen from "./screens/BookedexScreen";
@@ -61,6 +63,9 @@ const TabNavigator = () => (
 );
 
 export default function App() {
+
+  const [fontsLoaded] = useFonts(interFonts);
+
   return (
     <Provider store={store}>
       <NavigationContainer>
@@ -68,6 +73,7 @@ export default function App() {
           <Stack.Screen name="Home" component={HomeScreen} />
           <Stack.Screen name="Inscription" component={Inscription} />
           <Stack.Screen name="TabNavigator" component={TabNavigator} />
+          <Stack.Screen name="BookLibrary" component={BookLibraryScreen} />
           <Stack.Screen name="BookInfos" component={BookScreen} />
           <Stack.Screen name="Bookedex" component={BookedexScreen} />
         </Stack.Navigator>
