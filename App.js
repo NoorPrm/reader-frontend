@@ -18,6 +18,7 @@ import { Provider } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
 import Inscription from "./screens/Inscription";
 import user from "./reducers/user";
+import StoryScreen from "./screens/StoryScreen";
 
 const store = configureStore({
   reducer: { user },
@@ -70,6 +71,7 @@ export default function App() {
           <Stack.Screen name="TabNavigator" component={TabNavigator} />
           <Stack.Screen name="BookInfos" component={BookScreen} />
           <Stack.Screen name="Bookedex" component={BookedexScreen} />
+          <Stack.Screen name="Story" component={StoryScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>

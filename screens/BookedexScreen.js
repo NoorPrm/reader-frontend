@@ -12,11 +12,7 @@ import { CameraView, Camera } from "expo-camera";
 // import { LOCAL_IP } from "@env"; 
 const backendAdress = process.env.EXPO_PUBLIC_URL_BACKEND
 
-<<<<<<< HEAD
-export default function BookedexScreen({navigation}) {
-=======
 export default function BookedexScreen({ navigation }) {
->>>>>>> cc6c4ec5fb75d2804538d0578038835001f67cf0
   const [hasPermission, setHasPermission] = useState(false);
   const [scannedCode, setScannedCode] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
@@ -68,13 +64,6 @@ export default function BookedexScreen({ navigation }) {
             cover: `https://covers.openlibrary.org/b/isbn/${isbn}-L.jpg`,
           };
 
-<<<<<<< HEAD
-          fetch("http://192.168.1.17:3000/books", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(bookToSave),
-          })
-=======
           saveBookToDB(bookToSave);
         } else {
           console.log("Aucun livre trouvé dans OpenLibrary.");
@@ -82,7 +71,6 @@ export default function BookedexScreen({ navigation }) {
           const googleBooksUrl = `https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}`;
 
           fetch(googleBooksUrl)
->>>>>>> cc6c4ec5fb75d2804538d0578038835001f67cf0
             .then((res) => res.json())
             .then((data) => {
               if (data.totalItems > 0) {

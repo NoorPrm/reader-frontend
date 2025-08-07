@@ -35,6 +35,7 @@ export default function HomeScreen({ navigation }) {
   const [passwordError, setPasswordError] = useState("");
 
   const handleSignUp = () => {
+   
     //console.log("handleSignUp appelée")
     
     let hasError = false;
