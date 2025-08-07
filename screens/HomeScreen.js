@@ -15,7 +15,8 @@ import { useState } from "react";
 // import { useDispatch } from 'react-redux';
 
 const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-
+const backendAdress= process.env.EXPO_PUBLIC_URL_BACKEND
+console.log(backendAdress)
 export default function HomeScreen({ navigation }) {
   // const handleSubmit = () => {
   //   navigation.navigate("TabNavigator");
@@ -27,6 +28,8 @@ export default function HomeScreen({ navigation }) {
   const [passwordError, setPasswordError] = useState("");
 
   const handleSignUp = () => {
+    console.log("Email envoyé :", email);
+console.log("Mot de passe envoyé :", password);
     let hasError = false;
 
     if (email === "") {
@@ -52,7 +55,7 @@ export default function HomeScreen({ navigation }) {
     if (hasError) {
       return;
     }
-    fetch("http://192.168.1.127:3000/users/signup", {
+    fetch(`${backendAdress}/users/signup`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -93,7 +96,7 @@ export default function HomeScreen({ navigation }) {
     if (hasError) {
       return;
     }
-    fetch("http://192.168.1.127:3000/users/signin", {
+    fetch(`${backendAdress}/users/signin`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password }),
