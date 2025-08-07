@@ -1,8 +1,11 @@
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, Image, TouchableOpacity, Dimensions } from "react-native";
 import { useState } from "react";
+<<<<<<< HEAD
 import { Image } from 'react-native';
 import { TouchableOpacity } from "react-native";
+=======
+>>>>>>> cc6c4ec5fb75d2804538d0578038835001f67cf0
 
 export default function LibraryScreen({ navigation }) {
   const [mangas, setMangas] = useState("mangas");
@@ -12,7 +15,6 @@ export default function LibraryScreen({ navigation }) {
   return (
     <View style={styles.container}>
       <Text>Ma Bibliothèque</Text>
-
       <TouchableOpacity
         style={styles.input}
         onPress={() =>
@@ -25,7 +27,6 @@ export default function LibraryScreen({ navigation }) {
           style={styles.logo1}
         />
       </TouchableOpacity>
-
       <TouchableOpacity
         style={styles.input}
         onPress={() =>
@@ -38,7 +39,6 @@ export default function LibraryScreen({ navigation }) {
           style={styles.logo2}
         />
       </TouchableOpacity>
-
       <TouchableOpacity
         style={styles.input}
         onPress={() =>
@@ -51,15 +51,25 @@ export default function LibraryScreen({ navigation }) {
           style={styles.logo3}
         />
       </TouchableOpacity>
+<<<<<<< HEAD
 
+=======
+>>>>>>> cc6c4ec5fb75d2804538d0578038835001f67cf0
       <TouchableOpacity
         style={styles.input}
         onPress={() => navigation.navigate("BookInfos")}
       >
+<<<<<<< HEAD
           <Text style={styles.text}>BookInfos</Text>
           {/*Image source={require('')} style={styles.logo3} />*/}
       </TouchableOpacity>;
 
+=======
+        <Text style={styles.text}>BookInfos</Text>
+        {/*Image source={require('')} style={styles.logo3} />*/}
+      </TouchableOpacity>
+      ;
+>>>>>>> cc6c4ec5fb75d2804538d0578038835001f67cf0
       <StatusBar style="auto" />
     </View>
   );
@@ -67,7 +77,8 @@ export default function LibraryScreen({ navigation }) {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    width: Dimensions.get("window").width,
+    height: Dimensions.get("window").height,
     backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
