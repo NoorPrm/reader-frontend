@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { login } from "../reducers/user"; // adapte le chemin si besoin
 import {
   StyleSheet,
   Text,
@@ -9,14 +11,22 @@ import {
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { CameraView, Camera } from "expo-camera";
-// import { LOCAL_IP } from "@env"; 
-const backendAdress = process.env.EXPO_PUBLIC_URL_BACKEND
+// import { LOCAL_IP } from "@env";
+//const backendAdress = process.env.EXPO_PUBLIC_URL_BACKEND;
+const myip = process.env.MY_IP;
+const backendAdress = `${myip}`;
 
 export default function BookedexScreen({ navigation }) {
   const [hasPermission, setHasPermission] = useState(false);
   const [scannedCode, setScannedCode] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
+  const [secondModalVisible, setSecondModalVisible] = useState(false);
+  const [fetchedBookId, setFetchedBookId] = useState(null);
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [userLibraryError, setUserLibraryError] = useState("");
+  const userToken = useSelector((state) => state.user.value.token);
 
+  console.log(userToken);
   useEffect(() => {
     (async () => {
       const result = await Camera.requestCameraPermissionsAsync();
@@ -35,10 +45,14 @@ export default function BookedexScreen({ navigation }) {
     })
       .then((res) => res.json())
       .then((data) => {
+        console.log("fonction saveBookToDB: ", bookToSave);
         if (data.error) {
           console.log("Info :", data.error);
         } else {
-          console.log("Livre ajouté dans la DB :", data);
+          console.log("Livre ajouté dans la DB :", data._id);
+          setFetchedBookId(data._id);
+          setModalVisible(false);
+          setSecondModalVisible(true);
         }
       })
       .catch((error) => {
@@ -47,7 +61,7 @@ export default function BookedexScreen({ navigation }) {
   };
 
   //Déclenchée au scan de l'ISBN du livre
-  const fetchBookData = (isbn) => {
+  const fetchBookData = (isbn, category) => {
     const openLibraryUrl = `https://openlibrary.org/api/books?bibkeys=ISBN:${isbn}&format=json&jscmd=data`;
 
     fetch(openLibraryUrl)
@@ -60,11 +74,12 @@ export default function BookedexScreen({ navigation }) {
             title: bookData.title || "Titre inconnu",
             synopsis: bookData.notes || "Pas de résumé",
             author: bookData.authors?.[0]?.name || "Auteur inconnu",
-            isbn,
+            isbn: isbn,
             cover: `https://covers.openlibrary.org/b/isbn/${isbn}-L.jpg`,
           };
 
           saveBookToDB(bookToSave);
+          console.log("openlibrary: ", bookToSave);
         } else {
           console.log("Aucun livre trouvé dans OpenLibrary.");
           // Si OpenLibrary ne connait pas l'ISBN, fetch sur GoogleBooks
@@ -85,6 +100,7 @@ export default function BookedexScreen({ navigation }) {
                 };
 
                 saveBookToDB(bookToSave);
+                console.log("google: ", bookToSave);
               } else {
                 console.log("Aucun livre trouvé dans Google Books.");
               }
@@ -116,6 +132,33 @@ export default function BookedexScreen({ navigation }) {
   const handleReset = () => {
     setScannedCode(null);
     setModalVisible(false);
+  };
+
+  const handleSaveToUserLibrary = () => {
+    if (!selectedCategory || !fetchedBookId) return;
+
+    fetch(`${backendAdress}/userLibrary`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        token: userToken,
+        bookId: fetchedBookId,
+        category: selectedCategory,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(userToken, fetchedBookId, selectedCategory);
+        console.log("Ajout dans userLibrary :", data);
+        setSecondModalVisible(false);
+        setSelectedCategory(null);
+        setFetchedBookId(null);
+        setUserLibraryError("");
+      })
+      .catch((err) => {
+        console.log("Erreur userLibrary :", err.message);
+        setUserLibraryError("Livre déjà présent dans la bibliothèque");
+      });
   };
 
   return (
@@ -166,6 +209,101 @@ export default function BookedexScreen({ navigation }) {
             </TouchableOpacity>
           </View>
         </Pressable>
+      </Modal>
+
+      <Modal
+        transparent
+        animationType="fade"
+        visible={secondModalVisible}
+        onRequestClose={() => setSecondModalVisible(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modal}>
+            <Text style={styles.modalTitle}>Livre enregistré !</Text>
+            <Text style={styles.modalText}>
+              Dans quelle catégorie le ranger ?
+            </Text>
+
+            {userLibraryError !== "" && (
+              <Text style={{ color: "red", textAlign: "center" }}>
+                {userLibraryError}
+              </Text>
+            )}
+
+            <View style={{ flexDirection: "row", gap: 10 }}>
+              <TouchableOpacity
+                style={
+                  selectedCategory === "Livres"
+                    ? styles.selectedBtn
+                    : styles.normalBtn
+                }
+                onPress={() => setSelectedCategory("Livres")}
+              >
+                <Text
+                  style={
+                    selectedCategory === "Livres"
+                      ? styles.selectedTxt
+                      : styles.normalTxt
+                  }
+                >
+                  Livres
+                </Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={
+                  selectedCategory === "BD"
+                    ? styles.selectedBtn
+                    : styles.normalBtn
+                }
+                onPress={() => setSelectedCategory("BD")}
+              >
+                <Text
+                  style={
+                    selectedCategory === "BD"
+                      ? styles.selectedTxt
+                      : styles.normalTxt
+                  }
+                >
+                  BD
+                </Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={
+                  selectedCategory === "Mangas"
+                    ? styles.selectedBtn
+                    : styles.normalBtn
+                }
+                onPress={() => setSelectedCategory("Mangas")}
+              >
+                <Text
+                  style={
+                    selectedCategory === "Mangas"
+                      ? styles.selectedTxt
+                      : styles.normalTxt
+                  }
+                >
+                  Mangas
+                </Text>
+              </TouchableOpacity>
+            </View>
+
+            <TouchableOpacity
+              style={[styles.addBtn, { marginTop: 15 }]}
+              onPress={handleSaveToUserLibrary}
+            >
+              <Text style={styles.btnText}>Valider la catégorie</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.cancelBtn}
+              onPress={() => setSecondModalVisible(false)}
+            >
+              <Text style={styles.cancelText}>Annuler</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
       </Modal>
     </LinearGradient>
   );
@@ -253,10 +391,56 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   btnText: {
-    color: "#fff",
+    color: "#ffffffff",
     fontWeight: "bold",
   },
+  normalTxt: {
+    color: "#0E0E66",
+    fontWeight: "bold",
+  },
+
   cancelText: {
     color: "#888",
+  },
+  normalBtn: {
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#ffffffff",
+    width: 55,
+    height: 35,
+    borderRadius: 15,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  selectedBtn: {
+    backgroundColor: "#0E0E66",
+    alignItems: "center",
+    justifyContent: "center",
+
+    width: 55,
+    height: 35,
+    borderRadius: 15,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  normalTxt: {
+    color: "#0E0E66",
+    fontWeight: "bold",
+  },
+  selectedTxt: {
+    color: "#ffffffff",
+    fontWeight: "bold",
   },
 });

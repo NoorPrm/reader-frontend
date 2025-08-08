@@ -1,60 +1,81 @@
-import { StyleSheet, Text, View, TextInput, KeyboardAvoidingView, Platform, Image, TouchableOpacity, Dimensions } from 'react-native';
-import { Picker } from '@react-native-picker/picker';
-import * as ImagePicker from 'expo-image-picker';
+import {
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
+  KeyboardAvoidingView,
+  Platform,
+  Image,
+  TouchableOpacity,
+  Dimensions,
+} from "react-native";
+import { Picker } from "@react-native-picker/picker";
+import * as ImagePicker from "expo-image-picker";
 import { interFontsToUse } from '../assets/fonts/fonts';
-import { useState } from 'react';
-import { useSelector } from 'react-redux';
-// import { LOCAL_IP } from "@env"; 
-const backendAdress = process.env.EXPO_PUBLIC_URL_BACKEND
+import { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { login } from "../reducers/user";
+// import { LOCAL_IP } from "@env";
+const backendAdress = process.env.EXPO_PUBLIC_URL_BACKEND;
 
 export default function Inscription({ navigation }) {
-    const [statut, setStatut] = useState('LECTEUR');
-    const [username, setUsername] = useState('');
-    const [photo, setPhoto] = useState(null);
+  const [statut, setStatut] = useState("LECTEUR");
+  const [username, setUsername] = useState("");
+  const [photo, setPhoto] = useState(null);
 
-    const token = useSelector((state) => state.user.value.token);
-
-    const handleProfileUpdate = () => {
-        // console.log("token:", token)
-        fetch(`${backendAdress}/users/${token}`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                username: username,
-                statut: statut,
-                profilPicture: photo,
-            }),
-        })
-            .then(response => response.json())
-            .then(data => {
-                if (data.result) {
-                    navigation.navigate("TabNavigator");
-                } else {
-                    console.log('Erreur');
-                }
+  const token = useSelector((state) => state.user.value.token);
+  const dispatch = useDispatch();
+  const handleProfileUpdate = () => {
+    // console.log("token:", token)
+    fetch(`${backendAdress}/users/${token}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        username: username,
+        statut: statut,
+        profilPicture: photo,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.result) {
+          dispatch(
+            login({
+              token: token,
+              username: data.updatedUser.username,
+              email: data.updatedUser.email,
+              statut: data.updatedUser.statut,
+              profilPicture: data.updatedUser.profilPicture,
             })
-    };
+          );
 
-    const pickImage = () => {
-        ImagePicker.requestMediaLibraryPermissionsAsync()
-            .then(permissionResult => {
-                if (!permissionResult.granted) {
-                    alert("Permission refusée pour accéder aux images.");
-                    return;
-                }
-                ImagePicker.launchImageLibraryAsync({
-                    mediaTypes: "images",
-                    allowsEditing: true,
-                    aspect: [1, 1],
-                    quality: 1,
-                })
-                .then(result => {
-                    if (!result.canceled) {
-                        setPhoto(result.assets[0].uri);
-                    }
-                });
-            });
-    };
+          navigation.navigate("TabNavigator");
+        } else {
+          console.log("Erreur");
+        }
+      });
+  };
+
+  const pickImage = () => {
+    ImagePicker.requestMediaLibraryPermissionsAsync().then(
+      (permissionResult) => {
+        if (!permissionResult.granted) {
+          alert("Permission refusée pour accéder aux images.");
+          return;
+        }
+        ImagePicker.launchImageLibraryAsync({
+          mediaTypes: "images",
+          allowsEditing: true,
+          aspect: [1, 1],
+          quality: 1,
+        }).then((result) => {
+          if (!result.canceled) {
+            setPhoto(result.assets[0].uri);
+          }
+        });
+      }
+    );
+  };
 
   return (
     <KeyboardAvoidingView
@@ -66,57 +87,71 @@ export default function Inscription({ navigation }) {
           <Text style={styles.formulaireText}>Formulaire d'inscription</Text>
         </View>
 
-                <View style={styles.avatarContainer}>
-                    <Image source={photo ? { uri: photo } : require('../assets/images/whiteUser.png')} style={styles.logoUser} />
-                    <Text style={styles.textPhoto}> PHOTO DE PROFIL </Text>
-                    {!photo && (
-                    <TouchableOpacity onPress={pickImage} style={styles.plusButton}>
-                        <Text style={styles.plus}>+</Text>
-                    </TouchableOpacity>
-                    )}
-                </View>
+        <View style={styles.avatarContainer}>
+          <Image
+            source={
+              photo ? { uri: photo } : require("../assets/images/whiteUser.png")
+            }
+            style={styles.logoUser}
+          />
+          <Text style={styles.textPhoto}> PHOTO DE PROFIL </Text>
+          {!photo && (
+            <TouchableOpacity onPress={pickImage} style={styles.plusButton}>
+              <Text style={styles.plus}>+</Text>
+            </TouchableOpacity>
+          )}
+        </View>
 
-                <View style={styles.formInputs}>
-                    <View style={styles.Inputlabell}>
-                        <Text style={styles.label1}>Nom d'utilisateur</Text>
-                        <TextInput style={styles.input1} placeholder="Entrez votre nom d'utilisateur" autoCapitalize="none" value={username}                   // ← Lier à l'état
-                            onChangeText={setUsername} />
-                    </View>
-                </View>
-                <View style={styles.separator} />
-                <View style={styles.statut}>
-                    <Text style={styles.statutText}>Statut de l'utilisateur</Text>
-                </View>
-                <View style={styles.pickerContainer}>
-                    <Picker
-                        selectedValue={statut}
-                        onValueChange={(itemValue) => setStatut(itemValue)}
-                        style={styles.picker}
-                        itemStyle={{ fontSize: 16, fontFamily: interFontsToUse.regular }}
-                    >
-                        <Picker.Item label="LECTEUR" value="LECTEUR" />
-                        <Picker.Item label="AUTEUR" value="AUTEUR" />
-                    </Picker>
-                </View>
+        <View style={styles.formInputs}>
+          <View style={styles.Inputlabell}>
+            <Text style={styles.label1}>Nom d'utilisateur</Text>
+            <TextInput
+              style={styles.input1}
+              placeholder="Entrez votre nom d'utilisateur"
+              autoCapitalize="none"
+              value={username} // ← Lier à l'état
+              onChangeText={setUsername}
+            />
+          </View>
+        </View>
+        <View style={styles.separator} />
+        <View style={styles.statut}>
+          <Text style={styles.statutText}>Statut de l'utilisateur</Text>
+        </View>
+        <View style={styles.pickerContainer}>
+          <Picker
+            selectedValue={statut}
+            onValueChange={(itemValue) => setStatut(itemValue)}
+            style={styles.picker}
+            itemStyle={{ fontSize: 16 }}
+          >
+            <Picker.Item label="LECTEUR" value="LECTEUR" />
+            <Picker.Item label="AUTEUR" value="AUTEUR" />
+          </Picker>
+        </View>
 
-                <TouchableOpacity onPress={handleProfileUpdate} style={styles.buttonValidation} activeOpacity={0.8}>
-                    <Text style={styles.textButton}> Validation </Text>
-                </TouchableOpacity>
-            </View>
-        </KeyboardAvoidingView>
-    );
+        <TouchableOpacity
+          onPress={handleProfileUpdate}
+          style={styles.buttonValidation}
+          activeOpacity={0.8}
+        >
+          <Text style={styles.textButton}> Validation </Text>
+        </TouchableOpacity>
+      </View>
+    </KeyboardAvoidingView>
+  );
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        width: Dimensions.get("window").width,
-        height: Dimensions.get("window").height,
-        backgroundColor: '#FCF8F1',
-        alignItems: 'center',
-        paddingTop: 20,
-        width: "100%"
-    },
+  container: {
+    flex: 1,
+    width: Dimensions.get("window").width,
+    height: Dimensions.get("window").height,
+    backgroundColor: "#FCF8F1",
+    alignItems: "center",
+    paddingTop: 20,
+    width: "100%",
+  },
 
     formulaire: {
         borderWidth: 0.5,
@@ -214,25 +249,25 @@ const styles = StyleSheet.create({
         textAlign: "center",
     },
 
-    separator: {
-        width: '100%',
-        height: 2,
-        backgroundColor: 'black',
-    },
+  separator: {
+    width: "100%",
+    height: 2,
+    backgroundColor: "black",
+  },
 
-    pickerContainer: {
-        width: 180,
-        height: 150,
-        borderWidth: 1,
-        borderColor: '#E8DCCA',
-        borderRadius: 8,
-        overflow: 'hidden',
-        marginTop: 20,
-    },
+  pickerContainer: {
+    width: 180,
+    height: 150,
+    borderWidth: 1,
+    borderColor: "#E8DCCA",
+    borderRadius: 8,
+    overflow: "hidden",
+    marginTop: 20,
+  },
 
-    picker: {
-        color: '#fffff',
-    },
+  picker: {
+    color: "#fffff",
+  },
 
     buttonValidation: {
         alignItems: 'center',

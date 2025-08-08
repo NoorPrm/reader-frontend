@@ -14,14 +14,16 @@ import {
 } from "react-native";
 import { interFontsToUse } from '../assets/fonts/fonts';
 import { useState } from "react";
-// import { LOCAL_IP } from "@env"; 
-import { useDispatch } from 'react-redux';
-import { login } from '../reducers/user';
+// import { LOCAL_IP } from "@env";
+import { useDispatch } from "react-redux";
+import { login } from "../reducers/user";
 
 const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
-const backendAdress = process.env.EXPO_PUBLIC_URL_BACKEND;
-//console.log('Backend URL:', backendAdress);
+//const backendAdress = process.env.EXPO_PUBLIC_URL_BACKEND;
+const myip = process.env.MY_IP;
+const backendAdress = `${myip}`;
+console.log("Backend URL:", backendAdress);
 
 export default function HomeScreen({ navigation }) {
   // const handleSubmit = () => {
@@ -37,7 +39,7 @@ export default function HomeScreen({ navigation }) {
 
   const handleSignUp = () => {
     //console.log("handleSignUp appelée")
-    
+
     let hasError = false;
 
     if (email === "") {
@@ -58,14 +60,14 @@ export default function HomeScreen({ navigation }) {
     } else {
       setPasswordError("");
     }
-    
+
     // si erreur : pas de fetch
     // console.log("hasError:", hasError);
     if (hasError) {
       return;
     }
 
-    //console.log("URL fetch :", `${backendAdress}/users/signup`);
+    console.log("URL fetch :", `${backendAdress}/users/signup`);
     fetch(`${backendAdress}/users/signup`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -76,20 +78,22 @@ export default function HomeScreen({ navigation }) {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log('data reçue:', data);
+        console.log("data reçue:", data);
         if (data.result) {
-          dispatch(login({
-            token: data.token,
-            email: email,
-          }));
+          dispatch(
+            login({
+              token: data.token,
+              email: email,
+            })
+          );
           navigation.navigate("Inscription");
         }
-      })
+      });
   };
 
   const handleLogin = () => {
     let hasError = false;
-    console.log(email, password, URL);
+    console.log(email, password, backendAdress);
     if (email === "") {
       setEmailError("Champ obligatoire");
       hasError = true;
@@ -120,6 +124,15 @@ export default function HomeScreen({ navigation }) {
       .then((data) => {
         if (data.result) {
           navigation.navigate("TabNavigator");
+          dispatch(
+            login({
+              token: data.token,
+              username: data.username,
+              email: data.email,
+              statut: data.statut,
+              profilPicture: data.profilPicture,
+            })
+          );
         }
       });
   };

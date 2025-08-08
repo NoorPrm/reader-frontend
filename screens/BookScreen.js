@@ -1,5 +1,6 @@
 import { StatusBar } from "expo-status-bar";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 import {
   StyleSheet,
   Text,
@@ -13,11 +14,75 @@ import {
 } from "react-native";
 import AvisCard from "../components/AvisCard";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
+import defaultCover from "../assets/images/defaultCover.jpg";
+//const backendAdress = process.env.EXPO_PUBLIC_URL_BACKEND;
+const myip = process.env.MY_IP;
+const backendAdress = `${myip}`;
+console.log("Backend URL:", backendAdress);
 
 export default function BookScreen({navigation}) {
   const [modalVisible, setModalVisible] = useState(false);
   const [rating, setRating] = useState(0);
   const [review, setReview] = useState("");
+  const [bookId, setBookId] = useState(null);
+  const [bookData, setBookData] = useState(null);
+  const [secondModalVisible, setSecondModalVisible] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [userLibraryError, setUserLibraryError] = useState("");
+  const userToken = useSelector((state) => state.user.value.token);
+
+  useEffect(() => {
+    const reduxBookId = "6895a7215c4e75408b6a34cb";
+    setBookId(reduxBookId);
+  }, []);
+
+  useEffect(() => {
+    if (!bookId) return;
+
+    fetch(`${backendAdress}/books/${bookId}`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.error) {
+          console.log("Erreur: ", data.error);
+        } else {
+          setBookData(data);
+        }
+      })
+      .catch((err) => {
+        console.log("Erreur lors du fetch :", err);
+      });
+  }, [bookId]);
+
+  const handleSaveToUserLibrary = () => {
+    if (!selectedCategory || !bookId) return;
+
+    fetch(`${backendAdress}/userLibrary`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        token: userToken,
+        bookId: bookId,
+        category: selectedCategory,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(userToken, bookId, selectedCategory);
+        console.log("Ajout dans userLibrary :", data);
+        if (data.error) {
+          setUserLibraryError(data.error);
+          return;
+        }
+        setSecondModalVisible(false);
+        setSelectedCategory(null);
+        setBookId(null);
+        setUserLibraryError("");
+      })
+      .catch((err) => {
+        console.log("Erreur userLibrary :", err.message);
+      });
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <TouchableOpacity
@@ -28,27 +93,132 @@ export default function BookScreen({navigation}) {
       </TouchableOpacity>
 
       <View style={styles.bookContainer}>
-        <Image
-          source={require("../assets/images/couvlartdelaguerre.jpg")}
-          style={styles.image}
-        ></Image>
+        {bookData && (
+          <Image
+            source={bookData.cover ? { uri: bookData.cover } : defaultCover}
+            style={styles.image}
+          ></Image>
+        )}
         <View style={styles.bookInfosContainer}>
-          <Text style={styles.title}>TITRE API</Text>
-          <Text style={styles.author}>auteur API</Text>
-          <Text style={styles.parutionDate}>Date de parution API</Text>
+          {bookData && <Text style={styles.title}>{bookData.title}</Text>}
+          {bookData && <Text style={styles.author}>{bookData.author}</Text>}
+          {bookData && (
+            <Text style={styles.parutionDate}>Date de parution API</Text>
+          )}
+
           <Text style={styles.synopsisTitle}>RESUME</Text>
-          <Text style={styles.synopsisTxt}>
-            bla bla bla Texte résumé API bla bla bla bla bla bla Texte résumé
-            API bla bla bla bla bla bla Texte résumé API bla bla bla bla bla bla
-            Texte résumé API bla bla bla bla bla bla Texte résumé API bla bla
-            bla
-          </Text>
+          {bookData && (
+            <Text style={styles.synopsisTxt}>{bookData.synopsis}</Text>
+          )}
         </View>
       </View>
       <View style={styles.btnContainer}>
-        <TouchableOpacity style={styles.addBtn}>
+        <TouchableOpacity
+          style={styles.addBtn}
+          onPress={() => setSecondModalVisible(true)}
+        >
           <Text style={styles.txtBtn}>Ajouter à ma bibliothèque</Text>
         </TouchableOpacity>
+        <Modal
+          transparent
+          animationType="fade"
+          visible={secondModalVisible}
+          onRequestClose={() => setSecondModalVisible(false)}
+        >
+          <View style={styles.modalOverlay}>
+            <View style={styles.modal}>
+              <Text style={styles.modalTitle}>Excellent choix !</Text>
+              <Text style={styles.modalText}>
+                Dans quelle catégorie le ranger ?
+              </Text>
+
+              {userLibraryError !== "" && (
+                <Text
+                  style={{
+                    color: "red",
+                    textAlign: "center",
+                    marginBottom: 10,
+                  }}
+                >
+                  {userLibraryError}
+                </Text>
+              )}
+
+              <View style={{ flexDirection: "row", gap: 10 }}>
+                <TouchableOpacity
+                  style={
+                    selectedCategory === "Livres"
+                      ? styles.selectedBtn
+                      : styles.normalBtn
+                  }
+                  onPress={() => setSelectedCategory("Livres")}
+                >
+                  <Text
+                    style={
+                      selectedCategory === "Livres"
+                        ? styles.selectedTxt
+                        : styles.normalTxt
+                    }
+                  >
+                    Livres
+                  </Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  style={
+                    selectedCategory === "BD"
+                      ? styles.selectedBtn
+                      : styles.normalBtn
+                  }
+                  onPress={() => setSelectedCategory("BD")}
+                >
+                  <Text
+                    style={
+                      selectedCategory === "BD"
+                        ? styles.selectedTxt
+                        : styles.normalTxt
+                    }
+                  >
+                    BD
+                  </Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  style={
+                    selectedCategory === "Mangas"
+                      ? styles.selectedBtn
+                      : styles.normalBtn
+                  }
+                  onPress={() => setSelectedCategory("Mangas")}
+                >
+                  <Text
+                    style={
+                      selectedCategory === "Mangas"
+                        ? styles.selectedTxt
+                        : styles.normalTxt
+                    }
+                  >
+                    Mangas
+                  </Text>
+                </TouchableOpacity>
+              </View>
+
+              <TouchableOpacity
+                style={[styles.addBtn, { marginTop: 15 }]}
+                onPress={handleSaveToUserLibrary}
+              >
+                <Text style={styles.btnTxt}>Valider la catégorie</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={styles.cancelBtn}
+                onPress={() => setSecondModalVisible(false)}
+              >
+                <Text style={styles.cancelText}>Annuler</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
       </View>
 
       <View style={styles.totalStars}>
@@ -276,6 +446,13 @@ const styles = StyleSheet.create({
     marginTop: 10,
     fontFamily: "Inter_400Regular",
   },
+  modalTitle: {
+    textAlign: "center",
+    fontWeight: "bold",
+  },
+  modalText: {
+    paddingBottom: 10,
+  },
   modalOverlay: {
     flex: 1,
     justifyContent: "center",
@@ -370,5 +547,59 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontWeight: "bold",
     fontSize: 16,
+  },
+  normalTxt: {
+    color: "#0E0E66",
+    fontWeight: "bold",
+  },
+
+  cancelText: {
+    color: "#888",
+  },
+  normalBtn: {
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#ffffffff",
+    width: 55,
+    height: 35,
+    borderRadius: 15,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  selectedBtn: {
+    backgroundColor: "#0E0E66",
+    alignItems: "center",
+    justifyContent: "center",
+
+    width: 55,
+    height: 35,
+    borderRadius: 15,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  normalTxt: {
+    color: "#0E0E66",
+    fontWeight: "bold",
+  },
+  selectedTxt: {
+    color: "#ffffffff",
+    fontWeight: "bold",
+  },
+  btnTxt: {
+    color: "#ffffffff",
+    fontWeight: "bold",
+    textAlign: "center",
   },
 });
