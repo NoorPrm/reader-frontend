@@ -12,7 +12,7 @@ import {
   Dimensions,
   SafeAreaView,
 } from "react-native";
-import { interFontsToUse } from '../assets/fonts/fonts';
+import { interFontsToUse } from "../assets/fonts/fonts";
 import { useState } from "react";
 // import { LOCAL_IP } from "@env";
 import { useDispatch } from "react-redux";

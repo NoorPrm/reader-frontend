@@ -1,12 +1,21 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, View, Text, Dimensions, TouchableOpacity, Image, ScrollView } from "react-native";
-import { interFontsToUse } from '../assets/fonts/fonts';
-import { useState } from 'react';
-import { useSelector } from 'react-redux';
-const backendAdress = process.env.EXPO_PUBLIC_URL_BACKEND
+import { StatusBar } from "expo-status-bar";
+import {
+  StyleSheet,
+  View,
+  Text,
+  Dimensions,
+  TouchableOpacity,
+  Image,
+  ScrollView,
+} from "react-native";
+import { interFontsToUse } from "../assets/fonts/fonts";
+import { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
+//const backendAdress = process.env.EXPO_PUBLIC_URL_BACKEND;
+myip = process.env.MY_IP;
+const backendAdress = `${myip}`;
 
-export default function BookLibraryScreen({navigation}) {
-
+export default function BookLibraryScreen({ navigation }) {
   const [books, setBooks] = useState([]);
   const token = useSelector((state) => state.user.value.token);
 
@@ -14,10 +23,10 @@ export default function BookLibraryScreen({navigation}) {
     fetch(`${backendAdress}/userLibrary/${token}/Livres`)
       .then((response) => response.json())
       .then((data) => {
-        console.log('data reçue:', data);
-        const booksFromBackend = data.map(item => item.book);
+        console.log("data reçue:", data);
+        const booksFromBackend = data.map((item) => item.book);
         setBooks(booksFromBackend);
-      })
+      });
   }, []);
 
   // const books = [
@@ -46,7 +55,6 @@ export default function BookLibraryScreen({navigation}) {
 
   return (
     <View style={styles.container}>
-
       <View style={styles.titleMyLibraryGlobalContent}>
         <View style={styles.titleMyLibraryContent}>
           <Text style={styles.titleMyLibraryText}>LIVRES</Text>
@@ -73,14 +81,19 @@ export default function BookLibraryScreen({navigation}) {
               <Text style={styles.author}>{book.author}</Text>
               <Text style={styles.parutionDate}>{book.date}</Text>
               <Text style={styles.counter}>
-                PRÉSENT DANS <Text style={styles.counterBold}>{book.counter}</Text> BIBLIOTHÈQUES SUR READER.
+                PRÉSENT DANS{" "}
+                <Text style={styles.counterBold}>{book.counter}</Text>{" "}
+                BIBLIOTHÈQUES SUR READER.
               </Text>
             </View>
             {book.cover ? (
-                <Image source={{uri: book.cover}} style={styles.image} />
-              ) : (
-                <Image source={require('../assets/images/notAvailable.jpg')} style={styles.image} />
-              )}
+              <Image source={{ uri: book.cover }} style={styles.image} />
+            ) : (
+              <Image
+                source={require("../assets/images/notAvailable.jpg")}
+                style={styles.image}
+              />
+            )}
           </View>
         ))}
       </ScrollView>
@@ -130,7 +143,7 @@ const styles = StyleSheet.create({
     color: "#0E0E66",
   },
 
-  // button BookInfos 
+  // button BookInfos
   buttonNavigateToNextScreen: {
     alignItems: "center",
   },

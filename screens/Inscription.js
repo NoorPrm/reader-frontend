@@ -11,12 +11,14 @@ import {
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import * as ImagePicker from "expo-image-picker";
-import { interFontsToUse } from '../assets/fonts/fonts';
+import { interFontsToUse } from "../assets/fonts/fonts";
 import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { login } from "../reducers/user";
 // import { LOCAL_IP } from "@env";
-const backendAdress = process.env.EXPO_PUBLIC_URL_BACKEND;
+//const backendAdress = process.env.EXPO_PUBLIC_URL_BACKEND;
+const myip = process.env.MY_IP;
+const backendAdress = `${myip}`;
 
 export default function Inscription({ navigation }) {
   const [statut, setStatut] = useState("LECTEUR");
@@ -153,101 +155,100 @@ const styles = StyleSheet.create({
     width: "100%",
   },
 
-    formulaire: {
-        borderWidth: 0.5,
-        borderRadius: 15,
-        height: 50,
-        width: 240,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#E8DCCA',
-    },
-    formulaireText: {
-        fontSize: 16,
-        fontWeight: 'bold',
-        fontFamily: interFontsToUse.bold,
-        textAlign: 'center',
-    },
-    avatarContainer: {
-        marginTop: 25,
-        alignItems: 'center',
-    },
-    logoUser: {
-        width: 150,
-        height: 150,
-        borderRadius: 70,
-        backgroundColor: '#E8DCCA',
-        borderWidth: 0.5,
-        borderColor: '#E8DCCA',
-    },
-    textPhoto: {
-        color: '#E8DCCA',
-        fontSize: 16,
-        fontFamily: interFontsToUse.bold,
-    },
+  formulaire: {
+    borderWidth: 0.5,
+    borderRadius: 15,
+    height: 50,
+    width: 240,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#E8DCCA",
+  },
+  formulaireText: {
+    fontSize: 16,
+    fontWeight: "bold",
+    fontFamily: interFontsToUse.bold,
+    textAlign: "center",
+  },
+  avatarContainer: {
+    marginTop: 25,
+    alignItems: "center",
+  },
+  logoUser: {
+    width: 150,
+    height: 150,
+    borderRadius: 70,
+    backgroundColor: "#E8DCCA",
+    borderWidth: 0.5,
+    borderColor: "#E8DCCA",
+  },
+  textPhoto: {
+    color: "#E8DCCA",
+    fontSize: 16,
+    fontFamily: interFontsToUse.bold,
+  },
 
-    plusButton: {
-        position: 'absolute',
-        bottom: 100,
-        right: 67,
-        width: 17,
-        height: 20,
-        borderRadius: 12,
-        backgroundColor: '#0E0E66',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    
-    plus: {
-        color: '#ffffff',
-        fontSize: 16,
-        fontFamily: interFontsToUse.bold,
-    },
+  plusButton: {
+    position: "absolute",
+    bottom: 100,
+    right: 67,
+    width: 17,
+    height: 20,
+    borderRadius: 12,
+    backgroundColor: "#0E0E66",
+    alignItems: "center",
+    justifyContent: "center",
+  },
 
-    formInputs: {
-        marginTop: 20,
-        width: 250,
-        alignItems: 'flex-start',
-    },
-    Inputlabell: {
-        width: '100%',
-        marginBottom: 20,
-    },
-    statut: {
-        alignSelf: 'center',
-        borderWidth: 0.5,
-        borderRadius: 15,
-        height: 75,
-        width: 300,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#E8DCCA',
-        marginTop: 30,
-    },
-    statutText: {
-        fontSize: 16,
-        fontFamily: interFontsToUse.bold,
-        textAlign: 'center',
-    },
-    label1: {
-        marginBottom: -9,
-        paddingLeft: 5,
-        fontSize: 13,
-        color: "#5c5c5c",
-        fontFamily: interFontsToUse.bold,
-        
-    },
-    input1: {
-        borderWidth: 1,
-        borderColor: "#E8DCCA",
-        borderRadius: 10,
-        marginBottom: 16,
-        height: 80,
-        fontSize: 15,
-        paddingLeft: 12,
-        fontFamily: interFontsToUse.regular,
-        textAlign: "center",
-    },
+  plus: {
+    color: "#ffffff",
+    fontSize: 16,
+    fontFamily: interFontsToUse.bold,
+  },
+
+  formInputs: {
+    marginTop: 20,
+    width: 250,
+    alignItems: "flex-start",
+  },
+  Inputlabell: {
+    width: "100%",
+    marginBottom: 20,
+  },
+  statut: {
+    alignSelf: "center",
+    borderWidth: 0.5,
+    borderRadius: 15,
+    height: 75,
+    width: 300,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#E8DCCA",
+    marginTop: 30,
+  },
+  statutText: {
+    fontSize: 16,
+    fontFamily: interFontsToUse.bold,
+    textAlign: "center",
+  },
+  label1: {
+    marginBottom: -9,
+    paddingLeft: 5,
+    fontSize: 13,
+    color: "#5c5c5c",
+    fontFamily: interFontsToUse.bold,
+  },
+  input1: {
+    borderWidth: 1,
+    borderColor: "#E8DCCA",
+    borderRadius: 10,
+    marginBottom: 16,
+    height: 80,
+    fontSize: 15,
+    paddingLeft: 12,
+    fontFamily: interFontsToUse.regular,
+    textAlign: "center",
+  },
 
   separator: {
     width: "100%",
@@ -269,19 +270,19 @@ const styles = StyleSheet.create({
     color: "#fffff",
   },
 
-    buttonValidation: {
-        alignItems: 'center',
-        justifyContent: 'center',
-        height: 70,
-        width: 250,
-        backgroundColor: '#0E0E66',
-        borderRadius: 50,
-        marginTop: 35,
-        marginBottom: 70,
-    },
-    textButton: {
-        color: "#ffffffff",
-        fontSize: 18,
-        fontFamily: interFontsToUse.regular,
-    }
+  buttonValidation: {
+    alignItems: "center",
+    justifyContent: "center",
+    height: 70,
+    width: 250,
+    backgroundColor: "#0E0E66",
+    borderRadius: 50,
+    marginTop: 35,
+    marginBottom: 70,
+  },
+  textButton: {
+    color: "#ffffffff",
+    fontSize: 18,
+    fontFamily: interFontsToUse.regular,
+  },
 });
