@@ -13,6 +13,8 @@ import GeneralScreen from "./screens/GeneralScreen";
 import SearchScreen from "./screens/SearchScreen";
 import LibraryScreen from "./screens/LibraryScreen";
 import BookLibraryScreen from "./screens/BookLibraryScreen";
+import ComicLibraryScreen from "./screens/ComicLibraryScreen";
+import MangaLibraryScreen from "./screens/MangaLibraryScreen";
 import UserProfilScreen from "./screens/UserProfilScreen";
 import BookScreen from "./screens/BookScreen";
 import BookedexScreen from "./screens/BookedexScreen";
@@ -76,6 +78,8 @@ export default function App() {
           <Stack.Screen name="Inscription" component={Inscription} />
           <Stack.Screen name="TabNavigator" component={TabNavigator} />
           <Stack.Screen name="BookLibrary" component={BookLibraryScreen} />
+          <Stack.Screen name="ComicLibrary" component={ComicLibraryScreen} />
+          <Stack.Screen name="MangaLibrary" component={MangaLibraryScreen} />
           <Stack.Screen name="BookInfos" component={BookScreen} />
           <Stack.Screen name="Bookedex" component={BookedexScreen} />
           <Stack.Screen name="Parametres" component={Parametres} />

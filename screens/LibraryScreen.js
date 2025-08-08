@@ -11,12 +11,12 @@ const categories = [
   {
     title: 'BD',
     image: require('../assets/images/BibliothequeBD.png'),
-    componant: 'BookLibrary',
+    componant: 'ComicLibrary',
   },
   {
     title: 'MANGAS',
     image: require('../assets/images/BibliothequeManga.png'),
-    componant: 'BookLibrary',
+    componant: 'MangaLibrary',
   },
 ];
 
@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
   },
   titleMyLibraryContent: {
     borderWidth: 3,
-    color: "#0E0E66",
+    borderColor: "#0E0E66",
     borderRadius: 20,
     height: 50,
     width: 300,

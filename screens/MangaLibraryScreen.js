@@ -9,13 +9,13 @@ const myip = process.env.MY_IP;
 const backendAdress = `${myip}`;
 console.log("Backend URL:", backendAdress);
 
-export default function BookLibraryScreen({navigation}) {
+export default function MangaLibraryScreen({navigation}) {
   const dispatch = useDispatch();
   const [books, setBooks] = useState([]);
   const token = useSelector((state) => state.user.value.token);
 
   useEffect(() => {
-    fetch(`${backendAdress}/userLibrary/${token}/Livres`)
+    fetch(`${backendAdress}/userLibrary/${token}/Mangas`)
       .then((response) => response.json())
       .then((data) => {
         console.log('data reçue:', data);
@@ -77,7 +77,7 @@ export default function BookLibraryScreen({navigation}) {
 
       <View style={styles.titleMyLibraryGlobalContent}>
         <View style={styles.titleMyLibraryContent}>
-          <Text style={styles.titleMyLibraryText}>LIVRES</Text>
+          <Text style={styles.titleMyLibraryText}>MANGAS</Text>
         </View>
       </View>
 

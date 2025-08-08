@@ -1,6 +1,7 @@
 import { StatusBar } from "expo-status-bar";
 import React, { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from 'react-redux';
+import { clearSelectedBook } from "../reducers/bookSelected";
 import {
   StyleSheet,
   Text,
@@ -14,7 +15,7 @@ import {
 } from "react-native";
 import AvisCard from "../components/AvisCard";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
-import defaultCover from "../assets/images/defaultCover.jpg";
+//import defaultCover from "../assets/images/defaultCover.jpg";
 //const backendAdress = process.env.EXPO_PUBLIC_URL_BACKEND;
 const myip = process.env.MY_IP;
 const backendAdress = `${myip}`;
@@ -30,6 +31,8 @@ export default function BookScreen({navigation}) {
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [userLibraryError, setUserLibraryError] = useState("");
   const userToken = useSelector((state) => state.user.value.token);
+  const dispatch = useDispatch();
+  const selectedBook = useSelector((state) => state.bookSelected.selectedBook);
 
   useEffect(() => {
     const reduxBookId = "6895a7215c4e75408b6a34cb";
@@ -87,29 +90,29 @@ export default function BookScreen({navigation}) {
     <SafeAreaView style={styles.container}>
       <TouchableOpacity
         style={styles.returnBtn}
-        onPress={() => navigation.navigate("BookLibrary")}
+        onPress={() => {
+          dispatch(clearSelectedBook());
+          navigation.navigate("BookLibrary"
+          )}
+        }  
       >
         <Text style={styles.txtBtn}>Retour à la bibliothèque</Text>
       </TouchableOpacity>
 
       <View style={styles.bookContainer}>
-        {bookData && (
-          <Image
-            source={bookData.cover ? { uri: bookData.cover } : defaultCover}
-            style={styles.image}
-          ></Image>
+        {selectedBook.cover ? (
+          <Image source={{ uri: selectedBook.cover }} style={styles.image} />
+        ) : (
+          <Image source={require('../assets/images/notAvailable.jpg')} style={styles.image} />
         )}
         <View style={styles.bookInfosContainer}>
-          {bookData && <Text style={styles.title}>{bookData.title}</Text>}
-          {bookData && <Text style={styles.author}>{bookData.author}</Text>}
-          {bookData && (
-            <Text style={styles.parutionDate}>Date de parution API</Text>
-          )}
-
-          <Text style={styles.synopsisTitle}>RESUME</Text>
-          {bookData && (
-            <Text style={styles.synopsisTxt}>{bookData.synopsis}</Text>
-          )}
+          <Text style={styles.title}>{selectedBook.title}</Text>
+          <Text style={styles.author}>{selectedBook.author}</Text>
+          <Text style={styles.parutionDate}>{selectedBook.date}</Text>
+          <Text style={styles.synopsisTitle}>Résumé</Text>
+          <Text style={styles.synopsisTxt}>
+            {selectedBook.synopsis || "Pas de résumé disponible."}
+          </Text>
         </View>
       </View>
       <View style={styles.btnContainer}>
