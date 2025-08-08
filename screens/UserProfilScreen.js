@@ -1,8 +1,12 @@
 import { StatusBar } from 'expo-status-bar';
-import { Text, View, TouchableOpacity, StyleSheet } from 'react-native';
+import { Text, View, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import { useSelector } from "react-redux";
 
+export default function UserProfilScreen({ navigation }) {
+  const user = useSelector((state) => state.user.value);
 
-export default function UserProfilScreen({navigation}) {
+console.log("Profil picture :", user.profilPicture);
+
   return (
     <View style={styles.container}>
       <TouchableOpacity
@@ -11,7 +15,19 @@ export default function UserProfilScreen({navigation}) {
       >
         <Text style={styles.menuText}>⋯</Text>
       </TouchableOpacity>
-      <Text>Profil de l'utilisateur.</Text>
+
+      <View>
+        <Text style={styles.username}>{user.username}</Text>
+        <Image
+          source={
+            user.profilPicture
+              ? { uri: user.profilPicture }
+              : require('../assets/images/whiteUser.png')
+          }
+          style={styles.avatar}
+        />
+      </View>
+
       <StatusBar style="auto" />
     </View>
   );
@@ -24,15 +40,22 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-    menuButton: {
+  menuButton: {
     position: "absolute",
-    top: 20,   
+    top: 20,
     right: 15,
     padding: 10,
-    zIndex: 10,
+    
   },
   menuText: {
     fontSize: 24,
   },
-  
+  avatar: {
+    width: 150,
+    height: 150,
+    borderRadius: 40,
+    marginBottom: 400,
+    backgroundColor: "#E8DCCA",
+    borderBlockColor: "#FCF8F1"
+  },
 });
