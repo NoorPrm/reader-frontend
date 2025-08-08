@@ -1,7 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, View, Text, Dimensions, TouchableOpacity, Image, ScrollView } from "react-native";
 import { interFontsToUse } from '../assets/fonts/fonts';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 const backendAdress = process.env.EXPO_PUBLIC_URL_BACKEND
 

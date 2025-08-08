@@ -5,10 +5,11 @@ import {
     TextInput,
     TouchableOpacity,
     StyleSheet,
-    Dimensions
+    Dimensions,
 } from 'react-native';
+import { Picker } from "@react-native-picker/picker";
 import { useSelector, useDispatch } from 'react-redux';
-import { login } from '../reducers/user'; // Assure-toi que ce chemin est correct
+import { login } from '../reducers/user'; 
 
 export default function Parametres({ navigation }) {
     const user = useSelector((state) => state.user.value);
@@ -16,7 +17,7 @@ export default function Parametres({ navigation }) {
     const dispatch = useDispatch();
     const backendAdress = process.env.EXPO_PUBLIC_URL_BACKEND;
 
-    
+    const [statutL, setStatutL] = useState(user.statut);
     const [email, setEmail] = useState(user.email || '');
     const [username, setUsername] = useState(user.username || '');
     const [password, setPassword] = useState('');
@@ -80,9 +81,17 @@ export default function Parametres({ navigation }) {
                 <Text style={styles.statutText}>Statut de l'utilisateur</Text>
             </View>
 
-            <View style={styles.statutValue}>
-                <Text style={styles.statutValueText}>{statut}</Text>
-            </View>
+             <View style={styles.pickerContainer}>
+          <Picker
+            selectedValue={statutL}
+            onValueChange={(itemValue) => setStatutL(itemValue)}
+            style={styles.picker}
+            itemStyle={{ fontSize: 16 }}
+          >
+            <Picker.Item label="LECTEUR" value="LECTEUR" />
+            <Picker.Item label="AUTEUR" value="AUTEUR" />
+          </Picker>
+        </View>
 
             <View style={styles.visibilityContainer}>
                 <TouchableOpacity
@@ -299,5 +308,15 @@ const styles = StyleSheet.create({
     deleteButtonText: {
         color: 'white',
         fontSize: 12,
-    }
+    },
+    
+    pickerContainer: {
+    width: 180,
+    height: 50,
+    borderWidth: 1,
+    borderColor: "#E8DCCA",
+    borderRadius: 8,
+    overflow: "hidden",
+    marginTop: 20,
+  },
 });
