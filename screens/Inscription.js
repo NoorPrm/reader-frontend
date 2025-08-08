@@ -13,6 +13,7 @@ import { Picker } from "@react-native-picker/picker";
 import * as ImagePicker from "expo-image-picker";
 import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { login } from "../reducers/user";
 // import { LOCAL_IP } from "@env";
 const backendAdress = process.env.EXPO_PUBLIC_URL_BACKEND;
 
@@ -20,9 +21,9 @@ export default function Inscription({ navigation }) {
   const [statut, setStatut] = useState("LECTEUR");
   const [username, setUsername] = useState("");
   const [photo, setPhoto] = useState(null);
-  const dispatch = useDispatch();
-  const token = useSelector((state) => state.user.value.token);
 
+  const token = useSelector((state) => state.user.value.token);
+  const dispatch = useDispatch();
   const handleProfileUpdate = () => {
     // console.log("token:", token)
     fetch(`${backendAdress}/users/${token}`, {
@@ -37,6 +38,16 @@ export default function Inscription({ navigation }) {
       .then((response) => response.json())
       .then((data) => {
         if (data.result) {
+          dispatch(
+            login({
+              token: token,
+              username: data.updatedUser.username,
+              email: data.updatedUser.email,
+              statut: data.updatedUser.statut,
+              profilPicture: data.updatedUser.profilPicture,
+            })
+          );
+
           navigation.navigate("TabNavigator");
         } else {
           console.log("Erreur");
