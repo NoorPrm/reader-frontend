@@ -233,20 +233,20 @@ export default function BookedexScreen({ navigation }) {
             <View style={{ flexDirection: "row", gap: 10 }}>
               <TouchableOpacity
                 style={
-                  selectedCategory === "Livre"
+                  selectedCategory === "Livres"
                     ? styles.selectedBtn
                     : styles.normalBtn
                 }
-                onPress={() => setSelectedCategory("Livre")}
+                onPress={() => setSelectedCategory("Livres")}
               >
                 <Text
                   style={
-                    selectedCategory === "Livre"
+                    selectedCategory === "Livres"
                       ? styles.selectedTxt
                       : styles.normalTxt
                   }
                 >
-                  Livre
+                  Livres
                 </Text>
               </TouchableOpacity>
 
@@ -271,20 +271,20 @@ export default function BookedexScreen({ navigation }) {
 
               <TouchableOpacity
                 style={
-                  selectedCategory === "Manga"
+                  selectedCategory === "Mangas"
                     ? styles.selectedBtn
                     : styles.normalBtn
                 }
-                onPress={() => setSelectedCategory("Manga")}
+                onPress={() => setSelectedCategory("Mangas")}
               >
                 <Text
                   style={
-                    selectedCategory === "Manga"
+                    selectedCategory === "Mangas"
                       ? styles.selectedTxt
                       : styles.normalTxt
                   }
                 >
-                  Manga
+                  Mangas
                 </Text>
               </TouchableOpacity>
             </View>
