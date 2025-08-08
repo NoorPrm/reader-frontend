@@ -20,9 +20,10 @@ import { Provider } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
 import Inscription from "./screens/Inscription";
 import user from "./reducers/user";
+import bookSelected from "./reducers/bookSelected";
 
 const store = configureStore({
-  reducer: { user },
+  reducer: { user, bookSelected },
 });
 
 const Stack = createNativeStackNavigator();

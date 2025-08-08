@@ -1,14 +1,55 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, View, Text, Dimensions, TouchableOpacity, Image} from "react-native";
+import { StyleSheet, View, Text, Dimensions, TouchableOpacity, Image, ScrollView } from "react-native";
 import { interFontsToUse } from '../assets/fonts/fonts';
+import { useState } from 'react';
+import { useSelector } from 'react-redux';
+const backendAdress = process.env.EXPO_PUBLIC_URL_BACKEND
 
 export default function BookLibraryScreen({navigation}) {
 
+  const [books, setBooks] = useState([]);
+  const token = useSelector((state) => state.user.value.token);
+
+  useEffect(() => {
+    fetch(`${backendAdress}/userLibrary/${token}/Livres`)
+      .then((response) => response.json())
+      .then((data) => {
+        console.log('data reçue:', data);
+        const booksFromBackend = data.map(item => item.book);
+        setBooks(booksFromBackend);
+      })
+  }, []);
+
+  // const books = [
+  //   {
+  //     title: "L’ART DE LA GUERRE",
+  //     author: "@SUN TZU",
+  //     date: "600 ans av. J-C",
+  //     counter: 46,
+  //     image: require("../assets/images/couvlartdelaguerre.jpg"),
+  //   },
+  //   {
+  //     title: "HARRY POTTER ET L’ENFANT MAUDIT",
+  //     author: "@J.K. ROWLING",
+  //     date: "14/10/2016",
+  //     counter: 255,
+  //     image: require("../assets/images/couvharrypotter.jpg"),
+  //   },
+  //   {
+  //     title: "AP CHEMISTRY POUR LES NULS",
+  //     author: "@PETER J. MIKULECKY",
+  //     date: "23/01/2015",
+  //     counter: 5,
+  //     image: require("../assets/images/couvchemistryfordummies.jpg"),
+  //   }
+  // ];
+
   return (
     <View style={styles.container}>
+
       <View style={styles.titleMyLibraryGlobalContent}>
         <View style={styles.titleMyLibraryContent}>
-          <Text style={styles.titleMyLibraryText}>MES LIVRES</Text>
+          <Text style={styles.titleMyLibraryText}>LIVRES</Text>
         </View>
       </View>
 
@@ -21,32 +62,40 @@ export default function BookLibraryScreen({navigation}) {
         </View>
       </TouchableOpacity>
 
-      <View style={styles.bookContainer}>
-              <Image
-                source={require("../assets/images/couvlartdelaguerre.jpg")}
-                style={styles.image}
-              ></Image>
-              <View style={styles.bookInfosContainer}>
-                <Text style={styles.title}>TITRE API</Text>
-                <Text style={styles.author}>@auteur API</Text>
-                <Text style={styles.parutionDate}>Date de parution API</Text>
-                <Text style={styles.counter}>PRESENT DANS XX BIBLIOTHEQUES SUR READER</Text>
-              </View>
-      </View>
-
+      <ScrollView
+        contentContainerStyle={styles.content}
+        showsVerticalScrollIndicator={true}
+      >
+        {books.map((book) => (
+          <View style={styles.bookContainer}>
+            <View style={styles.bookInfosContainer}>
+              <Text style={styles.title}>{book.title}</Text>
+              <Text style={styles.author}>{book.author}</Text>
+              <Text style={styles.parutionDate}>{book.date}</Text>
+              <Text style={styles.counter}>
+                PRÉSENT DANS <Text style={styles.counterBold}>{book.counter}</Text> BIBLIOTHÈQUES SUR READER.
+              </Text>
+            </View>
+            {book.cover ? (
+                <Image source={{uri: book.cover}} style={styles.image} />
+              ) : (
+                <Image source={require('../assets/images/notAvailable.jpg')} style={styles.image} />
+              )}
+          </View>
+        ))}
+      </ScrollView>
 
       <TouchableOpacity
         style={styles.returnBtn}
         onPress={() => navigation.navigate("Library")}
       >
-        <Text style={styles.txtBtn}>Retour à la bibliothèque</Text>
+        <Text style={styles.txtBtn}>Retour à la Bibliothèque</Text>
       </TouchableOpacity>
 
       <StatusBar style="auto" />
     </View>
   );
 }
-
 
 const styles = StyleSheet.create({
   container: {
@@ -58,11 +107,11 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
   },
 
-  // title Content
+  // title
   titleMyLibraryGlobalContent: {
     marginTop: 65,
-    flexDirection: "column",
-    alignItems: "flex-start",
+    alignItems: "center",
+    width: "100%",
   },
   titleMyLibraryContent: {
     borderWidth: 3,
@@ -75,51 +124,15 @@ const styles = StyleSheet.create({
     backgroundColor: "#FCF8F1",
   },
   titleMyLibraryText: {
-    fontSize: 18,
+    fontSize: 20,
     fontFamily: interFontsToUse.bold,
     textAlign: "center",
     color: "#0E0E66",
   },
 
-  // books infos
-  bookContainer: {
-    flexDirection: "row",
-    justifyContent: "center",
-  },
-  bookInfosContainer: {
-    flexDirection: "column",
-    justifyContent: "space-around",
-  },
-  image: {
-    height: 220,
-    width: 140,
-    margin: 10,
-  },
-  title: {
-    fontFamily: interFontsToUse.bold,
-    fontSize: 25,
-
-    textAlign: "center",
-  },
-  author: {
-    textAlign: "center",
-    fontFamily: interFontsToUse.regular,
-  },
-  parutionDate: {
-    textAlign: "center",
-    fontFamily: interFontsToUse.regular,
-  },
-  counter: {
-    fontSize: 15,
-    fontFamily: interFontsToUse.bold,
-    textAlign: "center",
-  },
-
-  // button bookinfos
+  // button BookInfos 
   buttonNavigateToNextScreen: {
     alignItems: "center",
-    width: "70%",
-    height: "30%",
   },
   titleSectionContent: {
     borderWidth: 2.5,
@@ -139,18 +152,74 @@ const styles = StyleSheet.create({
     color: "#0E0E66",
   },
 
-  // Button return
+  // books list
+  content: {
+    paddingTop: 10,
+    paddingHorizontal: 15,
+    marginTop: 5,
+    width: "100%",
+  },
+  bookContainer: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+    justifyContent: "space-between",
+    marginBottom: 25,
+    width: "100%",
+  },
+  image: {
+    width: 90,
+    height: 130,
+    resizeMode: "cover",
+    borderRadius: 3,
+    marginLeft: 10,
+    alignSelf: "flex-start",
+  },
+  bookInfosContainer: {
+    flex: 1,
+    paddingRight: 10,
+  },
+  title: {
+    fontFamily: interFontsToUse.bold,
+    fontSize: 14,
+    color: "#0E0E66",
+    marginBottom: 2,
+  },
+  author: {
+    fontFamily: interFontsToUse.bold,
+    fontSize: 12,
+    color: "#0E0E66",
+    marginBottom: 5,
+  },
+  parutionDate: {
+    fontFamily: interFontsToUse.regular,
+    fontSize: 11,
+    color: "#0E0E66",
+    marginBottom: 2,
+  },
+  counter: {
+    fontFamily: interFontsToUse.italic,
+    fontSize: 11,
+    color: "#0E0E66",
+  },
+  counterBold: {
+    fontFamily: interFontsToUse.bold,
+    fontSize: 11,
+    color: "#0E0E66",
+  },
+
+  // return button
   returnBtn: {
     padding: 10,
     margin: 10,
-    marginBottom: 20,
+    marginBottom: 60,
     borderRadius: 5,
     backgroundColor: "#0E0E66",
     float: "left",
     width: 180,
   },
   txtBtn: {
-    color: "#ffffffff",
+    color: "#FFFFFF",
     fontFamily: interFontsToUse.regular,
+    fontSize: 14,
   },
 });
