@@ -13,7 +13,7 @@ import {
   ScrollView,
   SafeAreaView,
 } from "react-native";
-import AvisCard from "../components/AvisCard";
+import BookReviews from "../components/BookReviews";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 //import defaultCover from "../assets/images/defaultCover.jpg";
 //const backendAdress = process.env.EXPO_PUBLIC_URL_BACKEND;
@@ -21,10 +21,13 @@ const myip = process.env.MY_IP;
 const backendAdress = `${myip}`;
 console.log("Backend URL:", backendAdress);
 
-export default function BookScreen({navigation}) {
+export default function BookScreen({ navigation }) {
   const [modalVisible, setModalVisible] = useState(false);
   const [rating, setRating] = useState(0);
   const [review, setReview] = useState("");
+  const [totalReviews, setTotalReviews] = useState("");
+  const [allReviews, setAllReviews] = useState([]);
+  const [averageRating, setAverageRating] = useState(0);
   const [bookId, setBookId] = useState(null);
   const [bookData, setBookData] = useState(null);
   const [secondModalVisible, setSecondModalVisible] = useState(false);
@@ -35,7 +38,7 @@ export default function BookScreen({navigation}) {
   const selectedBook = useSelector((state) => state.bookSelected.selectedBook);
 
   useEffect(() => {
-    const reduxBookId = "6895a7215c4e75408b6a34cb";
+    const reduxBookId = selectedBook._id;
     setBookId(reduxBookId);
   }, []);
 
@@ -53,6 +56,16 @@ export default function BookScreen({navigation}) {
       })
       .catch((err) => {
         console.log("Erreur lors du fetch :", err);
+      });
+    fetch(`${backendAdress}/reviews/${bookId}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setAllReviews(data.reviews);
+        setAverageRating(data.averageRating);
+        setTotalReviews(data.reviews.length);
+      })
+      .catch((err) => {
+        console.log("Erreur lors du fetch des avis :", err);
       });
   }, [bookId]);
 
@@ -86,6 +99,41 @@ export default function BookScreen({navigation}) {
       });
   };
 
+  //Validation de la note + avis
+  const postReview = () => {
+    fetch(`${backendAdress}/reviews`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        token: userToken,
+        bookId,
+        rating,
+        review: review,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.error) {
+          console.log("Erreur :", data.error);
+        } else {
+          setAllReviews((prev) => [data.review, ...prev]);
+          setTotalReviews((prev) => prev + 1);
+          setAverageRating(
+            (
+              (parseFloat(averageRating) * totalReviews + rating) /
+              (totalReviews + 1)
+            ).toFixed(1)
+          );
+        }
+        setModalVisible(false);
+        setRating(0);
+        setReview("");
+      })
+      .catch((err) => {
+        console.log("Erreur lors de l'envoi de l'avis :", err);
+      });
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <TouchableOpacity
@@ -106,13 +154,18 @@ export default function BookScreen({navigation}) {
           <Image source={require('../assets/images/notAvailable.jpg')} style={styles.image} />
         )}
         <View style={styles.bookInfosContainer}>
-          <Text style={styles.title}>{selectedBook.title}</Text>
-          <Text style={styles.author}>{selectedBook.author}</Text>
-          <Text style={styles.parutionDate}>{selectedBook.date}</Text>
-          <Text style={styles.synopsisTitle}>Résumé</Text>
-          <Text style={styles.synopsisTxt}>
-            {selectedBook.synopsis || "Pas de résumé disponible."}
-          </Text>
+          {bookData && <Text style={styles.title}>{bookData.title}</Text>}
+          {bookData && <Text style={styles.author}>{bookData.author}</Text>}
+          {bookData && (
+            <Text style={styles.parutionDate}>
+              Publié le {bookData.publishedDate}
+            </Text>
+          )}
+
+          <Text style={styles.synopsisTitle}>RESUME</Text>
+          {bookData && (
+            <Text style={styles.synopsisTxt}>{bookData.synopsis}</Text>
+          )}
         </View>
       </View>
       <View style={styles.btnContainer}>
@@ -231,7 +284,7 @@ export default function BookScreen({navigation}) {
         <FontAwesome name="star" size={25} color="#0E0E66" />
         <FontAwesome name="star" size={25} color="#0E0E66" />
         <View style={styles.totalAvis}>
-          <Text>(xxxx avis en DB)</Text>
+          <Text>({totalReviews} avis en DB)</Text>
         </View>
         <View style={styles.addBtnContainer}>
           <TouchableOpacity
@@ -247,17 +300,7 @@ export default function BookScreen({navigation}) {
         contentContainerStyle={styles.content}
         showsVerticalScrollIndicator={true}
       >
-        <AvisCard
-          avisData={{
-            username: "Bryan Cranston",
-            rating: 5,
-            date: "Il y a 40 jours",
-            totalAvis: 133,
-            comment: "blablabla mon avis bla bla bla...",
-          }}
-          isUser={true} //à remplacer plus tard avec userId === avis.userId
-          onDelete={() => console.log("yaaah")} //avis.id
-        />
+        <BookReviews bookId={bookId} backendAdress={backendAdress} />
       </ScrollView>
       <Modal
         animationType="slide"
@@ -295,7 +338,7 @@ export default function BookScreen({navigation}) {
             <TouchableOpacity
               style={styles.sendBtn}
               onPress={() => {
-                //route vers DB à coder
+                postReview();
                 setModalVisible(false);
                 console.log("Avis :", rating, review);
               }}

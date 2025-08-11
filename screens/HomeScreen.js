@@ -12,7 +12,7 @@ import {
   Dimensions,
   SafeAreaView,
 } from "react-native";
-import { interFontsToUse } from '../assets/fonts/fonts';
+import { interFontsToUse } from "../assets/fonts/fonts";
 import { useState } from "react";
 // import { LOCAL_IP } from "@env";
 import { useDispatch } from "react-redux";
@@ -20,7 +20,7 @@ import { login } from "../reducers/user";
 
 const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
-//const backendAdress = process.env.EXPO_PUBLIC_URL_BACKEND;
+// const backendAdress = process.env.EXPO_PUBLIC_URL_BACKEND;
 const myip = process.env.MY_IP;
 const backendAdress = `${myip}`;
 console.log("Backend URL:", backendAdress);

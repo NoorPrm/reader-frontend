@@ -74,7 +74,6 @@ export default function BookLibraryScreen({navigation}) {
 
   return (
     <View style={styles.container}>
-
       <View style={styles.titleMyLibraryGlobalContent}>
         <View style={styles.titleMyLibraryContent}>
           <Text style={styles.titleMyLibraryText}>LIVRES</Text>
@@ -161,7 +160,7 @@ const styles = StyleSheet.create({
     color: "#0E0E66",
   },
 
-  // button BookInfos 
+  // button BookInfos
   buttonNavigateToNextScreen: {
     alignItems: "center",
   },

@@ -1,15 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
-    View,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    StyleSheet,
-    Dimensions
-} from 'react-native';
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  Dimensions,
+} from "react-native";
+import { Picker } from "@react-native-picker/picker";
 import { interFontsToUse } from '../assets/fonts/fonts';
-import { useSelector, useDispatch } from 'react-redux';
-import { login } from '../reducers/user'; // Assure-toi que ce chemin est correct
+import { useSelector, useDispatch } from "react-redux";
+import { login } from "../reducers/user";
 
 //const backendAdress = process.env.EXPO_PUBLIC_URL_BACKEND;
 const myip = process.env.MY_IP;
@@ -17,15 +18,15 @@ const backendAdress = `${myip}`;
 console.log("Backend URL:", backendAdress);
 
 export default function Parametres({ navigation }) {
-    const user = useSelector((state) => state.user.value);
-    const statut = user.statut;
-    const dispatch = useDispatch();
+  const user = useSelector((state) => state.user.value);
+  const statut = user.statut;
+  const dispatch = useDispatch();
 
-    
-    const [email, setEmail] = useState(user.email || '');
-    const [username, setUsername] = useState(user.username || '');
-    const [password, setPassword] = useState('');
-    const [isPublic, setIsPublic] = useState(true); 
+  const [statutL, setStatutL] = useState(user.statut);
+  const [email, setEmail] = useState(user.email || "");
+  const [username, setUsername] = useState(user.username || "");
+  const [password, setPassword] = useState("");
+  const [isPublic, setIsPublic] = useState(true);
 
     // Fetch UPDATE 
     const handleUpdate = () => {
@@ -58,92 +59,102 @@ export default function Parametres({ navigation }) {
             });
     };
 
-    // FETCH DELETE 
-    const handleDelete = () => {
-        fetch(`${backendAdress}/users/${user.email}`, {
-            method: 'DELETE',
-        })
-            .then(res => res.json())
-            .then(data => {
-                console.log(data);
-                if (data.result) {
-                    console.log('Compte supprimé');
-                    navigation.navigate('Home');
-                } else {
-                    console.log('Erreur suppression:', data.error);
-                }
-            });
-    };
+  // FETCH DELETE
+  const handleDelete = () => {
+    fetch(`${backendAdress}/users/${user.email}`, {
+      method: "DELETE",
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        if (data.result) {
+          console.log("Compte supprimé");
+          navigation.navigate("Home");
+        } else {
+          console.log("Erreur suppression:", data.error);
+        }
+      });
+  };
 
-    return (
-        <View style={styles.container}>
-            <TouchableOpacity style={styles.back}
-                onPress={() => navigation.navigate("TabNavigator")}>
-                <Text style={styles.backText}>Retour au Profil Utilisateur</Text>
-            </TouchableOpacity>
+  return (
+    <View style={styles.container}>
+      <TouchableOpacity
+        style={styles.back}
+        onPress={() => navigation.navigate("TabNavigator")}
+      >
+        <Text style={styles.backText}>Retour au Profil Utilisateur</Text>
+      </TouchableOpacity>
 
-            <View style={styles.statut}>
-                <Text style={styles.statutText}>Statut de l'utilisateur</Text>
-            </View>
+      <View style={styles.statut}>
+        <Text style={styles.statutText}>Statut de l'utilisateur</Text>
+      </View>
 
-            <View style={styles.statutValue}>
-                <Text style={styles.statutValueText}>{statut}</Text>
-            </View>
+      <View style={styles.pickerContainer}>
+        <Picker
+          selectedValue={statutL}
+          onValueChange={(itemValue) => setStatutL(itemValue)}
+          style={styles.picker}
+          itemStyle={{ fontSize: 16 }}
+        >
+          <Picker.Item label="LECTEUR" value="LECTEUR" />
+          <Picker.Item label="AUTEUR" value="AUTEUR" />
+        </Picker>
+      </View>
 
-            <View style={styles.visibilityContainer}>
-                <TouchableOpacity
-                    style={[
-                        styles.visibilityButton,
-                        !isPublic && styles.visibilitySelectedPrivate
-                    ]}
-                    onPress={() => setIsPublic(false)} 
-                >
-                    <Text
-                        style={[
-                            styles.visibilityText,
-                            !isPublic && styles.visibilityTextSelectedPrivate
-                        ]}
-                    >
-                        Privé
-                    </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    style={[
-                        styles.visibilityButton,
-                        isPublic && styles.visibilitySelectedPublic
-                    ]}
-                    onPress={() => setIsPublic(true)} 
-                >
-                    <Text
-                        style={[
-                            styles.visibilityText,
-                            isPublic && styles.visibilityTextSelectedPublic
-                        ]}
-                    >
-                        Public
-                    </Text>
-                </TouchableOpacity>
-            </View>
+      <View style={styles.visibilityContainer}>
+        <TouchableOpacity
+          style={[
+            styles.visibilityButton,
+            !isPublic && styles.visibilitySelectedPrivate,
+          ]}
+          onPress={() => setIsPublic(false)}
+        >
+          <Text
+            style={[
+              styles.visibilityText,
+              !isPublic && styles.visibilityTextSelectedPrivate,
+            ]}
+          >
+            Privé
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[
+            styles.visibilityButton,
+            isPublic && styles.visibilitySelectedPublic,
+          ]}
+          onPress={() => setIsPublic(true)}
+        >
+          <Text
+            style={[
+              styles.visibilityText,
+              isPublic && styles.visibilityTextSelectedPublic,
+            ]}
+          >
+            Public
+          </Text>
+        </TouchableOpacity>
+      </View>
 
-            <View style={styles.sectionTitle}>
-                <Text style={styles.sectionTitleText}>Coordonnées</Text>
-            </View>
+      <View style={styles.sectionTitle}>
+        <Text style={styles.sectionTitleText}>Coordonnées</Text>
+      </View>
 
-            <Text style={styles.label}>E-mail</Text>
-            <TextInput
-                style={styles.input}
-                value={email}
-                onChangeText={setEmail}
-                autoCapitalize="none"
-            />
+      <Text style={styles.label}>E-mail</Text>
+      <TextInput
+        style={styles.input}
+        value={email}
+        onChangeText={setEmail}
+        autoCapitalize="none"
+      />
 
-            <Text style={styles.label}>Nom d'utilisateur</Text>
-            <TextInput
-                style={styles.input}
-                value={username}
-                onChangeText={setUsername}
-                autoCapitalize="none"
-            />
+      <Text style={styles.label}>Nom d'utilisateur</Text>
+      <TextInput
+        style={styles.input}
+        value={username}
+        onChangeText={setUsername}
+        autoCapitalize="none"
+      />
 
             <Text style={styles.label}>Mot de passe</Text>
             <TextInput
@@ -154,18 +165,18 @@ export default function Parametres({ navigation }) {
                 onChangeText={setPassword}
             />
 
-            <View style={styles.actionsContainer}>
-                <TouchableOpacity style={styles.validateButton}
-                    onPress={handleUpdate}>
-                    <Text style={styles.validateButtonText}>Valider les modifications</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.deleteButton}
-                    onPress={handleDelete}>
-                    <Text style={styles.deleteButtonText}>Supprimer mon compte</Text>
-                </TouchableOpacity>
-            </View>
-        </View>
-    );
+      <View style={styles.actionsContainer}>
+        <TouchableOpacity style={styles.validateButton} onPress={handleUpdate}>
+          <Text style={styles.validateButtonText}>
+            Valider les modifications
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.deleteButton} onPress={handleDelete}>
+          <Text style={styles.deleteButtonText}>Supprimer mon compte</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
@@ -314,5 +325,14 @@ const styles = StyleSheet.create({
     color: "#FFFFFF",
     fontFamily: interFontsToUse.regular,
     fontSize: 12,
+  },
+   pickerContainer: {
+    width: 180,
+    height: 50,
+    borderWidth: 1,
+    borderColor: "#E8DCCA",
+    borderRadius: 8,
+    overflow: "hidden",
+    marginTop: 20,
   },
 });

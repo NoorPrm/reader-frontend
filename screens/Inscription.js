@@ -11,7 +11,7 @@ import {
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import * as ImagePicker from "expo-image-picker";
-import { interFontsToUse } from '../assets/fonts/fonts';
+import { interFontsToUse } from "../assets/fonts/fonts";
 import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { login } from "../reducers/user";
@@ -227,6 +227,23 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: interFontsToUse.bold,
   },
+  plusButton: {
+    position: "absolute",
+    bottom: 100,
+    right: 67,
+    width: 17,
+    height: 20,
+    borderRadius: 12,
+    backgroundColor: "#0E0E66",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+
+  plus: {
+    color: "#ffffff",
+    fontSize: 16,
+    fontFamily: interFontsToUse.bold,
+  },
 
   formInputs: {
     marginTop: 20,
@@ -300,6 +317,21 @@ const styles = StyleSheet.create({
     color: "#fffff",
   },
 
+  buttonValidation: {
+    alignItems: "center",
+    justifyContent: "center",
+    height: 70,
+    width: 250,
+    backgroundColor: "#0E0E66",
+    borderRadius: 50,
+    marginTop: 35,
+    marginBottom: 70,
+  },
+  textButton: {
+    color: "#ffffffff",
+    fontSize: 18,
+    fontFamily: interFontsToUse.regular,
+  },
   buttonValidation: {
     alignItems: "center",
     justifyContent: "center",
