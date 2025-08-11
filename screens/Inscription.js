@@ -16,7 +16,7 @@ import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { login } from "../reducers/user";
 // import { LOCAL_IP } from "@env";
-//const backendAdress = process.env.EXPO_PUBLIC_URL_BACKEND;
+// const backendAdress = process.env.EXPO_PUBLIC_URL_BACKEND;
 const myip = process.env.MY_IP;
 const backendAdress = `${myip}`;
 
