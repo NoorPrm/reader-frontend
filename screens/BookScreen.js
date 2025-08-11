@@ -35,7 +35,7 @@ export default function BookScreen({ navigation }) {
   const userToken = useSelector((state) => state.user.value.token);
 
   useEffect(() => {
-    const reduxBookId = "689609443fe9741d937e5973";
+    const reduxBookId = "6899be5d27fa5d6d5d58d070";
     setBookId(reduxBookId);
   }, []);
 
@@ -96,6 +96,7 @@ export default function BookScreen({ navigation }) {
       });
   };
 
+  //Validation de la note + avis
   const postReview = () => {
     fetch(`${backendAdress}/reviews`, {
       method: "POST",
@@ -112,7 +113,6 @@ export default function BookScreen({ navigation }) {
         if (data.error) {
           console.log("Erreur :", data.error);
         } else {
-          // Refresh auto
           setAllReviews((prev) => [data.review, ...prev]);
           setTotalReviews((prev) => prev + 1);
           setAverageRating(
@@ -151,7 +151,9 @@ export default function BookScreen({ navigation }) {
           {bookData && <Text style={styles.title}>{bookData.title}</Text>}
           {bookData && <Text style={styles.author}>{bookData.author}</Text>}
           {bookData && (
-            <Text style={styles.parutionDate}>Date de parution API</Text>
+            <Text style={styles.parutionDate}>
+              Publié le {bookData.publishedDate}
+            </Text>
           )}
 
           <Text style={styles.synopsisTitle}>RESUME</Text>

@@ -15,7 +15,7 @@ export default function BookReviews({ bookId, backendAdress }) {
   const [reviews, setReviews] = useState([]);
   const [averageRating, setAverageRating] = useState(0);
   const [totalReviews, setTotalReviews] = useState(0);
-  const [modalVisible, setModalVisible] = useState(null); // pour les "..."
+  const [modalVisible, setModalVisible] = useState(null);
 
   useEffect(() => {
     if (!bookId) return;
@@ -32,7 +32,6 @@ export default function BookReviews({ bookId, backendAdress }) {
 
   return (
     <View>
-      {/* moyenne étoiles */}
       <View style={styles.totalStars}>
         {[1, 2, 3, 4, 5].map((i) => (
           <FontAwesome
@@ -45,7 +44,6 @@ export default function BookReviews({ bookId, backendAdress }) {
         <Text style={styles.totalAvis}>({totalReviews} avis)</Text>
       </View>
 
-      {/* Liste des avis */}
       <ScrollView
         style={styles.scrollContainer}
         contentContainerStyle={styles.content}
@@ -58,13 +56,17 @@ export default function BookReviews({ bookId, backendAdress }) {
               <View style={styles.avisCard} key={index}>
                 <View style={styles.avisHeader}>
                   <Image
-                    source={require("../assets/images/userBryanCranston.jpg")} // tu pourras le remplacer par un champ `avatar` plus tard
+                    source={
+                      avis.authorAvatar
+                        ? { uri: avis.authorAvatar }
+                        : require("../assets/images/whiteUser.png")
+                    }
                     style={styles.avatarImg}
                   />
                   <View style={styles.avisContainer}>
                     <TouchableOpacity>
                       <Text style={styles.userName}>
-                        {avis.author.username}
+                        {avis.authorUsername || "Utilisateur"}
                       </Text>
                     </TouchableOpacity>
 
@@ -112,7 +114,6 @@ export default function BookReviews({ bookId, backendAdress }) {
                         style={styles.deleteBtn}
                         onPress={() => {
                           setModalVisible(null);
-                          // Ajoute ici une fonction de suppression si besoin
                         }}
                       >
                         <Text style={styles.deleteText}>Supprimer</Text>
@@ -161,6 +162,7 @@ const styles = StyleSheet.create({
     height: 80,
     width: 80,
     borderRadius: 40,
+    backgroundColor: "#E8DCCA",
   },
   avisContainer: {
     marginLeft: 10,
