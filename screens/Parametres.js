@@ -10,12 +10,15 @@ import {
 import { Picker } from "@react-native-picker/picker";
 import { useSelector, useDispatch } from 'react-redux';
 import { login } from '../reducers/user'; 
+// const backendAdress = process.env.EXPO_PUBLIC_URL_BACKEND;
+const myip = process.env.MY_IP;
+const backendAdress = `${myip}`;
 
 export default function Parametres({ navigation }) {
     const user = useSelector((state) => state.user.value);
     const statut = user.statut;
     const dispatch = useDispatch();
-    const backendAdress = process.env.EXPO_PUBLIC_URL_BACKEND;
+    
 
     const [statutL, setStatutL] = useState(user.statut);
     const [email, setEmail] = useState(user.email || '');

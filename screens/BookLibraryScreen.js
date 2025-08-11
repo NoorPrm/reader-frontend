@@ -3,7 +3,9 @@ import { StyleSheet, View, Text, Dimensions, TouchableOpacity, Image, ScrollView
 import { interFontsToUse } from '../assets/fonts/fonts';
 import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
-const backendAdress = process.env.EXPO_PUBLIC_URL_BACKEND
+// const backendAdress = process.env.EXPO_PUBLIC_URL_BACKEND
+const myip = process.env.MY_IP;
+const backendAdress = `${myip}`;
 
 export default function BookLibraryScreen({navigation}) {
 

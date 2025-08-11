@@ -20,9 +20,9 @@ import { login } from "../reducers/user";
 
 const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
-const backendAdress = process.env.EXPO_PUBLIC_URL_BACKEND;
+// const backendAdress = process.env.EXPO_PUBLIC_URL_BACKEND;
 const myip = process.env.MY_IP;
-// const backendAdress = `${myip}`;
+const backendAdress = `${myip}`;
 console.log("Backend URL:", backendAdress);
 
 export default function HomeScreen({ navigation }) {
