@@ -24,11 +24,28 @@ console.log("Backend URL:", backendAdress);
 export default function Inscription({ navigation }) {
   const [statut, setStatut] = useState("LECTEUR");
   const [username, setUsername] = useState("");
+  const [usernameError, setUsernameError] = useState("");
   const [photo, setPhoto] = useState(null);
 
   const token = useSelector((state) => state.user.value.token);
   const dispatch = useDispatch();
   const handleProfileUpdate = () => {
+    
+    let hasError = false;
+
+    if (username === "") {
+      setUsernameError("Champ obligatoire");
+      hasError = true;
+    } else {
+      setUsernameError("");
+    }
+
+    // si erreur : pas de fetch
+    // console.log("hasError:", hasError);
+    if (hasError) {
+      return;
+    }
+
     // console.log("token:", token)
     fetch(`${backendAdress}/users/${token}`, {
       method: "PUT",
@@ -107,6 +124,11 @@ export default function Inscription({ navigation }) {
 
         <View style={styles.formInputs}>
           <View style={styles.Inputlabell}>
+
+            {usernameError !== "" && (
+              <Text style={styles.errorText}>{usernameError}</Text>
+            )}
+
             <Text style={styles.label1}>Nom d'utilisateur</Text>
             <TextInput
               style={styles.input1}
@@ -155,102 +177,108 @@ const styles = StyleSheet.create({
     paddingTop: 20,
     width: "100%",
   },
+  formulaire: {
+    borderWidth: 0.5,
+    borderRadius: 15,
+    height: 50,
+    width: 240,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#E8DCCA",
+  },
+  formulaireText: {
+    fontSize: 16,
+    fontWeight: "bold",
+    fontFamily: interFontsToUse.bold,
+    textAlign: "center",
+  },
+  avatarContainer: {
+    marginTop: 25,
+    alignItems: "center",
+  },
+  logoUser: {
+    width: 150,
+    height: 150,
+    borderRadius: 70,
+    backgroundColor: "#E8DCCA",
+    borderWidth: 0.5,
+    borderColor: "#E8DCCA",
+  },
+  textPhoto: {
+    color: "#E8DCCA",
+    fontSize: 16,
+    fontFamily: interFontsToUse.bold,
+  },
 
-    formulaire: {
-        borderWidth: 0.5,
-        borderRadius: 15,
-        height: 50,
-        width: 240,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#E8DCCA',
-    },
-    formulaireText: {
-        fontSize: 16,
-        fontWeight: 'bold',
-        fontFamily: interFontsToUse.bold,
-        textAlign: 'center',
-    },
-    avatarContainer: {
-        marginTop: 25,
-        alignItems: 'center',
-    },
-    logoUser: {
-        width: 150,
-        height: 150,
-        borderRadius: 70,
-        backgroundColor: '#E8DCCA',
-        borderWidth: 0.5,
-        borderColor: '#E8DCCA',
-    },
-    textPhoto: {
-        color: '#E8DCCA',
-        fontSize: 16,
-        fontFamily: interFontsToUse.bold,
-    },
+  plusButton: {
+    position: "absolute",
+    bottom: 100,
+    right: 67,
+    width: 17,
+    height: 20,
+    borderRadius: 12,
+    backgroundColor: "#0E0E66",
+    alignItems: "center",
+    justifyContent: "center",
+  },
 
-    plusButton: {
-        position: 'absolute',
-        bottom: 100,
-        right: 67,
-        width: 17,
-        height: 20,
-        borderRadius: 12,
-        backgroundColor: '#0E0E66',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    
-    plus: {
-        color: '#ffffff',
-        fontSize: 16,
-        fontFamily: interFontsToUse.bold,
-    },
+  plus: {
+    color: "#ffffff",
+    fontSize: 16,
+    fontFamily: interFontsToUse.bold,
+  },
 
-    formInputs: {
-        marginTop: 20,
-        width: 250,
-        alignItems: 'flex-start',
-    },
-    Inputlabell: {
-        width: '100%',
-        marginBottom: 20,
-    },
-    statut: {
-        alignSelf: 'center',
-        borderWidth: 0.5,
-        borderRadius: 15,
-        height: 75,
-        width: 300,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#E8DCCA',
-        marginTop: 30,
-    },
-    statutText: {
-        fontSize: 16,
-        fontFamily: interFontsToUse.bold,
-        textAlign: 'center',
-    },
-    label1: {
-        marginBottom: -9,
-        paddingLeft: 5,
-        fontSize: 13,
-        color: "#5c5c5c",
-        fontFamily: interFontsToUse.bold,
-        
-    },
-    input1: {
-        borderWidth: 1,
-        borderColor: "#E8DCCA",
-        borderRadius: 10,
-        marginBottom: 16,
-        height: 80,
-        fontSize: 15,
-        paddingLeft: 12,
-        fontFamily: interFontsToUse.regular,
-        textAlign: "center",
-    },
+  formInputs: {
+    marginTop: 20,
+    width: 250,
+    alignItems: "flex-start",
+  },
+  Inputlabell: {
+    width: "100%",
+    marginBottom: 20,
+  },
+  statut: {
+    alignSelf: "center",
+    borderWidth: 0.5,
+    borderRadius: 15,
+    height: 75,
+    width: 300,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#E8DCCA",
+    marginTop: 30,
+  },
+  statutText: {
+    fontSize: 16,
+    fontFamily: interFontsToUse.bold,
+    textAlign: "center",
+  },
+  errorText: {
+    position: "absolute",
+    top: 65,
+    right: 60,
+    color: "red",
+    fontFamily: interFontsToUse.regular,
+    fontSize: 13,
+  },
+  label1: {
+    marginBottom: -9,
+    paddingLeft: 5,
+    fontSize: 13,
+    color: "#5c5c5c",
+    fontFamily: interFontsToUse.bold,
+  },
+  input1: {
+    borderWidth: 1,
+    borderColor: "#E8DCCA",
+    borderRadius: 10,
+    marginBottom: 16,
+    height: 80,
+    fontSize: 15,
+    paddingLeft: 12,
+    fontFamily: interFontsToUse.regular,
+    textAlign: "center",
+  },
 
   separator: {
     width: "100%",
@@ -272,19 +300,19 @@ const styles = StyleSheet.create({
     color: "#fffff",
   },
 
-    buttonValidation: {
-        alignItems: 'center',
-        justifyContent: 'center',
-        height: 70,
-        width: 250,
-        backgroundColor: '#0E0E66',
-        borderRadius: 50,
-        marginTop: 35,
-        marginBottom: 70,
-    },
-    textButton: {
-        color: "#ffffffff",
-        fontSize: 18,
-        fontFamily: interFontsToUse.regular,
-    }
+  buttonValidation: {
+    alignItems: "center",
+    justifyContent: "center",
+    height: 70,
+    width: 250,
+    backgroundColor: "#0E0E66",
+    borderRadius: 50,
+    marginTop: 35,
+    marginBottom: 70,
+  },
+  textButton: {
+    color: "#ffffffff",
+    fontSize: 18,
+    fontFamily: interFontsToUse.regular,
+  },
 });

@@ -45,7 +45,7 @@ export default function Parametres({ navigation }) {
                 console.log(data);
                 if (data.result) {
                     dispatch(login({
-                        email: data.updatedUser.email,
+                        email: data.updatedUser.email, // updatedUser : la data reçue dans la route PUT users
                         username: data.updatedUser.username,
                         statut: data.updatedUser.statut,
                         profilPicture: data.updatedUser.profilPicture,

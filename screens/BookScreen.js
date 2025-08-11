@@ -92,8 +92,8 @@ export default function BookScreen({navigation}) {
         style={styles.returnBtn}
         onPress={() => {
           dispatch(clearSelectedBook());
-          navigation.navigate("BookLibrary"
-          )}
+          navigation.goBack();
+        }
         }  
       >
         <Text style={styles.txtBtn}>Retour à la bibliothèque</Text>

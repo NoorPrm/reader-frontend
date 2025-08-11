@@ -21,7 +21,7 @@ export const userSlice = createSlice({
       state.value.statut = action.payload.statut;
       state.value.profilPicture = action.payload.profilPicture;
     },
-  },
+  }
 });
 
 export const { login } = userSlice.actions;
