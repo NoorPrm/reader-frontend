@@ -1,36 +1,66 @@
-import { StatusBar } from 'expo-status-bar';
-import { Text, View, TouchableOpacity, StyleSheet, Image, ScrollView } from 'react-native';
-import { useSelector } from "react-redux";
+import { StatusBar } from "expo-status-bar";
+import {
+  Text,
+  View,
+  TouchableOpacity,
+  StyleSheet,
+  Image,
+  ScrollView,
+} from "react-native";
+import { useSelector, useDispatch } from "react-redux";
 import { useState, useEffect } from "react";
-import { interFontsToUse } from '../assets/fonts/fonts';
-// import AvisCard from "../components/AvisCard";
+import { interFontsToUse } from "../assets/fonts/fonts";
+import { setSelectedBook } from "../reducers/bookSelected";
 const myip = process.env.MY_IP;
 const backendAdress = `${myip}`;
 
 export default function UserProfilScreen({ navigation }) {
+  const dispatch = useDispatch();
   const user = useSelector((state) => state.user.value);
   const [activeTab, setActiveTab] = useState("bibliotheque");
   const [books, setBooks] = useState([]);
-  const [isFollowing, setIsFollowing] = useState(false); 
-  console.log("Profil picture :", user.profilPicture);
+  const [posts, setPosts] = useState([]);
 
+  // Chargement des données
   useEffect(() => {
-    const token = user.token; // ✅ récupération du token
-    if (!token) return; // sécurité
+    const token = user.token;
 
+    // Charger tous les livres du user
+    let allBooks = [];
     fetch(`${backendAdress}/userLibrary/${token}/Livres`)
-      .then((response) => response.json())
+      .then((res) => res.json())
       .then((data) => {
-        console.log('data reçue:', data);
-        const booksFromBackend = data.map(item => item.book);
-        setBooks(booksFromBackend);
+        allBooks = [...allBooks, ...data.map((item) => item.book)];
+        return fetch(`${backendAdress}/userLibrary/${token}/BD`);
       })
-      .catch(err => console.error("Erreur lors du fetch:", err));
+      .then((res) => res.json())
+      .then((data) => {
+        allBooks = [...allBooks, ...data.map((item) => item.book)];
+        return fetch(`${backendAdress}/userLibrary/${token}/Mangas`);
+      })
+      .then((res) => res.json())
+      .then((data) => {
+        allBooks = [...allBooks, ...data.map((item) => item.book)];
+        setBooks(allBooks);
+      });
+
+    // Charger tous les posts du user
+    fetch(`${backendAdress}/posts/${token}`)
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("TOKEN FRONT =>", user.token);
+        console.log("DATA POSTS =>", data);
+        if (data.result) {
+          setPosts(data.posts);
+        } else {
+          setPosts([]);
+        }
+      });
   }, [user.token]);
 
   return (
     <View style={styles.container}>
-      {/* Bouton menu */}
+      {/* Bouton menu en haut à droite */}
       <TouchableOpacity
         style={styles.menuButton}
         onPress={() => navigation.navigate("Parametres")}
@@ -38,14 +68,13 @@ export default function UserProfilScreen({ navigation }) {
         <Text style={styles.menuText}>⋯</Text>
       </TouchableOpacity>
 
-      {/* Section profil */}
       <View style={styles.profileSection}>
         <Text style={styles.username}>{user.username}</Text>
         <Image
           source={
             user.profilPicture
               ? { uri: user.profilPicture }
-              : require('../assets/images/whiteUser.png')
+              : require("../assets/images/whiteUser.png")
           }
           style={styles.avatar}
         />
@@ -60,10 +89,8 @@ export default function UserProfilScreen({ navigation }) {
   </Text>
       </View>
 
-      {/* Séparateur */}
       <View style={styles.separator} />
 
-      {/* Onglets */}
       <View style={styles.tabs}>
         <TouchableOpacity
           style={[styles.tab, activeTab === "bibliotheque" && styles.activeTab]}
@@ -79,59 +106,69 @@ export default function UserProfilScreen({ navigation }) {
         </TouchableOpacity>
       </View>
 
-      {/* Contenu des onglets */}
       <ScrollView style={styles.content}>
+        {/* Onglet Bibliothèque */}
         {activeTab === "bibliotheque" ? (
           <View>
             {books.length > 0 ? (
               books.map((book, index) => (
-                <View key={index} style={styles.bookItem}>
+                <TouchableOpacity
+                  key={index}
+                  style={styles.bookItem}
+                  onPress={() => {
+                    dispatch(setSelectedBook(book));
+                    navigation.navigate("BookInfos");
+                  }}
+                >
                   <Image
-                    source={{ uri: book.cover }}
+                    source={
+                      book.cover
+                        ? { uri: book.cover }
+                        : require("../assets/images/notAvailable.jpg")
+                    }
                     style={styles.bookCover}
                   />
-                  <Text style={styles.bookTitle}>"{book.title}" de  {book.author}</Text>
-                </View>
+                  <Text style={styles.bookTitle}>
+                    "{book.title}" de {book.author}
+                  </Text>
+                </TouchableOpacity>
               ))
             ) : (
-              <Text style={{ fontStyle: "italic" }}>Aucun livre dans la bibliothèque.</Text>
+              <Text style={{ fontStyle: "italic" }}>
+                Aucun livre dans la bibliothèque.
+              </Text>
             )}
           </View>
         ) : (
+          /* Onglet Posts */
           <View>
-            <AvisCard
-          avisData={{
-            username: user.username,
-            rating: 5,
-            date: "Il y a 40 jours",
-            totalAvis: 133,
-            comment: "Ce livre est réellement fantastique, je vous le recommande vivement ! ",
-          }}
-          isUser={true} //à remplacer plus tard avec userId === avis.userId
-          onDelete={() => console.log("yaaah")} //avis.id
-        />
-        <AvisCard
-          avisData={{
-            username: user.username,
-            rating: 1,
-            date: "Il y a 25 jours",
-            totalAvis: 54,
-            comment: " Même Reese aurait fait mieux. ",
-          }}
-          isUser={true} //à remplacer plus tard avec userId === avis.userId
-          onDelete={() => console.log("yaaah")} //avis.id
-        />
-        <AvisCard
-          avisData={{
-            username: user.username,
-            rating: 5,
-            date: "Il y a 30 jours",
-            totalAvis: 101,
-            comment: "Excellent ! ",
-          }}
-          isUser={true} //à remplacer plus tard avec userId === avis.userId
-          onDelete={() => console.log("yaaah")} //avis.id
-        />
+            {posts.length > 0 ? (
+              posts.map((post, index) => (
+                <View key={post._id || index} style={styles.postItem}>
+                  <Image
+                    source={
+                      post?.authorProfilePicture
+                        ? { uri: post.authorProfilePicture }
+                        : require("../assets/images/whiteUser.png")
+                    }
+                    style={styles.postAvatar}
+                  />
+                  <Text style={styles.postUsername}>
+                    {post?.authorUsername || "Utilisateur"}
+                  </Text>
+                  <Text style={styles.postText}>{post?.content || ""}</Text>
+                  <Text style={styles.postDate}>
+                    {post?.createdAt
+                      ? new Date(post.createdAt).toLocaleDateString()
+                      : ""}
+                  </Text>
+                </View>
+              ))
+            ) : (
+              <Text style={{ fontStyle: "italic" }}>
+                Aucun post pour cet utilisateur.
+              </Text>
+            )}
           </View>
         )}
       </ScrollView>
@@ -237,7 +274,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 8,
   },
-
   followersText: {
     fontSize: 14,
     color: "#0E0E66",

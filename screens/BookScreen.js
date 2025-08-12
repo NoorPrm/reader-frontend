@@ -1,6 +1,6 @@
 import { StatusBar } from "expo-status-bar";
 import React, { useState, useEffect } from "react";
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from "react-redux";
 import { clearSelectedBook } from "../reducers/bookSelected";
 import {
   StyleSheet,
@@ -13,7 +13,7 @@ import {
   ScrollView,
   SafeAreaView,
 } from "react-native";
-//import BookReviews from "../components/BookReviews";
+import BookReviews from "../screens/BookReviews";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { interFontsToUse } from '../assets/fonts/fonts';
 //import defaultCover from "../assets/images/defaultCover.jpg";
@@ -35,6 +35,7 @@ export default function BookScreen({ navigation }) {
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [userLibraryError, setUserLibraryError] = useState("");
   const userToken = useSelector((state) => state.user.value.token);
+  const [refreshKey, setRefreshKey] = useState(0);
   const user = useSelector((state) => state.user.value);
   const dispatch = useDispatch();
   const selectedBook = useSelector((state) => state.bookSelected.selectedBook);
@@ -59,10 +60,11 @@ export default function BookScreen({ navigation }) {
       .catch((err) => {
         console.log("Erreur lors du fetch :", err);
       });
+
     fetch(`${backendAdress}/reviews/${bookId}`)
       .then((res) => res.json())
       .then((data) => {
-        setAllReviews(data.reviews);
+        setAllReviews(data.reviews || []);
         setAverageRating(data.averageRating);
         setTotalReviews(data.reviews.length);
       })
@@ -110,26 +112,25 @@ export default function BookScreen({ navigation }) {
         token: userToken,
         bookId,
         rating,
-        review: review,
+        review,
       }),
     })
       .then((res) => res.json())
       .then((data) => {
         if (data.error) {
           console.log("Erreur :", data.error);
-        } else {
-          setAllReviews((prev) => [data.review, ...prev]);
-          setTotalReviews((prev) => prev + 1);
-          setAverageRating(
-            (
-              (parseFloat(averageRating) * totalReviews + rating) /
-              (totalReviews + 1)
-            ).toFixed(1)
-          );
+          return;
         }
         setModalVisible(false);
         setRating(0);
         setReview("");
+        fetch(`${backendAdress}/reviews/${bookId}`)
+          .then((res) => res.json())
+          .then((data) => {
+            setAllReviews(data.reviews || []);
+            setAverageRating(data.averageRating);
+            setTotalReviews(data.reviews.length);
+          });
       })
       .catch((err) => {
         console.log("Erreur lors de l'envoi de l'avis :", err);
@@ -143,8 +144,7 @@ export default function BookScreen({ navigation }) {
         onPress={() => {
           dispatch(clearSelectedBook());
           navigation.goBack();
-        }
-        }  
+        }}
       >
         <Text style={styles.txtBtn}>Retour à la bibliothèque</Text>
       </TouchableOpacity>
@@ -153,7 +153,10 @@ export default function BookScreen({ navigation }) {
         {selectedBook.cover ? (
           <Image source={{ uri: selectedBook.cover }} style={styles.image} />
         ) : (
-          <Image source={require('../assets/images/notAvailable.jpg')} style={styles.image} />
+          <Image
+            source={require("../assets/images/notAvailable.jpg")}
+            style={styles.image}
+          />
         )}
         <View style={styles.bookInfosContainer}>
           {bookData && <Text style={styles.title}>{bookData.title}</Text>}
@@ -279,30 +282,26 @@ export default function BookScreen({ navigation }) {
         </Modal>
       </View>
 
-      <View style={styles.totalStars}>
-        <FontAwesome name="star" size={25} color="#0E0E66" />
-        <FontAwesome name="star" size={25} color="#0E0E66" />
-        <FontAwesome name="star" size={25} color="#0E0E66" />
-        <FontAwesome name="star" size={25} color="#0E0E66" />
-        <FontAwesome name="star" size={25} color="#0E0E66" />
-        <View style={styles.totalAvis}>
-          <Text>({totalReviews} avis en DB)</Text>
-        </View>
-        <View style={styles.addBtnContainer}>
-          <TouchableOpacity
-            style={styles.addAvisBtn}
-            onPress={() => setModalVisible(true)}
-          >
-            <Text style={styles.txtAddBtn}>+</Text>
-          </TouchableOpacity>
-        </View>
+      <View style={styles.addBtnContainer}>
+        <TouchableOpacity
+          style={styles.addAvisBtn}
+          onPress={() => setModalVisible(true)}
+        >
+          <Text style={styles.txtAddBtn}>Partager mon avis</Text>
+        </TouchableOpacity>
       </View>
+
       <ScrollView
         style={styles.scrollContainer}
         contentContainerStyle={styles.content}
         showsVerticalScrollIndicator={true}
       >
-        <BookReviews bookId={bookId} backendAdress={backendAdress} />
+        <BookReviews
+          reviews={allReviews}
+          averageRating={averageRating}
+          totalReviews={totalReviews}
+          refreshKey={refreshKey}
+        />
       </ScrollView>
       <Modal
         animationType="slide"
@@ -448,12 +447,18 @@ color: "#0E0E66",
     justifyContent: "center",
     alignItems: "center",
   },
+  addBtnContainer: {
+    alignItems: "center",
+    marginBottom: 0,
+  },
   addAvisBtn: {
     padding: 10,
     margin: 10,
-    height: 40,
-    width: 40,
+    marginTop: 20,
+    marginBottom: 5,
+
     borderRadius: 15,
+
     alignItems: "center",
     backgroundColor: "#0E0E66",
     shadowColor: "#000",
@@ -464,6 +469,19 @@ color: "#0E0E66",
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
+  },
+  txtAddBtn: {
+    color: "#ffffffff",
+    fontSize: 12,
+    fontFamily: "Inter_400Regular",
+    marginTop: -3,
+  },
+  addBtn: {
+    padding: 10,
+    margin: 10,
+    marginTop: 0,
+    borderRadius: 5,
+    backgroundColor: "#0E0E66",
   },
   avisCard: {
     backgroundColor: "#fff",
