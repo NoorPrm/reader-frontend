@@ -12,7 +12,7 @@ import {
   ScrollView,
   SafeAreaView,
 } from "react-native";
-import Posts from "../components/Posts";
+import Posts from "../screens/Posts";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { FontAwesome5 } from "@expo/vector-icons";
 
@@ -24,13 +24,14 @@ export default function GeneralScreen() {
   const [post, setPost] = useState("");
   const [allPosts, setAllPosts] = useState([]);
   const userToken = useSelector((state) => state.user.value.token);
+  const user = useSelector((state) => state.user.value);
 
   useEffect(() => {
     fetch(`${backendAdress}/posts`)
       .then((res) => res.json())
-      .then((data) => setAllPosts(data.posts || []))
+      .then((data) => setAllPosts(data.content || data.posts || []))
       .catch((err) => console.log("Erreur lors du fetch des posts :", err));
-  }, []);
+  }, [backendAdress]);
 
   const addPost = () => {
     fetch(`${backendAdress}/posts`, {
@@ -40,7 +41,7 @@ export default function GeneralScreen() {
     })
       .then((res) => res.json())
       .then((data) => {
-        if (!data.error) {
+        if (data?.post) {
           setAllPosts((prev) => [data.post, ...prev]);
           setPost("");
         }
@@ -60,17 +61,27 @@ export default function GeneralScreen() {
       <View style={styles.separator} />
       <View style={styles.userPostContainer}>
         <Image
-          source={require("../assets/images/whiteUser.png")}
+          source={
+            user?.profilPicture &&
+            (user.profilPicture.startsWith("http") ||
+              user.profilPicture.startsWith("file://"))
+              ? { uri: user.profilPicture }
+              : require("../assets/images/whiteUser.png")
+          }
           style={styles.avatarImg}
         />
         <TouchableOpacity
           style={styles.addPostInputContainer}
           onPress={() => setModalVisible(true)}
         >
-          <Text style={{ color: "#777" }}>Ecrire...</Text>
+          <Text style={{ color: "#777" }}>
+            {post
+              ? post.slice(0, 40) + (post.length > 40 ? "…" : "")
+              : "Ecrire..."}
+          </Text>
         </TouchableOpacity>
         <View style={styles.addBtnContainer}>
-          <TouchableOpacity onPress={() => setModalVisible(true)}>
+          <TouchableOpacity onPress={() => addPost()}>
             <FontAwesome5 name="paper-plane" size={30} color="#fff" />
           </TouchableOpacity>
         </View>
