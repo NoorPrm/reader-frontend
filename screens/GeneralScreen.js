@@ -12,7 +12,7 @@ import {
   ScrollView,
   SafeAreaView,
 } from "react-native";
-import Posts from "../components/Posts";
+import Posts from "../screens/Posts"
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { FontAwesome5 } from "@expo/vector-icons";
 

@@ -13,7 +13,7 @@ import {
   ScrollView,
   SafeAreaView,
 } from "react-native";
-import BookReviews from "../components/BookReviews";
+import BookReviews from "../screens/BookReviews";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 //import defaultCover from "../assets/images/defaultCover.jpg";
 //const backendAdress = process.env.EXPO_PUBLIC_URL_BACKEND;
