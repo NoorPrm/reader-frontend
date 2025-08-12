@@ -13,8 +13,9 @@ import {
   ScrollView,
   SafeAreaView,
 } from "react-native";
-import BookReviews from "../components/BookReviews";
+//import BookReviews from "../components/BookReviews";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
+import { interFontsToUse } from '../assets/fonts/fonts';
 //import defaultCover from "../assets/images/defaultCover.jpg";
 //const backendAdress = process.env.EXPO_PUBLIC_URL_BACKEND;
 const myip = process.env.MY_IP;
@@ -34,6 +35,7 @@ export default function BookScreen({ navigation }) {
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [userLibraryError, setUserLibraryError] = useState("");
   const userToken = useSelector((state) => state.user.value.token);
+  const user = useSelector((state) => state.user.value);
   const dispatch = useDispatch();
   const selectedBook = useSelector((state) => state.bookSelected.selectedBook);
 
@@ -361,7 +363,7 @@ const styles = StyleSheet.create({
   returnBtn: {
     padding: 10,
     margin: 10,
-    marginBottom: 75,
+    marginBottom: 40,
     borderRadius: 5,
     backgroundColor: "#0E0E66",
     float: "left",
@@ -369,7 +371,7 @@ const styles = StyleSheet.create({
   },
   txtBtn: {
     color: "#ffffffff",
-    fontFamily: "Inter_400Regular",
+    fontFamily: interFontsToUse.regular,
   },
   btnContainer: {
     justifyContent: "center",
@@ -384,7 +386,7 @@ const styles = StyleSheet.create({
   txtAddBtn: {
     color: "#ffffffff",
     fontSize: 20,
-    fontFamily: "Inter_400Regular",
+    fontFamily: interFontsToUse.regular,
     marginTop: -3,
   },
   totalAvis: {
@@ -394,6 +396,8 @@ const styles = StyleSheet.create({
   bookContainer: {
     flexDirection: "row",
     justifyContent: "center",
+    width: '80%',
+    paddingLeft: 90,
   },
   bookInfosContainer: {
     flexDirection: "column",
@@ -405,28 +409,34 @@ const styles = StyleSheet.create({
     margin: 10,
   },
   title: {
-    fontFamily: "Inter_700Bold",
+    fontFamily: interFontsToUse.bold,
     fontSize: 25,
-
+color: "#0E0E66",
     textAlign: "center",
   },
   author: {
     textAlign: "center",
-    fontFamily: "Inter_400Regular",
+    color: "#0E0E66",
+    fontSize: 15,
+    fontFamily: interFontsToUse.bold,
+    marginTop: 5,
   },
   parutionDate: {
     textAlign: "center",
-    fontFamily: "Inter_400Regular",
+    color: "#0E0E66",
+    fontFamily: interFontsToUse.regular,
+    marginTop: 20,
   },
   synopsisTitle: {
     fontSize: 15,
-    fontFamily: "Inter_700Bold",
+    fontFamily:interFontsToUse.bold,
+    color: "#0E0E66",
     textAlign: "center",
   },
   synopsisTxt: {
     textAlign: "center",
-    fontFamily: "Inter_400Regular",
-
+    fontFamily: interFontsToUse.regular,
+    color: "#0E0E66",
     width: 200,
     height: 120,
     margin: 5,
@@ -445,7 +455,6 @@ const styles = StyleSheet.create({
     width: 40,
     borderRadius: 15,
     alignItems: "center",
-
     backgroundColor: "#0E0E66",
     shadowColor: "#000",
     shadowOffset: {
@@ -478,7 +487,7 @@ const styles = StyleSheet.create({
   userName: {
     fontSize: 20,
     fontWeight: "bold",
-    fontFamily: "Inter_700Bold",
+    fontFamily: interFontsToUse.bold,
     color: "#0E0E66",
   },
   userStars: {
@@ -490,7 +499,7 @@ const styles = StyleSheet.create({
   },
   avisTxt: {
     marginTop: 10,
-    fontFamily: "Inter_400Regular",
+    fontFamily: interFontsToUse.regular,
   },
   modalTitle: {
     textAlign: "center",
@@ -518,7 +527,6 @@ const styles = StyleSheet.create({
   },
   modalClose: {
     left: 310,
-
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "#ffffffff",
@@ -557,7 +565,7 @@ const styles = StyleSheet.create({
   },
   txtBtn: {
     color: "#fff",
-    fontFamily: "Inter_700Bold",
+    fontFamily: interFontsToUse.regular,
   },
   deleteContainer: {
     left: 250,

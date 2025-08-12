@@ -1,8 +1,43 @@
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View, TouchableOpacity, Dimensions, KeyboardAvoidingView, Platform, TextInput } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity, Dimensions, KeyboardAvoidingView, Platform, TextInput, Image } from "react-native";
+import { useState } from "react";
+import { useSelector} from 'react-redux';
 import { interFontsToUse } from '../assets/fonts/fonts';
 
+const myip = process.env.MY_IP;
+const backendAdress = `${myip}`;
+
 export default function SearchScreen({ navigation }) {
+
+  const [author, setAuthor] = useState("");
+  const [title, setTitle] = useState("");
+  const [category, setCategory] = useState("");
+  const token = useSelector((state) => state.user.value.token);
+
+  const handleSearch = () => {
+    // Recherche par catégorie → route userlibrary
+    if (category) {
+    fetch(`${backendAdress}/userlibrary/${token}/${category}`)
+      .then(res => res.json())
+      .then(data => {
+        const books = data.map(item => item.book);
+        navigation.navigate("ResultSearch", { books: books || [] });
+      });
+    return;
+  }
+
+    // Sinon recherche par auteur/titre → route books
+    const params = new URLSearchParams();
+    if (author) params.append("author", author);
+    if (title) params.append("title", title);
+
+    fetch(`${backendAdress}/books?${params.toString()}`)
+      .then(res => res.json())
+      .then(data => {
+        navigation.navigate("ResultSearch", { books: data.books || [] });
+      })
+  };
+
   return (
     <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === "ios" ? "padding" : "height"} >
 
@@ -16,35 +51,50 @@ export default function SearchScreen({ navigation }) {
 
           <View style={styles.inputWrapper}>
               <Text style={styles.label}>Recherche par Auteur</Text>
+                <View style={styles.inputWithIcon}>
                   <TextInput
                     style={styles.input}
                     placeholder="Nom de l'auteur"
                     autoCapitalize="none"
-                    // value={password}
-                    // onChangeText={setPassword}
+                    value={author} 
+                    onChangeText={setAuthor}
                   />
+                  <TouchableOpacity onPress={handleSearch}>
+                    <Image source={require('../assets/images/blueLoupe.png')} style={styles.pictureLoupe}/>
+                  </TouchableOpacity>
+                </View>
           </View>
 
           <View style={styles.inputWrapper}>
               <Text style={styles.label}>Recherche par Titre</Text>
+                <View style={styles.inputWithIcon}>
                   <TextInput
                     style={styles.input}
                     placeholder="Titre du livre"
                     autoCapitalize="none"
-                    // value={password}
-                    // onChangeText={setPassword}
+                    value={title} 
+                    onChangeText={setTitle}
                   />
+                  <TouchableOpacity onPress={handleSearch}>
+                    <Image source={require('../assets/images/blueLoupe.png')} style={styles.pictureLoupe} />
+                  </TouchableOpacity>
+                </View>
           </View>
 
           <View style={styles.inputWrapper}>
               <Text style={styles.label}>Recherche par Catégorie</Text>
+                <View style={styles.inputWithIcon}>
                   <TextInput
                     style={styles.input}
-                    placeholder="Catégorie : Livres, BD ou Mangas"
+                    placeholder="Livres, BD ou Mangas"
                     autoCapitalize="none"
-                    // value={password}
-                    // onChangeText={setPassword}
+                    value={category} 
+                    onChangeText={setCategory}
                   />
+                  <TouchableOpacity onPress={handleSearch}>
+                    <Image source={require('../assets/images/blueLoupe.png')} style={styles.pictureLoupe} />
+                  </TouchableOpacity>
+                </View>
           </View>
 
       </View>
@@ -54,7 +104,7 @@ export default function SearchScreen({ navigation }) {
         onPress={() => navigation.navigate("Bookedex")}
       >
         <Text style={styles.textButton}>Scanne ton livre !</Text>
-        {/*Image source={require('')} style={styles.logo3} />*/}
+        <Image source={require('../assets/images/codeBarre.png')} style={styles.pictureISBN} />
       </TouchableOpacity>
 
       <StatusBar style="auto" />
@@ -97,36 +147,58 @@ const styles = StyleSheet.create({
 
   // styles input
   inputContainer: {
-    width: "70%",
-    marginTop: 80,
+    width: "100%",
+    alignItems: "center",
+    marginTop: 70,
     marginBottom: 0,
   },
 
   inputWrapper: {
     position: "relative",
     marginBottom: 8,
+    width: 300,
+  },
+
+  inputWithIcon: {
+    flexDirection: "row",
+    borderWidth: 0,
+    borderColor: "#FCF8F1",
+    width: 320,
+    height: 80,
+    paddingHorizontal: 12,
+    paddingRight: 25,
+    justifyContent: 'center',
   },
 
   label: {
     marginBottom: -9,
-    paddingLeft: 5,
+    paddingLeft: 18,
     fontSize: 15,
     color: "#0a0a0aff",
     fontFamily: interFontsToUse.regular,
   },
 
   input: {
+    flex: 1,
+    height: "100%",
+    width: 300,
+    textAlign: "left",
+    paddingVertical: 0,
     borderWidth: 1,
     borderColor: "#E8DCCA",
     opacity: 0.4,
     borderRadius: 10,
     marginBottom: 16,
-    width: 300,
-    height: 80,
     fontSize: 15,
     paddingLeft: 12,
     fontFamily: interFontsToUse.regular,
-    textAlign: "center",
+  },
+
+  pictureLoupe: {
+    width: 50,
+    height: 50,
+    marginLeft: -60,
+    marginTop: 15,
   },
 
   // scan button
@@ -136,11 +208,12 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     height: 80,
     width: 250,
+    flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#FCF8F1",
     fontFamily: interFontsToUse.regular,
-    marginTop: 20,
+    marginTop: 50,
   },
 
   textButton: {
@@ -150,5 +223,9 @@ const styles = StyleSheet.create({
     color: "black",
   },
 
-
+  pictureISBN: {
+    width: 70,
+    height: 70,
+    marginLeft: 10,
+  },
 });

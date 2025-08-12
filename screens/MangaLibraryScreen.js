@@ -94,26 +94,39 @@ export default function MangaLibraryScreen({navigation}) {
         contentContainerStyle={styles.content}
         showsVerticalScrollIndicator={true}
       >
-        {books.map((book) => (
-          <TouchableOpacity 
-          style={styles.bookContainer}
-          onPress={() => handleBookPress(book)}
-          >
-            <View style={styles.bookInfosContainer}>
-              <Text style={styles.title}>{book.title}</Text>
-              <Text style={styles.author}>{book.author}</Text>
-              <Text style={styles.parutionDate}>{book.date}</Text>
-              <Text style={styles.counter}>
-                PRÉSENT DANS <Text style={styles.counterBold}>{book.count}</Text> BIBLIOTHÈQUES SUR READER.
+        {books.length === 0 ? (
+            <View style={{ alignItems: "center", marginTop: 200 }}>
+              <Text style={{ 
+                fontFamily: interFontsToUse.boldItalic, 
+                fontSize: 16, 
+                color: "#0E0E66" 
+              }}>
+                Ajoute ton premier Manga ♥︎
               </Text>
             </View>
-            {book.cover ? (
-                <Image source={{uri: book.cover}} style={styles.image} />
-              ) : (
-                <Image source={require('../assets/images/notAvailable.jpg')} style={styles.image} />
-              )}
-          </TouchableOpacity>
-        ))}
+      ) : (
+        books.map((book, i) => (
+            <TouchableOpacity 
+            key={i}
+            style={styles.bookContainer}
+            onPress={() => handleBookPress(book)}
+            >
+              <View style={styles.bookInfosContainer}>
+                <Text style={styles.title}>{book.title}</Text>
+                <Text style={styles.author}>{book.author}</Text>
+                <Text style={styles.parutionDate}>{book.publishedDate}</Text>
+                <Text style={styles.counter}>
+                  PRÉSENT DANS <Text style={styles.counterBold}>{book.count}</Text> BIBLIOTHÈQUES SUR READER.
+                </Text>
+              </View>
+              {book.cover ? (
+                  <Image source={{uri: book.cover}} style={styles.image} />
+                ) : (
+                  <Image source={require('../assets/images/notAvailable.jpg')} style={styles.image} />
+                )}
+            </TouchableOpacity>
+        ))
+      )}
       </ScrollView>
 
       <TouchableOpacity

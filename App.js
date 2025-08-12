@@ -11,6 +11,7 @@ import { interFonts } from './assets/fonts/fonts';
 import HomeScreen from "./screens/HomeScreen";
 import GeneralScreen from "./screens/GeneralScreen";
 import SearchScreen from "./screens/SearchScreen";
+import ResultSearchScreen from "./screens/ResultSearchScreen";
 import LibraryScreen from "./screens/LibraryScreen";
 import BookLibraryScreen from "./screens/BookLibraryScreen";
 import ComicLibraryScreen from "./screens/ComicLibraryScreen";
@@ -77,6 +78,7 @@ export default function App() {
           <Stack.Screen name="Home" component={HomeScreen} />
           <Stack.Screen name="Inscription" component={Inscription} />
           <Stack.Screen name="TabNavigator" component={TabNavigator} />
+          <Stack.Screen name="ResultSearch" component={ResultSearchScreen} />
           <Stack.Screen name="BookLibrary" component={BookLibraryScreen} />
           <Stack.Screen name="ComicLibrary" component={ComicLibraryScreen} />
           <Stack.Screen name="MangaLibrary" component={MangaLibraryScreen} />

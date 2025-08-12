@@ -6,17 +6,17 @@ const categories = [
   {
     title: 'LIVRES',
     image: require('../assets/images/BibliothequeLivre.png'),
-    componant: 'BookLibrary',
+    component: 'BookLibrary',
   },
   {
     title: 'BD',
     image: require('../assets/images/BibliothequeBD.png'),
-    componant: 'ComicLibrary',
+    component: 'ComicLibrary',
   },
   {
     title: 'MANGAS',
     image: require('../assets/images/BibliothequeManga.png'),
-    componant: 'MangaLibrary',
+    component: 'MangaLibrary',
   },
 ];
 
@@ -31,12 +31,12 @@ export default function LibraryScreen({navigation}) {
       </View>
     </View> 
 
-    {categories.map(category => (
-        <View style={styles.sectionGlobalContent}>
+    {categories.map((category,i) => (
+        <View key={i} style={styles.sectionGlobalContent}>
           <Image source={category.image} style={styles.logo1} resizeMode="contain"/>
           <TouchableOpacity
             style={styles.buttonNavigateToNextScreen}
-            onPress={() => navigation.navigate(category.componant)}
+            onPress={() => navigation.navigate(category.component)}
           >
             <View style={styles.titleSectionContent}>
               <Text style={styles.titleSectionText}>{category.title}</Text>

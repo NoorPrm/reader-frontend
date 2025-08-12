@@ -3,7 +3,7 @@ import { Text, View, TouchableOpacity, StyleSheet, Image, ScrollView } from 'rea
 import { useSelector } from "react-redux";
 import { useState, useEffect } from "react";
 import { interFontsToUse } from '../assets/fonts/fonts';
-import AvisCard from "../components/AvisCard";
+// import AvisCard from "../components/AvisCard";
 const myip = process.env.MY_IP;
 const backendAdress = `${myip}`;
 
@@ -53,7 +53,7 @@ export default function UserProfilScreen({ navigation }) {
           style={styles.followersContainer} 
           onPress={() => setIsFollowing(!isFollowing)}
         >
-          <Text style={styles.followersText}> 77 Followers</Text>
+          <Text style={styles.followersText}> ♥︎ 77 Followers</Text>
         </TouchableOpacity>
          <Text style={styles.userStatut}>
     {user.statut}
@@ -144,8 +144,8 @@ export default function UserProfilScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FCF8F1',
-    alignItems: 'center',
+    backgroundColor: "#FCF8F1",
+    alignItems: "center",
   },
   menuButton: {
     position: "absolute",
@@ -162,27 +162,28 @@ const styles = StyleSheet.create({
     borderRadius: 75,
     marginBottom: 10,
     backgroundColor: "#E8DCCA",
-    borderBlockColor: "#FCF8F1"
+    borderBlockColor: "#FCF8F1",
   },
   userStatut: {
-fontFamily: interFontsToUse.bold,
+    fontFamily: interFontsToUse.bold,
+    color: "#0E0E66",
   },
   profileSection: {
-    alignItems: 'center',
+    alignItems: "center",
     marginTop: 50,
   },
   username: {
     fontSize: 22,
-    fontFamily: interFontsToUse.regular,
+    fontFamily: interFontsToUse.bold,
     marginBottom: 5,
-    color: "#0E0E66"
+    color: "#0E0E66",
   },
   separator: {
     width: "100%",
     height: 2,
     backgroundColor: "#E8DCCA",
     marginBottom: 10,
-    marginTop:10,
+    marginTop: 10,
   },
   tabs: {
     flexDirection: "row",
@@ -230,7 +231,7 @@ fontFamily: interFontsToUse.bold,
     fontSize: 14,
     fontWeight: "500",
     flexShrink: 1,
-  }, 
+  },
   followersContainer: {
     flexDirection: "row",
     alignItems: "center",
@@ -241,5 +242,6 @@ fontFamily: interFontsToUse.bold,
     fontSize: 14,
     color: "#0E0E66",
     fontWeight: "500",
+    opacity: 0.4,
   },
 });

@@ -1,94 +1,56 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, View, Text, Dimensions, TouchableOpacity, Image, ScrollView } from "react-native";
 import { interFontsToUse } from '../assets/fonts/fonts';
-import { useState, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { setSelectedBook } from "../reducers/bookSelected";
 //const backendAdress = process.env.EXPO_PUBLIC_URL_BACKEND
 const myip = process.env.MY_IP;
 const backendAdress = `${myip}`;
-console.log("Backend URL:", backendAdress);
 
-export default function ComicLibraryScreen({navigation}) {
+
+export default function ResultSearchScreen({navigation, route}) {
+
+  let books = [];
+  if (route.params && route.params.books) {
+    books = route.params.books;
+  }
   const dispatch = useDispatch();
-  const [books, setBooks] = useState([]);
-  const token = useSelector((state) => state.user.value.token);
-
-  useEffect(() => {
-    fetch(`${backendAdress}/userLibrary/${token}/BD`)
-      .then((response) => response.json())
-      .then((data) => {
-        console.log('data reçue:', data);
-        const booksFromBackend = data.map(item => item.book);
-
-        const countMap = {};
-
-        booksFromBackend.forEach((book) => {
-          if (countMap[book.title] === undefined) {
-            countMap[book.title] = 0;
-          }
-          countMap[book.title] += 1;
-        });
-
-        const booksWithCount = booksFromBackend.map((book) => {
-          return {
-            ...book,
-            count: countMap[book.title] 
-          };
-        });
-
-        setBooks(booksWithCount);
-      })
-  }, []);
 
   const handleBookPress = (book) => {
     dispatch(setSelectedBook(book));
     navigation.navigate('BookInfos');
   };
-
-  
-
   // const books = [
   //   {
   //     title: "L’ART DE LA GUERRE",
   //     author: "@SUN TZU",
-  //     date: "600 ans av. J-C",
-  //     counter: 46,
-  //     image: require("../assets/images/couvlartdelaguerre.jpg"),
+  //     publishedDate: "600 ans av. J-C",
+  //     count: 46,
+  //     cover: require("../assets/images/couvlartdelaguerre.jpg"),
   //   },
   //   {
   //     title: "HARRY POTTER ET L’ENFANT MAUDIT",
   //     author: "@J.K. ROWLING",
-  //     date: "14/10/2016",
-  //     counter: 255,
-  //     image: require("../assets/images/couvharrypotter.jpg"),
+  //     publishedDate: "14/10/2016",
+  //     count: 255,
+  //     cover: require("../assets/images/couvharrypotter.jpg"),
   //   },
   //   {
   //     title: "AP CHEMISTRY POUR LES NULS",
   //     author: "@PETER J. MIKULECKY",
-  //     date: "23/01/2015",
-  //     counter: 5,
-  //     image: require("../assets/images/couvchemistryfordummies.jpg"),
+  //     publishedDate: "23/01/2015",
+  //     count: 5,
+  //     cover: require("../assets/images/couvchemistryfordummies.jpg"),
   //   }
   // ];
 
   return (
     <View style={styles.container}>
-
-      <View style={styles.titleMyLibraryGlobalContent}>
-        <View style={styles.titleMyLibraryContent}>
-          <Text style={styles.titleMyLibraryText}>BD</Text>
+      <View style={styles.titleResultGlobalContent}>
+        <View style={styles.titleResultContent}>
+          <Text style={styles.titleResultText}>Trouvailles de l'apprenti chasseur</Text>
         </View>
       </View>
-
-      {/* <TouchableOpacity
-        style={styles.buttonNavigateToNextScreen}
-        onPress={() => navigation.navigate("BookInfos")}
-      >
-        <View style={styles.titleSectionContent}>
-          <Text style={styles.titleSectionText}>BookInfos</Text>
-        </View>
-      </TouchableOpacity> */}
 
       <ScrollView
               contentContainerStyle={styles.content}
@@ -101,7 +63,7 @@ export default function ComicLibraryScreen({navigation}) {
                       fontSize: 16, 
                       color: "#0E0E66" 
                     }}>
-                      Ajoute ta première Bande Dessinée ♥︎
+                      Oups, la recherche n'a rien donnée... 
                     </Text>
                   </View>
             ) : (
@@ -131,7 +93,7 @@ export default function ComicLibraryScreen({navigation}) {
 
       <TouchableOpacity
         style={styles.returnBtn}
-        onPress={() => navigation.navigate("Library")}
+        onPress={() => navigation.goBack()}
       >
         <Text style={styles.txtBtn}>Retour à la Bibliothèque</Text>
       </TouchableOpacity>
@@ -152,29 +114,29 @@ const styles = StyleSheet.create({
   },
 
   // title
-  titleMyLibraryGlobalContent: {
+  titleResultGlobalContent: {
     marginTop: 65,
     alignItems: "center",
     width: "100%",
   },
-  titleMyLibraryContent: {
+  titleResultContent: {
     borderWidth: 3,
     borderColor: "#0E0E66",
     borderRadius: 20,
     height: 50,
-    width: 300,
+    width: 320,
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#FCF8F1",
   },
-  titleMyLibraryText: {
-    fontSize: 20,
+  titleResultText: {
+    fontSize: 17,
     fontFamily: interFontsToUse.bold,
     textAlign: "center",
     color: "#0E0E66",
   },
 
-  // button BookInfos 
+  // button BookInfos
   buttonNavigateToNextScreen: {
     alignItems: "center",
   },

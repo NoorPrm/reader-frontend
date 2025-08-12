@@ -10,6 +10,7 @@ import {
   Pressable,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
+import { interFontsToUse } from '../assets/fonts/fonts';
 import { CameraView, Camera } from "expo-camera";
 // import { LOCAL_IP } from "@env";
 //const backendAdress = process.env.EXPO_PUBLIC_URL_BACKEND;
@@ -168,9 +169,9 @@ export default function BookedexScreen({ navigation }) {
 
   return (
     <LinearGradient colors={["#0E0E66", "#FCF8F1"]} style={styles.container}>
-      <Text style={styles.title}>BOOKéDEX</Text>
+      <Text style={styles.title}>BOOKÉDEX</Text>
       <Text style={styles.scanTxt}>
-        Capturez le code-barre du livre dans l'encadré !
+        Capturez le code-barre du livre, dans l'encadré !
       </Text>
 
       <View style={styles.scanBox}>
@@ -324,27 +325,30 @@ const styles = StyleSheet.create({
   returnBtn: {
     padding: 10,
     margin: 10,
+    marginTop: 30,
 
     borderRadius: 5,
     backgroundColor: "#0E0E66",
   },
   txtBtn: {
     color: "#ffffffff",
-    fontFamily: "Inter_400Regular",
+    fontFamily: interFontsToUse.regular,
   },
   title: {
     color: "#fff",
-    fontSize: 18,
-    fontWeight: "bold",
-    marginTop: 40,
+    fontSize: 40,
+    fontFamily: interFontsToUse.bold,
+    marginTop: 30,
   },
   scanTxt: {
     color: "#ffffffff",
+    fontFamily: interFontsToUse.regular,
+    marginTop: 10,
   },
   scanBox: {
     width: "80%",
     height: "65%",
-
+    borderRadius: 10,
     borderWidth: 2,
     borderColor: "#fff",
     marginTop: 30,

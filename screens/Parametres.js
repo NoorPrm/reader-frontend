@@ -36,7 +36,7 @@ export default function Parametres({ navigation }) {
             body: JSON.stringify({
                 email,
                 username,
-                statut,
+                statut: statutL,
                 mode: isPublic ? "Public" : "Privé",
                 password: password || undefined,
             }),
@@ -212,7 +212,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#FCF8F1",
-    marginTop: 10,
+    marginTop: 5,
   },
   statutText: {
     fontSize: 17,
@@ -267,7 +267,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     paddingHorizontal: 20,
     paddingVertical: 8,
-    marginTop: 40,
+    marginTop: 30,
   },
   sectionTitleText: {
     fontSize: 17,
@@ -279,7 +279,7 @@ const styles = StyleSheet.create({
     alignSelf: "flex-start",
     marginLeft: 30,
     marginTop: 15,
-    marginBottom: -9,
+    marginBottom: -7,
     paddingLeft: 5,
     fontSize: 13,
     color: "#5c5c5c",
@@ -291,6 +291,7 @@ const styles = StyleSheet.create({
     borderColor: "#E8DCCA",
     borderWidth: 1,
     borderRadius: 10,
+    opacity: 0.4,
     paddingHorizontal: 10,
     fontSize: 15,
     alignSelf: "flex-start",
@@ -299,7 +300,7 @@ const styles = StyleSheet.create({
   actionsContainer: {
     flexDirection: "row",
     justifyContent: "space-around",
-    marginTop: 30,
+    marginTop: 20,
     width: 190,
     gap: 2,
     marginRight: 139,
@@ -328,11 +329,14 @@ const styles = StyleSheet.create({
   },
    pickerContainer: {
     width: 180,
-    height: 50,
+    height: 150,
     borderWidth: 1,
     borderColor: "#E8DCCA",
     borderRadius: 8,
     overflow: "hidden",
     marginTop: 20,
+  },
+  picker: {
+    color: "#fffff",
   },
 });
