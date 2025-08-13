@@ -219,7 +219,7 @@ const styles = StyleSheet.create({
   pictureLoupe: {
     width: 50,
     height: 50,
-    marginLeft: -60,
+    marginLeft: 0,
     marginTop: 15,
   },
 

@@ -25,6 +25,7 @@ import Inscription from "./screens/Inscription";
 import Parametres from "./screens/Parametres";
 import user from "./reducers/user";
 import bookSelected from "./reducers/bookSelected";
+import PublicProfileScreen from "./screens/PublicProfileScreen";
 import searchResults from "./reducers/searchResults";
 
 const store = configureStore({
@@ -86,6 +87,7 @@ export default function App() {
           <Stack.Screen name="BookInfos" component={BookScreen} />
           <Stack.Screen name="Bookedex" component={BookedexScreen} />
           <Stack.Screen name="Parametres" component={Parametres} />
+          <Stack.Screen name="PublicProfile" component={PublicProfileScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>
