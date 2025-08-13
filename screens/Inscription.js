@@ -19,18 +19,15 @@ import { login } from "../reducers/user";
 // const backendAdress = process.env.EXPO_PUBLIC_URL_BACKEND;
 const myip = process.env.MY_IP;
 const backendAdress = `${myip}`;
-console.log("Backend URL:", backendAdress);
 
 export default function Inscription({ navigation }) {
   const [statut, setStatut] = useState("LECTEUR");
   const [username, setUsername] = useState("");
   const [usernameError, setUsernameError] = useState("");
   const [photo, setPhoto] = useState(null);
-
   const token = useSelector((state) => state.user.value.token);
   const dispatch = useDispatch();
   const handleProfileUpdate = () => {
-    
     let hasError = false;
 
     if (username === "") {
@@ -124,7 +121,6 @@ export default function Inscription({ navigation }) {
 
         <View style={styles.formInputs}>
           <View style={styles.Inputlabell}>
-
             {usernameError !== "" && (
               <Text style={styles.errorText}>{usernameError}</Text>
             )}

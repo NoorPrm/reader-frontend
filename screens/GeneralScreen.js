@@ -1,5 +1,6 @@
 import { StatusBar } from "expo-status-bar";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
+import { useFocusEffect } from "@react-navigation/native";
 import { useSelector } from "react-redux";
 import {
   StyleSheet,
@@ -11,7 +12,6 @@ import {
   Image,
   ScrollView,
   SafeAreaView,
-  Posts
 } from "react-native";
 import Posts from "../screens/Posts";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
@@ -21,18 +21,31 @@ const myip = process.env.MY_IP;
 const backendAdress = `${myip}`;
 
 export default function GeneralScreen() {
-  // const [modalVisible, setModalVisible] = useState(false);
-  // const [post, setPost] = useState("");
-  // const [allPosts, setAllPosts] = useState([]);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [post, setPost] = useState("");
+  const [allPosts, setAllPosts] = useState([]);
+  const [refreshKey, setRefreshKey] = useState(0);
   const userToken = useSelector((state) => state.user.value.token);
   const user = useSelector((state) => state.user.value);
 
+  // Premier chargement
   useEffect(() => {
+    fetchAllPosts();
+  }, []);
+
+  // Rechargement à chaque retour sur l'écran
+  useFocusEffect(
+    useCallback(() => {
+      fetchAllPosts();
+    }, [userToken])
+  );
+
+  const fetchAllPosts = () => {
     fetch(`${backendAdress}/posts`)
       .then((res) => res.json())
-      .then((data) => setAllPosts(data.content || data.posts || []))
+      .then((data) => setAllPosts(data.posts || []))
       .catch((err) => console.log("Erreur lors du fetch des posts :", err));
-  }, [backendAdress]);
+  };
 
   const addPost = () => {
     fetch(`${backendAdress}/posts`, {
@@ -94,10 +107,25 @@ export default function GeneralScreen() {
         contentContainerStyle={styles.content}
         showsVerticalScrollIndicator
       >
-        {/* <Posts posts={allPosts} /> */}
+        <Posts
+          posts={allPosts}
+          backendAdress={backendAdress}
+          userToken={user.token}
+          currentUsername={user.username}
+          currentUserPic={user.profilPicture}
+          refreshKey={refreshKey}
+          onRefresh={() => {
+            fetch(`${backendAdress}/posts`)
+              .then((res) => res.json())
+              .then((data) => setAllPosts(data.posts || []))
+              .catch((error) =>
+                console.log("Erreur lors du fetch des posts :", error)
+              );
+          }}
+        />
       </ScrollView>
 
-      {/* <Modal
+      <Modal
         animationType="slide"
         transparent
         visible={modalVisible}
@@ -127,7 +155,7 @@ export default function GeneralScreen() {
             </TouchableOpacity>
           </View>
         </View>
-      </Modal> */}
+      </Modal>
       <StatusBar style="auto" />
     </SafeAreaView>
   );

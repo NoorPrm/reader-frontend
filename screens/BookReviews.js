@@ -59,10 +59,10 @@ export default function BookReviews({
       >
         {reviews.map((avis, index) => {
           const isUser = avis.authorUsername === currentUsername;
-          const p = avis?.authorProfilePicture;
+          const avatar = avis?.authorProfilePicture;
           const hasValidAvatar =
-            typeof p === "string" &&
-            (p.startsWith("http") || p.startsWith("file://"));
+            typeof avatar === "string" &&
+            (avatar.startsWith("http") || avatar.startsWith("file://"));
 
           return (
             <View style={styles.avisCard} key={avis._id || index}>
@@ -70,7 +70,7 @@ export default function BookReviews({
                 <Image
                   source={
                     hasValidAvatar
-                      ? { uri: p }
+                      ? { uri: avatar }
                       : require("../assets/images/whiteUser.png")
                   }
                   style={styles.avatarImg}
@@ -188,7 +188,6 @@ const styles = StyleSheet.create({
   },
   userStars: {
     flexDirection: "row",
-    bottom: 20,
   },
   dateAvis: {
     justifyContent: "center",
@@ -199,8 +198,8 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   dotsContainer: {
-    left: 250,
-    bottom: 30,
+    alignItems: "flex-end",
+    bottom: 35,
   },
   dots: {
     fontSize: 24,

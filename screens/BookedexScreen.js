@@ -10,7 +10,7 @@ import {
   Pressable,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import { interFontsToUse } from '../assets/fonts/fonts';
+import { interFontsToUse } from "../assets/fonts/fonts";
 import { CameraView, Camera } from "expo-camera";
 // import { LOCAL_IP } from "@env";
 //const backendAdress = process.env.EXPO_PUBLIC_URL_BACKEND;
@@ -47,14 +47,20 @@ export default function BookedexScreen({ navigation }) {
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log("fonction saveBookToDB: ", bookToSave);
-        if (data.error) {
-          console.log("Info :", data.error);
-        } else {
-          console.log("Livre ajouté dans la DB :", data._id);
+        if (data.error && data.existingBookId) {
+          // Si le livre existe déjà on passe direct à la modale de catégorie
+          console.log("Livre déjà en base, ID :", data.existingBookId);
+          setFetchedBookId(data.existingBookId);
+          setModalVisible(false);
+          setSecondModalVisible(true);
+        } else if (data._id) {
+          // Si nouveau livre on enchaîne normalement
+          console.log("Livre ajouté :", data._id);
           setFetchedBookId(data._id);
           setModalVisible(false);
           setSecondModalVisible(true);
+        } else {
+          console.log("Erreur inconnue :", data);
         }
       })
       .catch((error) => {

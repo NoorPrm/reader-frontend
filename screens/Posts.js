@@ -9,76 +9,114 @@ import {
   Pressable,
 } from "react-native";
 
-export default function Posts({ posts = [] }) {
+export default function Posts({
+  posts = [],
+  backendAdress,
+  userToken,
+  currentUsername = "",
+  currentUserPic,
+  onRefresh,
+  refreshKey,
+}) {
   const [modalVisible, setModalVisible] = useState(null);
 
+  const handleDelete = (postId) => {
+    fetch(`${backendAdress}/posts/${postId}/${userToken}`, {
+      method: "DELETE",
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setModalVisible(null);
+        if (data.result && onRefresh) onRefresh();
+      })
+      .catch((err) => {
+        console.log("delete err:", err.message);
+        setModalVisible(null);
+      });
+  };
+
   return (
-    <View style={{ paddingBottom: 20 }}>
-      {posts.map((post, index) => (
-        <View style={styles.card} key={post?._id || index}>
-          <View style={styles.header}>
-            <Image
-              source={
-                post?.authorProfilePicture &&
-                (post.authorProfilePicture.startsWith("http") ||
-                  post.authorProfilePicture.startsWith("file://"))
-                  ? { uri: post.authorProfilePicture }
-                  : require("../assets/images/whiteUser.png")
-              }
-              style={styles.avatar}
-            />
+    <View style={{ paddingBottom: 20 }} key={refreshKey}>
+      {posts.map((post, index) => {
+        const isUser =
+          (post.authorToken && userToken && post.authorToken === userToken) ||
+          false;
 
-            <View style={styles.headerRight}>
-              <TouchableOpacity>
-                <Text style={styles.username}>
-                  {post?.authorUsername || "Utilisateur"}
-                </Text>
-              </TouchableOpacity>
+        const avatar = post?.authorProfilePicture;
 
-              <TouchableOpacity
-                onPress={() => setModalVisible(index)}
-                style={styles.dotsContainer}
-              >
-                <Text style={styles.dots}>...</Text>
-              </TouchableOpacity>
+        const hasValidAvatar =
+          typeof avatar === "string" &&
+          (avatar.startsWith("http") ||
+            avatar.startsWith("file://") ||
+            avatar.startsWith("data:"));
 
-              <Text style={styles.date}>
-                {post?.createdAt
-                  ? new Date(post.createdAt).toLocaleDateString()
-                  : ""}
-              </Text>
-            </View>
-          </View>
+        return (
+          <View style={styles.card} key={post?._id || index}>
+            <View style={styles.header}>
+              <Image
+                source={
+                  hasValidAvatar
+                    ? { uri: avatar }
+                    : require("../assets/images/whiteUser.png")
+                }
+                key={avatar}
+                style={styles.avatar}
+              />
 
-          <View style={styles.content}>
-            <Text>{post?.content || ""}</Text>
-          </View>
-
-          <Modal
-            transparent
-            animationType="fade"
-            visible={modalVisible === index}
-            onRequestClose={() => setModalVisible(null)}
-          >
-            <Pressable
-              style={styles.overlay}
-              onPress={() => setModalVisible(null)}
-            >
-              <View style={styles.modal}>
-                <TouchableOpacity
-                  style={styles.deleteBtn}
-                  onPress={() => {
-                    // TODO: call DELETE ici
-                    setModalVisible(null);
-                  }}
-                >
-                  <Text style={styles.deleteText}>Supprimer</Text>
+              <View style={styles.headerRight}>
+                <TouchableOpacity>
+                  <Text style={styles.username}>
+                    {post?.authorUsername || "Utilisateur"}
+                  </Text>
                 </TouchableOpacity>
+
+                {isUser && (
+                  <TouchableOpacity
+                    onPress={() => setModalVisible(index)}
+                    style={styles.dotsContainer}
+                  >
+                    <Text style={styles.dots}>...</Text>
+                  </TouchableOpacity>
+                )}
+
+                <Text style={styles.date}>
+                  {post?.createdAt
+                    ? new Date(post.createdAt).toLocaleDateString()
+                    : ""}
+                </Text>
               </View>
-            </Pressable>
-          </Modal>
-        </View>
-      ))}
+            </View>
+
+            <View style={styles.content}>
+              <Text>{post?.content || ""}</Text>
+            </View>
+
+            <Modal
+              transparent
+              animationType="fade"
+              visible={modalVisible === index}
+              onRequestClose={() => setModalVisible(null)}
+            >
+              <Pressable
+                style={styles.overlay}
+                onPress={() => setModalVisible(null)}
+              >
+                <View style={styles.modal}>
+                  <TouchableOpacity
+                    style={styles.deleteBtn}
+                    onPress={() => {
+                      handleDelete(post._id);
+                      setModalVisible(null);
+                    }}
+                  >
+                    <Text style={styles.deleteText}>Supprimer</Text>
+                  </TouchableOpacity>
+                </View>
+              </Pressable>
+            </Modal>
+          </View>
+        );
+      })}
     </View>
   );
 }

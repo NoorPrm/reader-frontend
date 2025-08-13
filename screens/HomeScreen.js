@@ -23,7 +23,6 @@ const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 // const backendAdress = process.env.EXPO_PUBLIC_URL_BACKEND;
 const myip = process.env.MY_IP;
 const backendAdress = `${myip}`;
-console.log("Backend URL:", backendAdress);
 
 export default function HomeScreen({ navigation }) {
   // const handleSubmit = () => {
@@ -67,7 +66,6 @@ export default function HomeScreen({ navigation }) {
       return;
     }
 
-    console.log("URL fetch :", `${backendAdress}/users/signup`);
     fetch(`${backendAdress}/users/signup`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -78,7 +76,6 @@ export default function HomeScreen({ navigation }) {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log("data reçue:", data);
         if (data.result) {
           dispatch(
             login({

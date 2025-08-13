@@ -1,14 +1,23 @@
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View, TouchableOpacity, Dimensions, KeyboardAvoidingView, Platform, TextInput, Image } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  Dimensions,
+  KeyboardAvoidingView,
+  Platform,
+  TextInput,
+  Image,
+} from "react-native";
 import { useState } from "react";
-import { useSelector} from 'react-redux';
-import { interFontsToUse } from '../assets/fonts/fonts';
+import { useSelector } from "react-redux";
+import { interFontsToUse } from "../assets/fonts/fonts";
 
 const myip = process.env.MY_IP;
 const backendAdress = `${myip}`;
 
 export default function SearchScreen({ navigation }) {
-
   const [author, setAuthor] = useState("");
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("");
@@ -17,14 +26,14 @@ export default function SearchScreen({ navigation }) {
   const handleSearch = () => {
     // Recherche par catégorie → route userlibrary
     if (category) {
-    fetch(`${backendAdress}/userlibrary/${token}/${category}`)
-      .then(res => res.json())
-      .then(data => {
-        const books = data.map(item => item.book);
-        navigation.navigate("ResultSearch", { books: books || [] });
-      });
-    return;
-  }
+      fetch(`${backendAdress}/userlibrary/${token}/${category}`)
+        .then((res) => res.json())
+        .then((data) => {
+          const books = data.map((item) => item.book);
+          navigation.navigate("ResultSearch", { books: books || [] });
+        });
+      return;
+    }
 
     // Sinon recherche par auteur/titre → route books
     const params = new URLSearchParams();
@@ -32,15 +41,17 @@ export default function SearchScreen({ navigation }) {
     if (title) params.append("title", title);
 
     fetch(`${backendAdress}/books?${params.toString()}`)
-      .then(res => res.json())
-      .then(data => {
+      .then((res) => res.json())
+      .then((data) => {
         navigation.navigate("ResultSearch", { books: data.books || [] });
-      })
+      });
   };
 
   return (
-    <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === "ios" ? "padding" : "height"} >
-
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+    >
       <View style={styles.titleSearchGlobalContent}>
         <View style={styles.titleSearchContent}>
           <Text style={styles.titleSearchText}>CHASSE AUX LIVRES</Text>
@@ -48,55 +59,62 @@ export default function SearchScreen({ navigation }) {
       </View>
 
       <View style={styles.inputContainer}>
-
-          <View style={styles.inputWrapper}>
-              <Text style={styles.label}>Recherche par Auteur</Text>
-                <View style={styles.inputWithIcon}>
-                  <TextInput
-                    style={styles.input}
-                    placeholder="Nom de l'auteur"
-                    autoCapitalize="none"
-                    value={author} 
-                    onChangeText={setAuthor}
-                  />
-                  <TouchableOpacity onPress={handleSearch}>
-                    <Image source={require('../assets/images/blueLoupe.png')} style={styles.pictureLoupe}/>
-                  </TouchableOpacity>
-                </View>
+        <View style={styles.inputWrapper}>
+          <Text style={styles.label}>Recherche par Auteur</Text>
+          <View style={styles.inputWithIcon}>
+            <TextInput
+              style={styles.input}
+              placeholder="Nom de l'auteur"
+              autoCapitalize="none"
+              value={author}
+              onChangeText={setAuthor}
+            />
+            <TouchableOpacity onPress={handleSearch}>
+              <Image
+                source={require("../assets/images/blueLoupe.png")}
+                style={styles.pictureLoupe}
+              />
+            </TouchableOpacity>
           </View>
+        </View>
 
-          <View style={styles.inputWrapper}>
-              <Text style={styles.label}>Recherche par Titre</Text>
-                <View style={styles.inputWithIcon}>
-                  <TextInput
-                    style={styles.input}
-                    placeholder="Titre du livre"
-                    autoCapitalize="none"
-                    value={title} 
-                    onChangeText={setTitle}
-                  />
-                  <TouchableOpacity onPress={handleSearch}>
-                    <Image source={require('../assets/images/blueLoupe.png')} style={styles.pictureLoupe} />
-                  </TouchableOpacity>
-                </View>
+        <View style={styles.inputWrapper}>
+          <Text style={styles.label}>Recherche par Titre</Text>
+          <View style={styles.inputWithIcon}>
+            <TextInput
+              style={styles.input}
+              placeholder="Titre du livre"
+              autoCapitalize="none"
+              value={title}
+              onChangeText={setTitle}
+            />
+            <TouchableOpacity onPress={handleSearch}>
+              <Image
+                source={require("../assets/images/blueLoupe.png")}
+                style={styles.pictureLoupe}
+              />
+            </TouchableOpacity>
           </View>
+        </View>
 
-          <View style={styles.inputWrapper}>
-              <Text style={styles.label}>Recherche par Catégorie</Text>
-                <View style={styles.inputWithIcon}>
-                  <TextInput
-                    style={styles.input}
-                    placeholder="Livres, BD ou Mangas"
-                    autoCapitalize="none"
-                    value={category} 
-                    onChangeText={setCategory}
-                  />
-                  <TouchableOpacity onPress={handleSearch}>
-                    <Image source={require('../assets/images/blueLoupe.png')} style={styles.pictureLoupe} />
-                  </TouchableOpacity>
-                </View>
+        <View style={styles.inputWrapper}>
+          <Text style={styles.label}>Recherche par Catégorie</Text>
+          <View style={styles.inputWithIcon}>
+            <TextInput
+              style={styles.input}
+              placeholder="Livres, BD ou Mangas"
+              autoCapitalize="none"
+              value={category}
+              onChangeText={setCategory}
+            />
+            <TouchableOpacity onPress={handleSearch}>
+              <Image
+                source={require("../assets/images/blueLoupe.png")}
+                style={styles.pictureLoupe}
+              />
+            </TouchableOpacity>
           </View>
-
+        </View>
       </View>
 
       <TouchableOpacity
@@ -104,7 +122,10 @@ export default function SearchScreen({ navigation }) {
         onPress={() => navigation.navigate("Bookedex")}
       >
         <Text style={styles.textButton}>Scanne ton livre !</Text>
-        <Image source={require('../assets/images/codeBarre.png')} style={styles.pictureISBN} />
+        <Image
+          source={require("../assets/images/codeBarre.png")}
+          style={styles.pictureISBN}
+        />
       </TouchableOpacity>
 
       <StatusBar style="auto" />
@@ -167,7 +188,7 @@ const styles = StyleSheet.create({
     height: 80,
     paddingHorizontal: 12,
     paddingRight: 25,
-    justifyContent: 'center',
+    justifyContent: "center",
   },
 
   label: {
@@ -197,7 +218,7 @@ const styles = StyleSheet.create({
   pictureLoupe: {
     width: 50,
     height: 50,
-    marginLeft: -60,
+    marginLeft: 0,
     marginTop: 15,
   },
 

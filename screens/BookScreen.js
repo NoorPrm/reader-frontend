@@ -15,7 +15,7 @@ import {
 } from "react-native";
 import BookReviews from "../screens/BookReviews";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
-import { interFontsToUse } from '../assets/fonts/fonts';
+import { interFontsToUse } from "../assets/fonts/fonts";
 //import defaultCover from "../assets/images/defaultCover.jpg";
 //const backendAdress = process.env.EXPO_PUBLIC_URL_BACKEND;
 const myip = process.env.MY_IP;
@@ -35,7 +35,6 @@ export default function BookScreen({ navigation }) {
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [userLibraryError, setUserLibraryError] = useState("");
   const userToken = useSelector((state) => state.user.value.token);
-  const [refreshKey, setRefreshKey] = useState(0);
   const user = useSelector((state) => state.user.value);
   const dispatch = useDispatch();
   const selectedBook = useSelector((state) => state.bookSelected.selectedBook);
@@ -300,7 +299,19 @@ export default function BookScreen({ navigation }) {
           reviews={allReviews}
           averageRating={averageRating}
           totalReviews={totalReviews}
-          refreshKey={refreshKey}
+          backendAdress={backendAdress}
+          bookId={bookId}
+          userToken={user.token}
+          currentUsername={user.username}
+          onRefresh={() => {
+            fetch(`${backendAdress}/reviews/${bookId}`)
+              .then((res) => res.json())
+              .then((data) => {
+                setAllReviews(data.reviews || []);
+                setAverageRating(data.averageRating);
+                setTotalReviews(data.reviews.length);
+              });
+          }}
         />
       </ScrollView>
       <Modal
@@ -395,7 +406,7 @@ const styles = StyleSheet.create({
   bookContainer: {
     flexDirection: "row",
     justifyContent: "center",
-    width: '80%',
+    width: "80%",
     paddingLeft: 90,
   },
   bookInfosContainer: {
@@ -410,7 +421,7 @@ const styles = StyleSheet.create({
   title: {
     fontFamily: interFontsToUse.bold,
     fontSize: 25,
-color: "#0E0E66",
+    color: "#0E0E66",
     textAlign: "center",
   },
   author: {
@@ -428,7 +439,7 @@ color: "#0E0E66",
   },
   synopsisTitle: {
     fontSize: 15,
-    fontFamily:interFontsToUse.bold,
+    fontFamily: interFontsToUse.bold,
     color: "#0E0E66",
     textAlign: "center",
   },
