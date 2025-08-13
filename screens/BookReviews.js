@@ -188,7 +188,6 @@ const styles = StyleSheet.create({
   },
   userStars: {
     flexDirection: "row",
-    bottom: 20,
   },
   dateAvis: {
     justifyContent: "center",

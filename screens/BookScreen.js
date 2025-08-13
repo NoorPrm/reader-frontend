@@ -396,7 +396,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     width: '80%',
-    paddingLeft: 90,
+    paddingLeft: 80,
   },
   bookInfosContainer: {
     flexDirection: "column",
@@ -410,7 +410,7 @@ const styles = StyleSheet.create({
   title: {
     fontFamily: interFontsToUse.bold,
     fontSize: 25,
-color: "#0E0E66",
+    color: "#0E0E66",
     textAlign: "center",
   },
   author: {

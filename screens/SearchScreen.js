@@ -1,7 +1,8 @@
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View, TouchableOpacity, Dimensions, KeyboardAvoidingView, Platform, TextInput, Image } from "react-native";
 import { useState } from "react";
-import { useSelector} from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { setSearchResults } from '../reducers/searchResults';
 import { interFontsToUse } from '../assets/fonts/fonts';
 
 const myip = process.env.MY_IP;
@@ -13,18 +14,36 @@ export default function SearchScreen({ navigation }) {
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("");
   const token = useSelector((state) => state.user.value.token);
+  const dispatch = useDispatch();
 
   const handleSearch = () => {
     // Recherche par catégorie → route userlibrary
     if (category) {
-    fetch(`${backendAdress}/userlibrary/${token}/${category}`)
-      .then(res => res.json())
-      .then(data => {
-        const books = data.map(item => item.book);
-        navigation.navigate("ResultSearch", { books: books || [] });
-      });
-    return;
-  }
+
+      const validCategories = ["Livres", "BD", "Mangas"];
+      let matchedCategory = null;
+
+      for (let i = 0; i < validCategories.length; i++) {
+
+        const currentCategory = validCategories[i];
+        const regex = new RegExp(`^${currentCategory}$`, "i");
+
+        if (regex.test(category)) {
+          matchedCategory = currentCategory;
+          break; 
+        }
+      }
+
+      fetch(`${backendAdress}/userlibrary/${token}/${matchedCategory}`)
+        .then(res => res.json())
+        .then(data => {
+          const books = data.map(item => item.book);
+          dispatch(setSearchResults(books || []));
+          setCategory("");
+          navigation.navigate("ResultSearch");
+        });
+      return;
+    }
 
     // Sinon recherche par auteur/titre → route books
     const params = new URLSearchParams();
@@ -34,7 +53,10 @@ export default function SearchScreen({ navigation }) {
     fetch(`${backendAdress}/books?${params.toString()}`)
       .then(res => res.json())
       .then(data => {
-        navigation.navigate("ResultSearch", { books: data.books || [] });
+        dispatch(setSearchResults(data.books || []));
+        setAuthor("");
+        setTitle("");
+        navigation.navigate("ResultSearch");
       })
   };
 

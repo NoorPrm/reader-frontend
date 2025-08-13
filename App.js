@@ -25,9 +25,10 @@ import Inscription from "./screens/Inscription";
 import Parametres from "./screens/Parametres";
 import user from "./reducers/user";
 import bookSelected from "./reducers/bookSelected";
+import searchResults from "./reducers/searchResults";
 
 const store = configureStore({
-  reducer: { user, bookSelected },
+  reducer: { user, bookSelected, searchResults },
 });
 
 const Stack = createNativeStackNavigator();
