@@ -36,6 +36,13 @@ export default function HomeScreen({ navigation }) {
   const [password, setPassword] = useState("");
   const [passwordError, setPasswordError] = useState("");
 
+  const resetInputs = () => {
+    setEmail("");
+    setPassword("");
+    setEmailError("");
+    setPasswordError("");
+  };
+
   const handleSignUp = () => {
     //console.log("handleSignUp appelée")
 
@@ -83,6 +90,7 @@ export default function HomeScreen({ navigation }) {
               email: email,
             })
           );
+          resetInputs();
           navigation.navigate("Inscription");
         }
       });
@@ -130,6 +138,7 @@ export default function HomeScreen({ navigation }) {
               profilPicture: data.profilPicture,
             })
           );
+          resetInputs();
         }
       });
   };

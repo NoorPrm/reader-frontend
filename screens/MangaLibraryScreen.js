@@ -95,14 +95,12 @@ export default function MangaLibraryScreen({navigation}) {
         showsVerticalScrollIndicator={true}
       >
         {books.length === 0 ? (
-            <View style={{ alignItems: "center", marginTop: 200 }}>
-              <Text style={{ 
-                fontFamily: interFontsToUse.boldItalic, 
-                fontSize: 16, 
-                color: "#0E0E66" 
-              }}>
-                Ajoute ton premier Manga ♥︎
-              </Text>
+            <View style={styles.resultNotFound}>
+              <TouchableOpacity onPress={() => navigation.navigate("Search")}>
+                <Text style={styles.resultNotFoundText}>
+                  Ajoute ton premier Manga ♥︎
+                </Text>
+              </TouchableOpacity>
             </View>
       ) : (
         books.map((book, i) => (
@@ -194,6 +192,17 @@ const styles = StyleSheet.create({
     fontFamily: interFontsToUse.italic,
     textAlign: "center",
     color: "#0E0E66",
+  },
+
+  // Result not found
+  resultNotFound: {
+    alignItems: "center", 
+    marginTop: 200,
+  },
+  resultNotFoundText: {
+    fontFamily: interFontsToUse.boldItalic, 
+    fontSize: 16, 
+    color: "#0E0E66" 
   },
 
   // books list

@@ -407,7 +407,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     width: "80%",
-    paddingLeft: 90,
+    paddingLeft: 80,
   },
   bookInfosContainer: {
     flexDirection: "column",

@@ -69,7 +69,7 @@ export default function BookedexScreen({ navigation }) {
   };
 
   //Déclenchée au scan de l'ISBN du livre
-  const fetchBookData = (isbn, category) => {
+  const fetchBookData = (isbn) => {
     const openLibraryUrl = `https://openlibrary.org/api/books?bibkeys=ISBN:${isbn}&format=json&jscmd=data`;
 
     fetch(openLibraryUrl)
@@ -82,7 +82,7 @@ export default function BookedexScreen({ navigation }) {
             title: bookData.title || "Titre inconnu",
             synopsis: bookData.notes || "Pas de résumé",
             author: bookData.authors?.[0]?.name || "Auteur inconnu",
-            publishedDate:
+            publishedDate: 
               bookData.publish_date || "Date de publication inconnue",
             isbn: isbn,
             cover: `https://covers.openlibrary.org/b/isbn/${isbn}-L.jpg`,
@@ -105,7 +105,7 @@ export default function BookedexScreen({ navigation }) {
                   title: info.title || "Titre inconnu",
                   synopsis: info.description || "Pas de résumé",
                   author: info.authors?.[0] || "Auteur inconnu",
-                  publishedDate:
+                  publishedDate: 
                     info.publishedDate || "Date de publication inconnue",
                   isbn: isbn,
                   cover: info.imageLinks?.thumbnail || null,

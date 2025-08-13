@@ -1,19 +1,16 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, View, Text, Dimensions, TouchableOpacity, Image, ScrollView } from "react-native";
 import { interFontsToUse } from '../assets/fonts/fonts';
-import { useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { setSelectedBook } from "../reducers/bookSelected";
 //const backendAdress = process.env.EXPO_PUBLIC_URL_BACKEND
 const myip = process.env.MY_IP;
 const backendAdress = `${myip}`;
 
 
-export default function ResultSearchScreen({navigation, route}) {
+export default function ResultSearchScreen({navigation}) {
 
-  let books = [];
-  if (route.params && route.params.books) {
-    books = route.params.books;
-  }
+  const books = useSelector((state) => state.searchResults.books);
   const dispatch = useDispatch();
 
   const handleBookPress = (book) => {
@@ -57,12 +54,8 @@ export default function ResultSearchScreen({navigation, route}) {
               showsVerticalScrollIndicator={true}
             >
               {books.length === 0 ? (
-                  <View style={{ alignItems: "center", marginTop: 200 }}>
-                    <Text style={{ 
-                      fontFamily: interFontsToUse.boldItalic, 
-                      fontSize: 16, 
-                      color: "#0E0E66" 
-                    }}>
+                  <View style={styles.resultNotFound}>
+                    <Text style={styles.resultNotFoundText}>
                       Oups, la recherche n'a rien donnée... 
                     </Text>
                   </View>
@@ -78,7 +71,7 @@ export default function ResultSearchScreen({navigation, route}) {
                       <Text style={styles.author}>{book.author}</Text>
                       <Text style={styles.parutionDate}>{book.publishedDate}</Text>
                       <Text style={styles.counter}>
-                        PRÉSENT DANS <Text style={styles.counterBold}>{book.count}</Text> BIBLIOTHÈQUES SUR READER.
+                        PRÉSENT DANS <Text style={styles.counterBold}>{book.count}1</Text> BIBLIOTHÈQUE SUR READER.
                       </Text>
                     </View>
                     {book.cover ? (
@@ -155,6 +148,17 @@ const styles = StyleSheet.create({
     fontSize: 17,
     fontFamily: interFontsToUse.italic,
     textAlign: "center",
+    color: "#0E0E66",
+  },
+
+  // Result not found
+  resultNotFound: {
+    alignItems: "center", 
+    marginTop: 200,
+  },
+  resultNotFoundText: {
+    fontFamily: interFontsToUse.boldItalic, 
+    fontSize: 16, 
     color: "#0E0E66",
   },
 
