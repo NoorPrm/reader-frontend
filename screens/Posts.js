@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -7,21 +7,71 @@ import {
   StyleSheet,
   Modal,
   Pressable,
+  TextInput,
 } from "react-native";
+import { useSelector } from "react-redux";
+import { FontAwesome } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
+
+const myip = process.env.MY_IP;
+const backendAdress = `${myip}`;
 
 export default function Posts({ posts = [] }) {
+  const navigation = useNavigation();
   const [modalVisible, setModalVisible] = useState(null);
+  const [commentVisible, setCommentVisible] = useState(null);
+  const [commentText, setCommentText] = useState("");
+  const [liked, setLiked] = useState({});
+  const [list, setList] = useState(posts);
+
+
+  useEffect(() => setList(posts), [posts]);
+  const user = useSelector((state) => state.user.value);
+  const userToken = user.token;
+
+//liker un post 
+  const handleLike = (postId) => {
+    fetch(`${backendAdress}/posts/${postId}/like`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ token: userToken }),
+    }).then(() => {
+    });
+  };
+
+  const reloadPosts = () => {
+    fetch(`${backendAdress}/posts`)
+      .then(res => res.json())
+      .then(data => setList(data?.content || []))
+  };
+
+  // publier un commentaire 
+  const handleSendComment = (postId) => {
+    const content = commentText.trim();
+    if (!content) return;
+
+    fetch(`${backendAdress}/posts/${postId}/comment`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ token: userToken, content }),
+    })
+      .then(() => {
+        setCommentText("");
+        setCommentVisible(null);
+        reloadPosts();
+      });
+  };
 
   return (
     <View style={{ paddingBottom: 20 }}>
-      {posts.map((post, index) => (
+      {list.map((post, index) => (
         <View style={styles.card} key={post?._id || index}>
           <View style={styles.header}>
             <Image
               source={
                 post?.authorProfilePicture &&
-                (post.authorProfilePicture.startsWith("http") ||
-                  post.authorProfilePicture.startsWith("file://"))
+                  (post.authorProfilePicture.startsWith("http") ||
+                    post.authorProfilePicture.startsWith("file://"))
                   ? { uri: post.authorProfilePicture }
                   : require("../assets/images/whiteUser.png")
               }
@@ -29,7 +79,19 @@ export default function Posts({ posts = [] }) {
             />
 
             <View style={styles.headerRight}>
-              <TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  if (post?.authorUsername === user?.username) {
+                    navigation.navigate("UserProfil");
+                  } else {
+                    navigation.navigate("PublicProfile", {
+                      userId: post?.author,
+                      username: post?.authorUsername,
+                      profilPicture: post?.authorProfilePicture,
+                      // statut: statut?.authorStatut,
+                    });
+                  }
+                }}>
                 <Text style={styles.username}>
                   {post?.authorUsername || "Utilisateur"}
                 </Text>
@@ -54,6 +116,70 @@ export default function Posts({ posts = [] }) {
             <Text>{post?.content || ""}</Text>
           </View>
 
+          <View style={styles.actions}>
+            <TouchableOpacity
+              style={styles.actionBtn}
+              onPress={() => {
+                setLiked(prev => ({ ...prev, [post._id]: !prev[post._id] }));
+                handleLike(post._id);
+              }}
+            >
+              <FontAwesome
+                name={liked[post._id] ? "heart" : "heart-o"}
+                size={18}
+                color={liked[post._id] ? "#E63946" : "grey"}
+              />
+              <Text style={styles.actionCount}>
+                {(post.likes?.length || 0) + (liked[post._id] ? 1 : 0)} Likes
+              </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.actionBtn}
+              onPress={() =>
+                setCommentVisible(commentVisible === index ? null : index)
+              }
+            >
+              <Text style={styles.actionText}>Commenter</Text>
+            </TouchableOpacity>
+          </View>
+
+
+          {Array.isArray(post.comments) && post.comments.length > 0 && (
+            <View style={styles.commentsContainer}>
+              {post.comments.map((comment, i) => (
+                <View key={i} style={styles.commentItem}>
+                  <Text style={styles.commentAuthor}>
+                    {comment.authorUsername || "Utilisateur"} :
+                  </Text>
+                  <Text style={styles.commentText}>
+                    {comment.content || ""}
+                  </Text>
+                </View>
+              ))}
+            </View>
+          )}
+
+
+          {commentVisible === index && (
+            <View style={styles.commentBox}>
+              <TextInput
+                style={styles.input}
+                placeholder="Écrire un commentaire..."
+                value={commentText}
+                onChangeText={setCommentText}
+                returnKeyType="send"
+                onSubmitEditing={() => handleSendComment(post._id, index)}
+              />
+              <TouchableOpacity
+                style={styles.sendBtn}
+                onPress={() => handleSendComment(post._id, index)}
+              >
+                <Text style={{ color: "#fff" }}>Envoyer</Text>
+              </TouchableOpacity>
+            </View>
+          )}
+
           <Modal
             transparent
             animationType="fade"
@@ -68,7 +194,7 @@ export default function Posts({ posts = [] }) {
                 <TouchableOpacity
                   style={styles.deleteBtn}
                   onPress={() => {
-                    // TODO: call DELETE ici
+
                     setModalVisible(null);
                   }}
                 >
@@ -104,18 +230,58 @@ const styles = StyleSheet.create({
   dots: { fontSize: 22, color: "#0E0E66", fontWeight: "bold" },
   date: { marginTop: 4, color: "#666", fontSize: 12 },
   content: { marginTop: 10 },
+
+  actions: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: 10,
+  },
+  actionBtn: { flexDirection: "row", alignItems: "center" },
+  actionText: { color: "#0E0E66", fontWeight: "600" },
+
+
+  commentsContainer: {
+    marginTop: 8,
+    paddingLeft: 8,
+    borderTopWidth: 1,
+    borderTopColor: "#eee",
+  },
+  commentItem: { flexDirection: "row", marginTop: 4 },
+  commentAuthor: { fontWeight: "bold", color: "#0E0E66", marginRight: 4 },
+  commentText: { color: "#333" },
+
+  commentBox: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: 8,
+    borderTopWidth: 1,
+    borderTopColor: "#ddd",
+    paddingTop: 8,
+  },
+  input: {
+    flex: 1,
+    borderWidth: 1,
+    borderColor: "#ddd",
+    borderRadius: 20,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    backgroundColor: "#fff",
+  },
+  sendBtn: {
+    marginLeft: 8,
+    backgroundColor: "#0E0E66",
+    paddingHorizontal: 14,
+    paddingVertical: 10,
+    borderRadius: 20,
+  },
+
   overlay: {
     flex: 1,
     backgroundColor: "rgba(0,0,0,0.2)",
     justifyContent: "center",
     alignItems: "center",
   },
-  modal: {
-    backgroundColor: "#fff",
-    padding: 20,
-    borderRadius: 10,
-    elevation: 5,
-  },
+  modal: { backgroundColor: "#fff", padding: 20, borderRadius: 10, elevation: 5 },
   deleteBtn: {
     backgroundColor: "#E63946",
     paddingVertical: 10,
@@ -123,4 +289,6 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   deleteText: { color: "#fff", fontWeight: "bold", fontSize: 16 },
+  actionCount: { color: "#0E0E66", fontWeight: "600", marginLeft: 6 },
+  LikeText: {}
 });

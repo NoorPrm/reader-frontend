@@ -11,7 +11,6 @@ import {
   Image,
   ScrollView,
   SafeAreaView,
-  Posts
 } from "react-native";
 import Posts from "../screens/Posts";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
@@ -21,9 +20,9 @@ const myip = process.env.MY_IP;
 const backendAdress = `${myip}`;
 
 export default function GeneralScreen() {
-  // const [modalVisible, setModalVisible] = useState(false);
-  // const [post, setPost] = useState("");
-  // const [allPosts, setAllPosts] = useState([]);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [post, setPost] = useState("");
+  const [allPosts, setAllPosts] = useState([]);
   const userToken = useSelector((state) => state.user.value.token);
   const user = useSelector((state) => state.user.value);
 
@@ -94,10 +93,10 @@ export default function GeneralScreen() {
         contentContainerStyle={styles.content}
         showsVerticalScrollIndicator
       >
-        {/* <Posts posts={allPosts} /> */}
+        <Posts posts={allPosts} />
       </ScrollView>
 
-      {/* <Modal
+      <Modal
         animationType="slide"
         transparent
         visible={modalVisible}
@@ -127,7 +126,7 @@ export default function GeneralScreen() {
             </TouchableOpacity>
           </View>
         </View>
-      </Modal> */}
+      </Modal>
       <StatusBar style="auto" />
     </SafeAreaView>
   );
