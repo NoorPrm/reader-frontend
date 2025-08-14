@@ -1,25 +1,36 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, View, Text, Dimensions, TouchableOpacity, Image, ScrollView } from "react-native";
-import { interFontsToUse } from '../assets/fonts/fonts';
-import { useState, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { StatusBar } from "expo-status-bar";
+import {
+  StyleSheet,
+  View,
+  Text,
+  Dimensions,
+  TouchableOpacity,
+  Image,
+  ScrollView,
+} from "react-native";
+import { interFontsToUse } from "../assets/fonts/fonts";
+import { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { setSelectedBook } from "../reducers/bookSelected";
+import FontAwesome from "react-native-vector-icons/FontAwesome";
 //const backendAdress = process.env.EXPO_PUBLIC_URL_BACKEND
 const myip = process.env.MY_IP;
 const backendAdress = `${myip}`;
 console.log("Backend URL:", backendAdress);
 
-export default function MangaLibraryScreen({navigation}) {
+export default function MangaLibraryScreen({ navigation }) {
   const dispatch = useDispatch();
   const [books, setBooks] = useState([]);
+  const [deleteMode, setDeleteMode] = useState(false);
   const token = useSelector((state) => state.user.value.token);
+  const category = "Mangas";
 
   useEffect(() => {
     fetch(`${backendAdress}/userLibrary/${token}/Mangas`)
       .then((response) => response.json())
       .then((data) => {
-        console.log('data reçue:', data);
-        const booksFromBackend = data.map(item => item.book);
+        console.log("data reçue:", data);
+        const booksFromBackend = data.map((item) => item.book);
 
         const countMap = {};
 
@@ -33,20 +44,30 @@ export default function MangaLibraryScreen({navigation}) {
         const booksWithCount = booksFromBackend.map((book) => {
           return {
             ...book,
-            count: countMap[book.title] 
+            count: countMap[book.title],
           };
         });
 
         setBooks(booksWithCount);
-      })
+      });
   }, []);
 
   const handleBookPress = (book) => {
     dispatch(setSelectedBook(book));
-    navigation.navigate('BookInfos');
+    navigation.navigate("BookInfos");
   };
 
-  
+  const handleDelete = (bookId) => {
+    fetch(`${backendAdress}/userLibrary/${token}/${bookId}/${category}`, {
+      method: "DELETE",
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.result) {
+          setBooks(data.library.map((item) => item.book));
+        }
+      });
+  };
 
   // const books = [
   //   {
@@ -74,11 +95,17 @@ export default function MangaLibraryScreen({navigation}) {
 
   return (
     <View style={styles.container}>
-
       <View style={styles.titleMyLibraryGlobalContent}>
         <View style={styles.titleMyLibraryContent}>
           <Text style={styles.titleMyLibraryText}>MANGAS</Text>
         </View>
+        <TouchableOpacity
+          onPress={() => setDeleteMode(deleteMode ? false : true)}
+        >
+          <View style={styles.deleteModeButton}>
+            <Text style={{ fontSize: 24, color: "#ff0000ff" }}>...</Text>
+          </View>
+        </TouchableOpacity>
       </View>
 
       {/* <TouchableOpacity
@@ -95,36 +122,50 @@ export default function MangaLibraryScreen({navigation}) {
         showsVerticalScrollIndicator={true}
       >
         {books.length === 0 ? (
-            <View style={styles.resultNotFound}>
-              <TouchableOpacity onPress={() => navigation.navigate("Search")}>
-                <Text style={styles.resultNotFoundText}>
-                  Ajoute ton premier Manga ♥︎
-                </Text>
-              </TouchableOpacity>
-            </View>
-      ) : (
-        books.map((book, i) => (
-            <TouchableOpacity 
-            key={i}
-            style={styles.bookContainer}
-            onPress={() => handleBookPress(book)}
+          <View style={styles.resultNotFound}>
+            <TouchableOpacity onPress={() => navigation.navigate("Search")}>
+              <Text style={styles.resultNotFoundText}>
+                Ajoute ton premier Manga ♥︎
+              </Text>
+            </TouchableOpacity>
+          </View>
+        ) : (
+          books.map((book, i) => (
+            <TouchableOpacity
+              key={i}
+              style={styles.bookContainer}
+              onPress={() => handleBookPress(book)}
             >
+              {deleteMode && (
+                <TouchableOpacity
+                  onPress={() => handleDelete(book._id)}
+                  style={styles.trashIcon}
+                >
+                  <FontAwesome name="trash" size={20} color="#ff0000ff" />
+                </TouchableOpacity>
+              )}
+
               <View style={styles.bookInfosContainer}>
                 <Text style={styles.title}>{book.title}</Text>
                 <Text style={styles.author}>{book.author}</Text>
                 <Text style={styles.parutionDate}>{book.publishedDate}</Text>
                 <Text style={styles.counter}>
-                  PRÉSENT DANS <Text style={styles.counterBold}>{book.count}</Text> BIBLIOTHÈQUES SUR READER.
+                  PRÉSENT DANS{" "}
+                  <Text style={styles.counterBold}>{book.count}</Text>{" "}
+                  BIBLIOTHÈQUES SUR READER.
                 </Text>
               </View>
               {book.cover ? (
-                  <Image source={{uri: book.cover}} style={styles.image} />
-                ) : (
-                  <Image source={require('../assets/images/notAvailable.jpg')} style={styles.image} />
-                )}
+                <Image source={{ uri: book.cover }} style={styles.image} />
+              ) : (
+                <Image
+                  source={require("../assets/images/notAvailable.jpg")}
+                  style={styles.image}
+                />
+              )}
             </TouchableOpacity>
-        ))
-      )}
+          ))
+        )}
       </ScrollView>
 
       <TouchableOpacity
@@ -155,6 +196,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     width: "100%",
   },
+  deleteModeButton: {
+    alignItems: "center",
+    justifyContent: "center",
+  },
   titleMyLibraryContent: {
     borderWidth: 3,
     borderColor: "#0E0E66",
@@ -172,7 +217,7 @@ const styles = StyleSheet.create({
     color: "#0E0E66",
   },
 
-  // button BookInfos 
+  // button BookInfos
   buttonNavigateToNextScreen: {
     alignItems: "center",
   },
@@ -196,13 +241,13 @@ const styles = StyleSheet.create({
 
   // Result not found
   resultNotFound: {
-    alignItems: "center", 
+    alignItems: "center",
     marginTop: 200,
   },
   resultNotFoundText: {
-    fontFamily: interFontsToUse.boldItalic, 
-    fontSize: 16, 
-    color: "#0E0E66" 
+    fontFamily: interFontsToUse.boldItalic,
+    fontSize: 16,
+    color: "#0E0E66",
   },
 
   // books list
@@ -274,5 +319,10 @@ const styles = StyleSheet.create({
     color: "#FFFFFF",
     fontFamily: interFontsToUse.regular,
     fontSize: 14,
+  },
+  trashIcon: {
+    margin: 10,
+    top: 20,
+    right: 5,
   },
 });

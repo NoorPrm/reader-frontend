@@ -30,9 +30,8 @@ export default function Posts({
   const [liked, setLiked] = useState({});
   const [list, setList] = useState(posts);
 
-  useEffect(() => setList(posts), [posts]);
+  //useEffect(() => setList(posts), [posts]);
   const user = useSelector((state) => state.user.value);
-  const userToken = user.token;
 
   //liker un post
   const handleLike = (postId) => {
@@ -41,12 +40,6 @@ export default function Posts({
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ token: userToken }),
     }).then(() => {});
-  };
-
-  const reloadPosts = () => {
-    fetch(`${backendAdress}/posts`)
-      .then((res) => res.json())
-      .then((data) => setList(data?.content || []));
   };
 
   // publier un commentaire
@@ -61,7 +54,7 @@ export default function Posts({
     }).then(() => {
       setCommentText("");
       setCommentVisible(null);
-      reloadPosts();
+      onRefresh();
     });
   };
 

@@ -55,8 +55,8 @@ export default function GeneralScreen() {
     })
       .then((res) => res.json())
       .then((data) => {
-        if (data?.post) {
-          setAllPosts((prev) => [data.post, ...prev]);
+        if (data?.posts) {
+          setAllPosts((prev) => [data.posts, ...prev]);
           setPost("");
         }
       })
@@ -234,6 +234,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 3 },
     shadowRadius: 6,
     elevation: 6,
+    marginBottom: 100,
   },
   modalClose: {
     alignSelf: "flex-end",

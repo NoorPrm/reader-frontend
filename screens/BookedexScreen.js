@@ -25,10 +25,11 @@ export default function BookedexScreen({ navigation }) {
   const [secondModalVisible, setSecondModalVisible] = useState(false);
   const [fetchedBookId, setFetchedBookId] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState(null);
-  const [userLibraryError, setUserLibraryError] = useState("");
   const userToken = useSelector((state) => state.user.value.token);
+  const [dbInfoMsg, setDbInfoMsg] = useState("");
+  const [libMsg, setLibMsg] = useState("");
+  const [libMsgColor, setLibMsgColor] = useState("");
 
-  console.log(userToken);
   useEffect(() => {
     (async () => {
       const result = await Camera.requestCameraPermissionsAsync();
@@ -50,21 +51,25 @@ export default function BookedexScreen({ navigation }) {
         if (data.error && data.existingBookId) {
           // Si le livre existe déjà on passe direct à la modale de catégorie
           console.log("Livre déjà en base, ID :", data.existingBookId);
+          setDbInfoMsg("Livre déjà présent dans la base.");
           setFetchedBookId(data.existingBookId);
+          setLibMsg("");
+          setLibMsgColor("");
           setModalVisible(false);
           setSecondModalVisible(true);
         } else if (data._id) {
           // Si nouveau livre on enchaîne normalement
           console.log("Livre ajouté :", data._id);
+          setDbInfoMsg("Livre enregistré dans la base");
           setFetchedBookId(data._id);
+          setLibMsg("");
+          setLibMsgColor("");
           setModalVisible(false);
           setSecondModalVisible(true);
         } else {
           console.log("Erreur inconnue :", data);
+          setDbInfoMsg("Problème à l'enregistrement du livre.");
         }
-      })
-      .catch((error) => {
-        console.log("Erreur lors de l'enregistrement :", error.message);
       });
   };
 
@@ -82,12 +87,12 @@ export default function BookedexScreen({ navigation }) {
             title: bookData.title || "Titre inconnu",
             synopsis: bookData.notes || "Pas de résumé",
             author: bookData.authors?.[0]?.name || "Auteur inconnu",
-            publishedDate: 
+            publishedDate:
               bookData.publish_date || "Date de publication inconnue",
             isbn: isbn,
             cover: `https://covers.openlibrary.org/b/isbn/${isbn}-L.jpg`,
           };
-
+          setDbInfoMsg("");
           saveBookToDB(bookToSave);
           console.log("openlibrary: ", bookToSave);
         } else {
@@ -105,25 +110,19 @@ export default function BookedexScreen({ navigation }) {
                   title: info.title || "Titre inconnu",
                   synopsis: info.description || "Pas de résumé",
                   author: info.authors?.[0] || "Auteur inconnu",
-                  publishedDate: 
+                  publishedDate:
                     info.publishedDate || "Date de publication inconnue",
                   isbn: isbn,
                   cover: info.imageLinks?.thumbnail || null,
                 };
-
+                setDbInfoMsg("");
                 saveBookToDB(bookToSave);
                 console.log("google: ", bookToSave);
               } else {
                 console.log("Aucun livre trouvé dans Google Books.");
               }
-            })
-            .catch((err) => {
-              console.log("Erreur avec Google Books :", err.message);
             });
         }
-      })
-      .catch((err) => {
-        console.log("Erreur avec Open Library :", err.message);
       });
   };
 
@@ -160,16 +159,22 @@ export default function BookedexScreen({ navigation }) {
     })
       .then((res) => res.json())
       .then((data) => {
+        if (data.error) {
+          setLibMsg(data.error || "Livre déjà présent dans ta bibliothèque !");
+          setLibMsgColor("#c62828");
+          return;
+        }
         console.log(userToken, fetchedBookId, selectedCategory);
         console.log("Ajout dans userLibrary :", data);
-        setSecondModalVisible(false);
-        setSelectedCategory(null);
-        setFetchedBookId(null);
-        setUserLibraryError("");
-      })
-      .catch((err) => {
-        console.log("Erreur userLibrary :", err.message);
-        setUserLibraryError("Livre déjà présent dans la bibliothèque");
+        setLibMsg("Livre ajouté à ta bibliothèque !");
+        setLibMsgColor("#2e7d32");
+        setTimeout(() => {
+          setSecondModalVisible(false);
+          setSelectedCategory(null);
+          setFetchedBookId(null);
+          setLibMsg("");
+          setDbInfoMsg("");
+        }, 900);
       });
   };
 
@@ -236,11 +241,29 @@ export default function BookedexScreen({ navigation }) {
               Dans quelle catégorie le ranger ?
             </Text>
 
-            {userLibraryError !== "" && (
-              <Text style={{ color: "red", textAlign: "center" }}>
-                {userLibraryError}
+            {dbInfoMsg ? (
+              <Text
+                style={{
+                  marginBottom: 6,
+                  color: "#0E0E66",
+                  textAlign: "center",
+                }}
+              >
+                {dbInfoMsg}
               </Text>
-            )}
+            ) : null}
+
+            {libMsg ? (
+              <Text
+                style={{
+                  marginBottom: 6,
+                  color: libMsgColor,
+                  textAlign: "center",
+                }}
+              >
+                {libMsg}
+              </Text>
+            ) : null}
 
             <View style={{ flexDirection: "row", gap: 10 }}>
               <TouchableOpacity
