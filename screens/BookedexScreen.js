@@ -52,7 +52,7 @@ export default function BookedexScreen({ navigation }) {
         if (data.error && data.existingBookId) {
           // Si le livre existe déjà on passe direct à la modale de catégorie
           console.log("Livre déjà en base, ID :", data.existingBookId);
-          setDbInfoMsg("Livre déjà présent dans la base.");
+          setDbInfoMsg("Livre déjà présent dans Reader.");
           setFetchedBookId(data.existingBookId);
           setLibMsg("");
           setLibMsgColor("");
@@ -61,7 +61,7 @@ export default function BookedexScreen({ navigation }) {
         } else if (data._id) {
           // Si nouveau livre on enchaîne normalement
           console.log("Livre ajouté :", data._id);
-          setDbInfoMsg("Livre enregistré dans la base");
+          setDbInfoMsg("Livre enregistré dans Reader");
           setFetchedBookId(data._id);
           setLibMsg("");
           setLibMsgColor("");

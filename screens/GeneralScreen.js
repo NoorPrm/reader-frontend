@@ -116,7 +116,7 @@ export default function GeneralScreen({ navigation }) {
             />
           </TouchableOpacity>
 
-          <Text style={styles.storyName}>Vous</Text>
+          <Text style={styles.storyName}>{user.username}</Text>
 
           <TouchableOpacity style={styles.plusButton}>
             <Text style={styles.plus} onPress={openSystemCamera}>+</Text>
@@ -145,10 +145,10 @@ export default function GeneralScreen({ navigation }) {
 
         <View style={styles.storyItem}>
           <Image
-            source={require("../assets/images/RowlingStory.png")}
+            source={require("../assets/images/AmelieNothomb.png")}
             style={[styles.miniStory, styles.miniStoryWithName]}
           />
-          <Text style={styles.storyName}> JK.Rowling <Feather name="feather" size={18} color="#0E0E66" /> </Text>
+          <Text style={styles.storyName}> A.Nothomb<Feather name="feather" size={18} color="#0E0E66" /> </Text>
         </View>
       </View>
 
@@ -162,7 +162,7 @@ export default function GeneralScreen({ navigation }) {
           <Text style={{ color: "grey", textAlign: "center", top: 10 }}>
             {post
               ? post.slice(0, 40) + (post.length > 40 ? "…" : "")
-              : "Écrivez ici et..."}
+              : "Écrivez ici et...   "}
               <FontAwesome5 name="book" size={16} color="grey" />
           </Text>
         </TouchableOpacity>
@@ -268,7 +268,7 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     borderColor: "#0E0E66",
     borderWidth: 1,
-    backgroundColor: "white",
+    backgroundColor: "#FCF8F1",
   },
   txtBtn: { color: "#fff", fontFamily: "Inter_400Regular" },
   addBtnContainer: {
@@ -286,7 +286,7 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 5,
   },
-  separator: { top: 10, width: "100%", height: 1.5, backgroundColor: "#0E0E66" },
+  separator: { top: 10, width: "100%", height: 2.5, backgroundColor: "#E8DCCA" },
   miniStoriesContainer: {
     flexDirection: "row",
     justifyContent: "space-around",
@@ -363,7 +363,7 @@ const styles = StyleSheet.create({
   plusButton: {
     position: "absolute",
     top: 90,
-    right: 2,
+    right: 10,
     width: 15,
     height: 20,
     borderRadius: 12,
@@ -377,7 +377,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: interFontsToUse.bold,
     alignItems: "center",
-    lineHeight: 8,
+
   },
   
   storyItem: {

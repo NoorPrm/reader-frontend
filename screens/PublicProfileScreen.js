@@ -20,7 +20,7 @@ export default function PublicProfileScreen({ route, navigation }) {
                 style={styles.back}
                 onPress={() => navigation.navigate("TabNavigator")}
             >
-                <Text style={styles.backText}>Retour au Profil Utilisateur</Text>
+                <Text style={styles.backText}>Retour à l'accueil</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.menuButton} onPress={() => { }}>
                 <Text style={styles.menuText}>⋯</Text>
@@ -161,7 +161,7 @@ const styles = StyleSheet.create({
         height: 40,
         paddingHorizontal: 12,
         backgroundColor: "#0E0E66",
-        marginTop: 35,
+        marginTop: 50,
         marginBottom: 30,
         marginLeft: 20,
         borderRadius: 5,

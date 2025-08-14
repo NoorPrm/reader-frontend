@@ -158,7 +158,7 @@ export default function ComicLibraryScreen({ navigation }) {
                 <Text style={styles.author}>{book.author}</Text>
                 <Text style={styles.parutionDate}>{book.publishedDate}</Text>
                 <Text style={styles.counter}>
-                  PRÉSENT DANS <Text style={styles.counterBold}>{book.count}</Text>BIBLIOTHÈQUE{book.count > 1 ? 'S' : ''} SUR READER.
+                  PRÉSENT DANS <Text style={styles.counterBold}>{book.count}</Text> BIBLIOTHÈQUE{book.count > 1 ? 'S' : ''} SUR READER.
                 </Text>
               </View>
               {book.cover ? (
