@@ -11,7 +11,6 @@ import {
 } from "react-native";
 import { useSelector } from "react-redux";
 import { FontAwesome } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
 
 const myip = process.env.MY_IP;
 const backendAdress = `${myip}`;
@@ -22,8 +21,9 @@ export default function Posts({
   userToken,
   onRefresh,
   refreshKey,
+  navigation,
 }) {
-  const navigation = useNavigation();
+
   const [modalVisible, setModalVisible] = useState(null);
   const [commentVisible, setCommentVisible] = useState(null);
   const [commentText, setCommentText] = useState("");
@@ -32,7 +32,6 @@ export default function Posts({
 
   useEffect(() => setList(posts), [posts]);
   const user = useSelector((state) => state.user.value);
-  const userToken = user.token;
 
   //liker un post
   const handleLike = (postId) => {
@@ -61,7 +60,7 @@ export default function Posts({
     }).then(() => {
       setCommentText("");
       setCommentVisible(null);
-      reloadPosts();
+      onRefresh();
     });
   };
 

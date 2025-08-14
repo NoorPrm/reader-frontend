@@ -30,7 +30,7 @@ export default function PublicProfileScreen({ route }) {
                     style={styles.avatar}
                 />
                 <Text style={styles.followersText}>
-                    43 Abonnés
+                  ♥︎ 43 Abonnés
                 </Text>
             </View>
 
@@ -69,75 +69,76 @@ export default function PublicProfileScreen({ route }) {
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: "#FCF8F1",
-        alignItems: "center"
-    },
+  container: {
+    flex: 1,
+    backgroundColor: "#FCF8F1",
+    alignItems: "center",
+  },
 
-    menuButton: {
-        position: "absolute",
-        top: 20,
-        right: 15,
-        padding: 10
-    },
-    menuText: {
-        fontSize: 24
-    },
-    profileSection: {
-        alignItems: "center",
-        marginTop: 50
-    },
+  menuButton: {
+    position: "absolute",
+    top: 20,
+    right: 15,
+    padding: 10,
+  },
+  menuText: {
+    fontSize: 24,
+  },
+  profileSection: {
+    alignItems: "center",
+    marginTop: 50,
+  },
 
-    username: {
-        fontSize: 22,
-        fontFamily: interFontsToUse.bold,
-        marginBottom: 5,
-        color: "#0E0E66"
-    },
+  username: {
+    fontSize: 22,
+    fontFamily: interFontsToUse.bold,
+    marginBottom: 5,
+    color: "#0E0E66",
+  },
 
-    avatar: {
-        width: 150,
-        height: 150,
-        borderRadius: 75,
-        marginBottom: 10,
-        backgroundColor: "#E8DCCA",
-    },
+  avatar: {
+    width: 150,
+    height: 150,
+    borderRadius: 75,
+    marginBottom: 10,
+    backgroundColor: "#E8DCCA",
+  },
 
-    followersText: {
-        fontSize: 14,
-        color: "#0E0E66"
-    },
-    separator: {
-        width: "100%",
-        height: 2,
-        backgroundColor: "#E8DCCA",
-        marginBottom: 10,
-        marginTop: 10
-    },
-    tabs: {
-        flexDirection: "row",
-        justifyContent: "center",
-        borderBottomWidth: 1,
-        borderColor: "#0E0E66"
-    },
-    tab: {
-        paddingVertical: 10,
-        paddingHorizontal: 20
-    },
+  followersText: {
+    fontSize: 14,
+    color: "#0E0E66",
+    fontWeight: "500",
+    opacity: 0.4,
+  },
+  separator: {
+    width: "100%",
+    height: 2,
+    backgroundColor: "#E8DCCA",
+    marginBottom: 10,
+    marginTop: 10,
+  },
+  tabs: {
+    flexDirection: "row",
+    justifyContent: "center",
+    borderBottomWidth: 1,
+    borderColor: "#0E0E66",
+  },
+  tab: {
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+  },
 
-    activeTab: {
-        borderBottomWidth: 3,
-        borderColor: "#0E0E66"
-    },
-    tabText: {
-        fontSize: 14,
-        fontWeight: "bold",
-        color: "#0E0E66"
-    },
-    content: {
-        width: "100%",
-        padding: 20
-    },
-   
+  activeTab: {
+    borderBottomWidth: 3,
+    borderColor: "#0E0E66",
+  },
+  tabText: {
+    fontSize: 14,
+    fontWeight: "bold",
+    color: "#0E0E66",
+  },
+  content: {
+    width: "100%",
+    padding: 20,
+  },
 });

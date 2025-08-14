@@ -16,7 +16,7 @@ import { CameraView, Camera } from "expo-camera";
 //const backendAdress = process.env.EXPO_PUBLIC_URL_BACKEND;
 const myip = process.env.MY_IP;
 const backendAdress = `${myip}`;
-console.log("Backend URL:", backendAdress);
+//console.log("Backend URL:", backendAdress);
 
 export default function BookedexScreen({ navigation }) {
   const [hasPermission, setHasPermission] = useState(false);
@@ -28,7 +28,7 @@ export default function BookedexScreen({ navigation }) {
   const [userLibraryError, setUserLibraryError] = useState("");
   const userToken = useSelector((state) => state.user.value.token);
 
-  console.log(userToken);
+  //console.log(userToken);
   useEffect(() => {
     (async () => {
       const result = await Camera.requestCameraPermissionsAsync();

@@ -1,6 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, View, Text, Dimensions, TouchableOpacity, Image, ScrollView } from "react-native";
 import { interFontsToUse } from '../assets/fonts/fonts';
+import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { setSelectedBook } from "../reducers/bookSelected";
 //const backendAdress = process.env.EXPO_PUBLIC_URL_BACKEND
@@ -12,11 +13,28 @@ export default function ResultSearchScreen({navigation}) {
 
   const books = useSelector((state) => state.searchResults.books);
   const dispatch = useDispatch();
+  const [counts, setCounts] = useState({});
+  
 
   const handleBookPress = (book) => {
     dispatch(setSelectedBook(book));
     navigation.navigate('BookInfos');
   };
+
+  useEffect(() => {
+    fetch(`${backendAdress}/userLibrary/Livres`)
+      .then((response) => response.json())
+      .then((allData) => {
+        const countMap = {};
+        allData.forEach(item => {
+          const bookId = item.book._id;
+          countMap[bookId] = (countMap[bookId] || 0) + 1;
+        });
+        setCounts(countMap);
+      });
+  }, []);
+
+  
   // const books = [
   //   {
   //     title: "L’ART DE LA GUERRE",
@@ -71,7 +89,7 @@ export default function ResultSearchScreen({navigation}) {
                       <Text style={styles.author}>{book.author}</Text>
                       <Text style={styles.parutionDate}>{book.publishedDate}</Text>
                       <Text style={styles.counter}>
-                        PRÉSENT DANS <Text style={styles.counterBold}>{book.count}1</Text> BIBLIOTHÈQUE SUR READER.
+                        PRÉSENT DANS <Text style={styles.counterBold}>{counts[book._id] || 1}</Text> BIBLIOTHÈQUE{book.count > 1 ? 'S' : ''} SUR READER.
                       </Text>
                     </View>
                     {book.cover ? (
@@ -207,6 +225,7 @@ const styles = StyleSheet.create({
     marginBottom: 2,
   },
   counter: {
+    marginTop: 65,
     fontFamily: interFontsToUse.italic,
     fontSize: 11,
     color: "#0E0E66",

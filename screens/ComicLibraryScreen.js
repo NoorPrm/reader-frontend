@@ -7,7 +7,7 @@ import { setSelectedBook } from "../reducers/bookSelected";
 //const backendAdress = process.env.EXPO_PUBLIC_URL_BACKEND
 const myip = process.env.MY_IP;
 const backendAdress = `${myip}`;
-console.log("Backend URL:", backendAdress);
+//console.log("Backend URL:", backendAdress);
 
 export default function ComicLibraryScreen({navigation}) {
   const dispatch = useDispatch();
@@ -15,31 +15,39 @@ export default function ComicLibraryScreen({navigation}) {
   const token = useSelector((state) => state.user.value.token);
 
   useEffect(() => {
-    fetch(`${backendAdress}/userLibrary/${token}/BD`)
-      .then((response) => response.json())
-      .then((data) => {
-        console.log('data reçue:', data);
-        const booksFromBackend = data.map(item => item.book);
-
-        const countMap = {};
-
-        booksFromBackend.forEach((book) => {
-          if (countMap[book.title] === undefined) {
-            countMap[book.title] = 0;
-          }
-          countMap[book.title] += 1;
-        });
-
-        const booksWithCount = booksFromBackend.map((book) => {
-          return {
-            ...book,
-            count: countMap[book.title] 
-          };
-        });
-
-        setBooks(booksWithCount);
-      })
-  }, []);
+      fetch(`${backendAdress}/userLibrary/${token}/BD`)
+        .then((response) => response.json())
+        .then((userData) => {
+          console.log('data reçue:', userData);
+          const userBooks = userData.map(item => item.book);
+          setBooks(userBooks);
+        
+          fetch(`${backendAdress}/userLibrary/BD`)
+            .then((response) => response.json())
+            .then((allData) => {
+              console.log('data reçue:', allData);
+              const allBooks = allData.map(item => item.book);
+  
+              const countMap = {};
+  
+              allBooks.forEach((book) => {
+                if (countMap[book.title] === undefined) {
+                  countMap[book.title] = 0;
+                }
+                countMap[book.title] += 1;
+              });
+  
+              const booksWithCount = userBooks.map((book) => {
+                return {
+                  ...book,
+                  count: countMap[book.title] 
+                };
+              });
+  
+              setBooks(booksWithCount);
+            })  
+        })   
+    }, []);
 
   const handleBookPress = (book) => {
     dispatch(setSelectedBook(book));
@@ -114,7 +122,7 @@ export default function ComicLibraryScreen({navigation}) {
                       <Text style={styles.author}>{book.author}</Text>
                       <Text style={styles.parutionDate}>{book.publishedDate}</Text>
                       <Text style={styles.counter}>
-                        PRÉSENT DANS <Text style={styles.counterBold}>{book.count}</Text> BIBLIOTHÈQUES SUR READER.
+                        PRÉSENT DANS <Text style={styles.counterBold}>{book.count}</Text> BIBLIOTHÈQUE{book.count > 1 ? 'S' : ''} SUR READER.
                       </Text>
                     </View>
                     {book.cover ? (
@@ -250,11 +258,13 @@ const styles = StyleSheet.create({
     marginBottom: 2,
   },
   counter: {
+    marginTop: 50,
     fontFamily: interFontsToUse.italic,
     fontSize: 11,
     color: "#0E0E66",
   },
   counterBold: {
+    marginTop: 50,
     fontFamily: interFontsToUse.bold,
     fontSize: 11,
     color: "#0E0E66",

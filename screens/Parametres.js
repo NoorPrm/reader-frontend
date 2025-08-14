@@ -15,7 +15,7 @@ import { login } from "../reducers/user";
 //const backendAdress = process.env.EXPO_PUBLIC_URL_BACKEND;
 const myip = process.env.MY_IP;
 const backendAdress = `${myip}`;
-console.log("Backend URL:", backendAdress);
+//console.log("Backend URL:", backendAdress);
 
 export default function Parametres({ navigation }) {
   const user = useSelector((state) => state.user.value);

@@ -20,7 +20,7 @@ import { interFontsToUse } from "../assets/fonts/fonts";
 //const backendAdress = process.env.EXPO_PUBLIC_URL_BACKEND;
 const myip = process.env.MY_IP;
 const backendAdress = `${myip}`;
-console.log("Backend URL:", backendAdress);
+//console.log("Backend URL:", backendAdress);
 
 export default function BookScreen({ navigation }) {
   const [modalVisible, setModalVisible] = useState(false);
@@ -553,6 +553,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 3 },
     shadowRadius: 6,
     elevation: 6,
+    marginBottom: 100,
   },
   modalClose: {
     left: 310,

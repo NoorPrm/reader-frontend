@@ -7,38 +7,47 @@ import { setSelectedBook } from "../reducers/bookSelected";
 //const backendAdress = process.env.EXPO_PUBLIC_URL_BACKEND
 const myip = process.env.MY_IP;
 const backendAdress = `${myip}`;
-console.log("Backend URL:", backendAdress);
+//console.log("Backend URL:", backendAdress);
 
 export default function BookLibraryScreen({navigation}) {
   const dispatch = useDispatch();
   const [books, setBooks] = useState([]);
+  const [booksWithCount, setBooksWithCount] = useState([]);
   const token = useSelector((state) => state.user.value.token);
 
   useEffect(() => {
     fetch(`${backendAdress}/userLibrary/${token}/Livres`)
       .then((response) => response.json())
-      .then((data) => {
-        console.log('data reçue:', data);
-        const booksFromBackend = data.map(item => item.book);
+      .then((userData) => {
+        console.log('data reçue:', userData);
+        const userBooks = userData.map(item => item.book);
+        setBooks(userBooks);
+      
+        fetch(`${backendAdress}/userLibrary/Livres`)
+          .then((response) => response.json())
+          .then((allData) => {
+            console.log('data reçue:', allData);
+            const allBooks = allData.map(item => item.book);
 
-        const countMap = {};
+            const countMap = {};
 
-        booksFromBackend.forEach((book) => {
-          if (countMap[book.title] === undefined) {
-            countMap[book.title] = 0;
-          }
-          countMap[book.title] += 1;
-        });
+            allBooks.forEach((book) => {
+              if (countMap[book.title] === undefined) {
+                countMap[book.title] = 0;
+              }
+              countMap[book.title] += 1;
+            });
 
-        const booksWithCount = booksFromBackend.map((book) => {
-          return {
-            ...book,
-            count: countMap[book.title] 
-          };
-        });
+            const booksWithCount = userBooks.map((book) => {
+              return {
+                ...book,
+                count: countMap[book.title] 
+              };
+            });
 
-        setBooks(booksWithCount);
-      })
+            setBooks(booksWithCount);
+          })  
+      })   
   }, []);
 
   const handleBookPress = (book) => {
@@ -113,7 +122,7 @@ export default function BookLibraryScreen({navigation}) {
                       <Text style={styles.author}>{book.author}</Text>
                       <Text style={styles.parutionDate}>{book.publishedDate}</Text>
                       <Text style={styles.counter}>
-                        PRÉSENT DANS <Text style={styles.counterBold}>{book.count}</Text> BIBLIOTHÈQUES SUR READER.
+                        PRÉSENT DANS <Text style={styles.counterBold}>{book.count}</Text> BIBLIOTHÈQUE{book.count > 1 ? 'S' : ''} SUR READER.
                       </Text>
                     </View>
                     {book.cover ? (
@@ -249,11 +258,13 @@ const styles = StyleSheet.create({
     marginBottom: 2,
   },
   counter: {
+    marginTop: 50,
     fontFamily: interFontsToUse.italic,
     fontSize: 11,
     color: "#0E0E66",
   },
   counterBold: {
+    marginTop: 50,
     fontFamily: interFontsToUse.bold,
     fontSize: 11,
     color: "#0E0E66",

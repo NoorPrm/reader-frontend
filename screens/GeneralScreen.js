@@ -20,7 +20,7 @@ import { FontAwesome5 } from "@expo/vector-icons";
 const myip = process.env.MY_IP;
 const backendAdress = `${myip}`;
 
-export default function GeneralScreen() {
+export default function GeneralScreen({ navigation }) {
   const [modalVisible, setModalVisible] = useState(false);
   const [post, setPost] = useState("");
   const [allPosts, setAllPosts] = useState([]);
@@ -55,8 +55,8 @@ export default function GeneralScreen() {
     })
       .then((res) => res.json())
       .then((data) => {
-        if (data?.post) {
-          setAllPosts((prev) => [data.post, ...prev]);
+        if (data?.posts) {
+          setAllPosts((prev) => [data.posts, ...prev]);
           setPost("");
         }
       })
@@ -91,7 +91,7 @@ export default function GeneralScreen() {
           <Text style={{ color: "#777" }}>
             {post
               ? post.slice(0, 40) + (post.length > 40 ? "…" : "")
-              : "Ecrire..."}
+              : "Écrivez ici et..."}
           </Text>
         </TouchableOpacity>
         <View style={styles.addBtnContainer}>
@@ -114,6 +114,7 @@ export default function GeneralScreen() {
           currentUsername={user.username}
           currentUserPic={user.profilPicture}
           refreshKey={refreshKey}
+          navigation={navigation}
           onRefresh={() => {
             fetch(`${backendAdress}/posts`)
               .then((res) => res.json())
@@ -142,7 +143,8 @@ export default function GeneralScreen() {
             <TextInput
               style={styles.inputAvis}
               multiline
-              placeholder="Partagez votre dernier coup de coeur ici..."
+              placeholder="Partagez votre dernier coup de coeur !"
+              placeholderTextColor="#bfbfceff"
               value={post}
               onChangeText={setPost}
             />
@@ -234,6 +236,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 3 },
     shadowRadius: 6,
     elevation: 6,
+    marginBottom: 100,
   },
   modalClose: {
     alignSelf: "flex-end",
