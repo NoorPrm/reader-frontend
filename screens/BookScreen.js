@@ -33,7 +33,8 @@ export default function BookScreen({ navigation }) {
   const [bookData, setBookData] = useState(null);
   const [secondModalVisible, setSecondModalVisible] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(null);
-  const [userLibraryError, setUserLibraryError] = useState("");
+  const [libMsg, setLibMsg] = useState("");
+  const [libMsgColor, setLibMsgColor] = useState("");
   const userToken = useSelector((state) => state.user.value.token);
   const user = useSelector((state) => state.user.value);
   const dispatch = useDispatch();
@@ -86,16 +87,21 @@ export default function BookScreen({ navigation }) {
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log(userToken, bookId, selectedCategory);
-        console.log("Ajout dans userLibrary :", data);
         if (data.error) {
-          setUserLibraryError(data.error);
+          setLibMsg(data.error);
+          setLibMsgColor("#ff0000ff");
           return;
         }
-        setSecondModalVisible(false);
-        setSelectedCategory(null);
-        setBookId(null);
-        setUserLibraryError("");
+        console.log(userToken, bookId, selectedCategory);
+        console.log("Ajout dans userLibrary :", data);
+        setLibMsg("Livre ajouté à ta bibliothèque !");
+        setLibMsgColor("#2e7d32");
+        setTimeout(() => {
+          setSecondModalVisible(false);
+          setSelectedCategory(null);
+          setBookId(null);
+          setLibMsg("");
+        }, 900);
       })
       .catch((err) => {
         console.log("Erreur userLibrary :", err.message);
@@ -145,7 +151,7 @@ export default function BookScreen({ navigation }) {
           navigation.goBack();
         }}
       >
-        <Text style={styles.txtBtn}>Retour à la bibliothèque</Text>
+        <Text style={styles.txtBtn}>Retour</Text>
       </TouchableOpacity>
 
       <View style={styles.bookContainer}>
@@ -165,11 +171,14 @@ export default function BookScreen({ navigation }) {
               Publié le {bookData.publishedDate}
             </Text>
           )}
-
           <Text style={styles.synopsisTitle}>RESUME</Text>
-          {bookData && (
-            <Text style={styles.synopsisTxt}>{bookData.synopsis}</Text>
-          )}
+          <View style={styles.synopsisScrollContainer}>
+            <ScrollView>
+              {bookData && (
+                <Text style={styles.synopsisTxt}>{bookData.synopsis}</Text>
+              )}
+            </ScrollView>
+          </View>
         </View>
       </View>
       <View style={styles.btnContainer}>
@@ -192,17 +201,17 @@ export default function BookScreen({ navigation }) {
                 Dans quelle catégorie le ranger ?
               </Text>
 
-              {userLibraryError !== "" && (
+              {libMsg ? (
                 <Text
                   style={{
-                    color: "red",
+                    marginBottom: 6,
+                    color: libMsgColor,
                     textAlign: "center",
-                    marginBottom: 10,
                   }}
                 >
-                  {userLibraryError}
+                  {libMsg}
                 </Text>
-              )}
+              ) : null}
 
               <View style={{ flexDirection: "row", gap: 10 }}>
                 <TouchableOpacity
@@ -377,7 +386,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     backgroundColor: "#0E0E66",
     float: "left",
-    width: 180,
+    width: 65,
   },
   txtBtn: {
     color: "#ffffffff",
@@ -435,7 +444,8 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: "#0E0E66",
     fontFamily: interFontsToUse.regular,
-    marginTop: 20,
+    marginTop: 10,
+    marginBottom: 10,
   },
   synopsisTitle: {
     fontSize: 15,
@@ -443,13 +453,16 @@ const styles = StyleSheet.create({
     color: "#0E0E66",
     textAlign: "center",
   },
+  synopsisScrollContainer: {
+    width: 200,
+    height: 120,
+    margin: 5,
+    marginBottom: 10,
+  },
   synopsisTxt: {
     textAlign: "center",
     fontFamily: interFontsToUse.regular,
     color: "#0E0E66",
-    width: 200,
-    height: 120,
-    margin: 5,
   },
 
   totalStars: {

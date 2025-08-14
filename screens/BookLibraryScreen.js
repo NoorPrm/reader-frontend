@@ -1,19 +1,30 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, View, Text, Dimensions, TouchableOpacity, Image, ScrollView } from "react-native";
-import { interFontsToUse } from '../assets/fonts/fonts';
-import { useState, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { StatusBar } from "expo-status-bar";
+import {
+  StyleSheet,
+  View,
+  Text,
+  Dimensions,
+  TouchableOpacity,
+  Image,
+  ScrollView,
+} from "react-native";
+import { interFontsToUse } from "../assets/fonts/fonts";
+import { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { setSelectedBook } from "../reducers/bookSelected";
+import FontAwesome from "react-native-vector-icons/FontAwesome";
 //const backendAdress = process.env.EXPO_PUBLIC_URL_BACKEND
 const myip = process.env.MY_IP;
 const backendAdress = `${myip}`;
 //console.log("Backend URL:", backendAdress);
 
-export default function BookLibraryScreen({navigation}) {
+export default function BookLibraryScreen({ navigation }) {
   const dispatch = useDispatch();
   const [books, setBooks] = useState([]);
+  const [deleteMode, setDeleteMode] = useState(false);
   const [booksWithCount, setBooksWithCount] = useState([]);
   const token = useSelector((state) => state.user.value.token);
+  const category = "Livres";
 
   useEffect(() => {
     fetch(`${backendAdress}/userLibrary/${token}/Livres`)
@@ -52,10 +63,20 @@ export default function BookLibraryScreen({navigation}) {
 
   const handleBookPress = (book) => {
     dispatch(setSelectedBook(book));
-    navigation.navigate('BookInfos');
+    navigation.navigate("BookInfos");
   };
 
-  
+  const handleDelete = (bookId) => {
+    fetch(`${backendAdress}/userLibrary/${token}/${bookId}/${category}`, {
+      method: "DELETE",
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.result) {
+          setBooks(data.library.map((item) => item.book));
+        }
+      });
+  };
 
   // const books = [
   //   {
@@ -87,6 +108,13 @@ export default function BookLibraryScreen({navigation}) {
         <View style={styles.titleMyLibraryContent}>
           <Text style={styles.titleMyLibraryText}>LIVRES</Text>
         </View>
+        <TouchableOpacity
+          onPress={() => setDeleteMode(deleteMode ? false : true)}
+        >
+          <View style={styles.deleteModeButton}>
+            <Text style={{ fontSize: 24, color: "#ff0000ff" }}>...</Text>
+          </View>
+        </TouchableOpacity>
       </View>
 
       {/* <TouchableOpacity
@@ -117,6 +145,15 @@ export default function BookLibraryScreen({navigation}) {
                   style={styles.bookContainer}
                   onPress={() => handleBookPress(book)}
                   >
+                {deleteMode && (
+                  <TouchableOpacity
+                    onPress={() => handleDelete(book._id)}
+                    style={styles.trashIcon}
+                  >
+                    <FontAwesome name="trash" size={20} color="#ff0000ff" />
+                  </TouchableOpacity>
+                )}
+
                     <View style={styles.bookInfosContainer}>
                       <Text style={styles.title}>{book.title}</Text>
                       <Text style={styles.author}>{book.author}</Text>
@@ -163,6 +200,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     width: "100%",
   },
+  deleteModeButton: {
+    alignItems: "center",
+    justifyContent: "center",
+  },
   titleMyLibraryContent: {
     borderWidth: 3,
     borderColor: "#0E0E66",
@@ -204,13 +245,13 @@ const styles = StyleSheet.create({
 
   // Result not found
   resultNotFound: {
-    alignItems: "center", 
+    alignItems: "center",
     marginTop: 200,
   },
   resultNotFoundText: {
-    fontFamily: interFontsToUse.boldItalic, 
-    fontSize: 16, 
-    color: "#0E0E66" 
+    fontFamily: interFontsToUse.boldItalic,
+    fontSize: 16,
+    color: "#0E0E66",
   },
 
   // books list
@@ -284,5 +325,10 @@ const styles = StyleSheet.create({
     color: "#FFFFFF",
     fontFamily: interFontsToUse.regular,
     fontSize: 14,
+  },
+  trashIcon: {
+    margin: 10,
+    top: 20,
+    right: 5,
   },
 });
