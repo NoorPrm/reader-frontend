@@ -4,23 +4,35 @@ import {
     Text, View, TouchableOpacity, StyleSheet, Image, ScrollView,
 } from "react-native";
 import { interFontsToUse } from "../assets/fonts/fonts";
+import { Feather } from "@expo/vector-icons";
 
 const myip = process.env.MY_IP;
 const backendAdress = `${myip}`;
 
-export default function PublicProfileScreen({ route }) {
-    const { username, profilPicture = [] } = route.params || {};
+export default function PublicProfileScreen({ route, navigation }) {
+    const { username, profilPicture, statut = [] } = route.params || {};
 
     const [activeTab, setActiveTab] = useState("bibliotheque");
 
     return (
         <View style={styles.container}>
-
+            <TouchableOpacity
+                style={styles.back}
+                onPress={() => navigation.navigate("TabNavigator")}
+            >
+                <Text style={styles.backText}>Retour au Profil Utilisateur</Text>
+            </TouchableOpacity>
             <TouchableOpacity style={styles.menuButton} onPress={() => { }}>
                 <Text style={styles.menuText}>⋯</Text>
             </TouchableOpacity>
             <View style={styles.profileSection}>
                 <Text style={styles.username}>{username || "Utilisateur"}</Text>
+                <View style={styles.statutRow}>
+                    <Text style={styles.userStatut}>{statut}</Text>
+                    {statut?.toLowerCase() === "auteur" && (
+                        <Feather name="feather" size={16} color="#0E0E66" />
+                    )}
+                </View>
                 <Image
                     source={
                         profilPicture
@@ -58,7 +70,7 @@ export default function PublicProfileScreen({ route }) {
                     </Text>
                 ) : (
                     <View>
-                            <Text style={{ fontStyle: "italic" }}>Aucun post pour cet utilisateur.</Text>  
+                        <Text style={{ fontStyle: "italic" }}>Aucun post pour cet utilisateur.</Text>
                     </View>
                 )}
             </ScrollView>
@@ -86,13 +98,12 @@ const styles = StyleSheet.create({
     },
     profileSection: {
         alignItems: "center",
-        marginTop: 50
+        marginTop: 30
     },
 
     username: {
         fontSize: 22,
         fontFamily: interFontsToUse.bold,
-        marginBottom: 5,
         color: "#0E0E66"
     },
 
@@ -101,6 +112,7 @@ const styles = StyleSheet.create({
         height: 150,
         borderRadius: 75,
         marginBottom: 10,
+        marginTop: 10,
         backgroundColor: "#E8DCCA",
     },
 
@@ -139,5 +151,31 @@ const styles = StyleSheet.create({
         width: "100%",
         padding: 20
     },
-   
+    back: {
+        alignSelf: "flex-start",
+        justifyContent: "center",
+        alignItems: "center",
+        height: 40,
+        paddingHorizontal: 12,
+        backgroundColor: "#0E0E66",
+        marginTop: 35,
+        marginBottom: 30,
+        marginLeft: 20,
+        borderRadius: 5,
+    },
+    backText: {
+        color: "#FFFFFF",
+        fontFamily: interFontsToUse.regular,
+    },
+    profileSection: {
+        alignItems: "center",
+        marginTop: -10
+    },
+    statutRow: {
+        flexDirection: "row",
+        alignItems: "center",
+        gap: 3,
+    },
+    userStatut: { fontFamily: interFontsToUse.bold, color: "#0E0E66" },
+
 });

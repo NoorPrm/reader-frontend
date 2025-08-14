@@ -149,12 +149,9 @@ export default function UserProfilScreen({ navigation }) {
             style={styles.avatar}
           />
         </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.followersContainer}
-          onPress={() => setIsFollowing(!isFollowing)}
-        >
+        
           <Text style={styles.followersText}> ♥︎ 77 Followers</Text>
-        </TouchableOpacity>
+        
         <Text style={styles.userStatut}>{user.statut}</Text>
       </View>
 
@@ -245,7 +242,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#E8DCCA",
     borderBlockColor: "#FCF8F1",
   },
-  userStatut: { fontFamily: interFontsToUse.bold, color: "#0E0E66" },
+  userStatut: { fontFamily: interFontsToUse.bold, color: "#0E0E66", paddingTop:5},
   profileSection: { alignItems: "center", marginTop: 50 },
   username: {
     fontSize: 22,
@@ -290,5 +287,6 @@ const styles = StyleSheet.create({
     color: "#0E0E66",
     fontWeight: "500",
     opacity: 0.4,
+    
   },
 });
