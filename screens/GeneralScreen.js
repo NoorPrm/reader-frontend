@@ -12,10 +12,15 @@ import {
   Image,
   ScrollView,
   SafeAreaView,
+  Pressable,
 } from "react-native";
 import Posts from "../screens/Posts";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { FontAwesome5 } from "@expo/vector-icons";
+import { Feather } from "@expo/vector-icons";
+import { interFontsToUse } from "../assets/fonts/fonts";
+import * as ImagePicker from "expo-image-picker";
+
 
 const myip = process.env.MY_IP;
 const backendAdress = `${myip}`;
@@ -25,6 +30,8 @@ export default function GeneralScreen() {
   const [post, setPost] = useState("");
   const [allPosts, setAllPosts] = useState([]);
   const [refreshKey, setRefreshKey] = useState(0);
+  const [storyPhoto, setStoryPhoto] = useState(null);
+  const [photoPreviewVisible, setPhotoPreviewVisible] = useState(false);
   const userToken = useSelector((state) => state.user.value.token);
   const user = useSelector((state) => state.user.value);
 
@@ -44,7 +51,6 @@ export default function GeneralScreen() {
     fetch(`${backendAdress}/posts`)
       .then((res) => res.json())
       .then((data) => setAllPosts(data.posts || []))
-      .catch((err) => console.log("Erreur lors du fetch des posts :", err));
   };
 
   const addPost = () => {
@@ -60,43 +66,109 @@ export default function GeneralScreen() {
           setPost("");
         }
       })
-      .catch((err) => console.log("Erreur lors de la publication :", err));
   };
+
+  const openSystemCamera = () => {
+    ImagePicker.requestCameraPermissionsAsync()
+      .then((permission) => {
+        if (!permission.granted) {
+          alert("Permission caméra refusée.");
+          return null;
+        }
+        return ImagePicker.launchCameraAsync({
+          allowsEditing: true,
+          aspect: [1, 1],
+          quality: 1,
+        });
+      })
+      .then((result) => {
+        if (!result || result.canceled) return;
+        setStoryPhoto(result.assets && result.assets[0] && result.assets[0].uri);
+      })
+  };
+
+
+
+
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.miniStoriesContainer}>
-        <Image style={styles.miniStory} />
-        <Image style={styles.miniStory} />
-        <Image style={styles.miniStory} />
-        <Image style={styles.miniStory} />
+
+        <View style={styles.storyItem}>
+          <TouchableOpacity
+            activeOpacity={0.8}
+            onPress={() => {
+              if (storyPhoto) setPhotoPreviewVisible(true);
+            }}
+          >
+            <Image
+              source={
+                storyPhoto
+                  ? { uri: storyPhoto }
+                  : (user?.profilPicture &&
+                    (user.profilPicture.startsWith("http") ||
+                      user.profilPicture.startsWith("file://")))
+                    ? { uri: user.profilPicture }
+                    : require("../assets/images/whiteUser.png")
+              }
+              style={[styles.miniStory, styles.miniStoryWithName]}
+            />
+          </TouchableOpacity>
+
+          <Text style={styles.storyName}>Vous</Text>
+
+          <TouchableOpacity style={styles.plusButton}>
+            <Text style={styles.plus} onPress={openSystemCamera}>+</Text>
+          </TouchableOpacity>
+        </View>
+
+
+        <View style={styles.storyItem}>
+
+          <Image
+            source={require("../assets/images/LecteurStory.jpg")}
+            style={[styles.miniStory, styles.miniStoryWithName]}
+          />
+          <Text style={styles.storyName}>Noah.K</Text>
+        </View>
+
+
+        <View style={styles.storyItem}>
+          <Image
+            source={require("../assets/images/UserScreenStory.jpg")}
+            style={[styles.miniStory, styles.miniStoryWithName]}
+          />
+          <Text style={styles.storyName}>Aurélie_t</Text>
+        </View>
+
+
+        <View style={styles.storyItem}>
+          <Image
+            source={require("../assets/images/RowlingStory.png")}
+            style={[styles.miniStory, styles.miniStoryWithName]}
+          />
+          <Text style={styles.storyName}> JK.Rowling <Feather name="feather" size={18} color="#0E0E66" /> </Text>
+        </View>
       </View>
 
       <View style={styles.separator} />
       <View style={styles.userPostContainer}>
-        <Image
-          source={
-            user?.profilPicture &&
-            (user.profilPicture.startsWith("http") ||
-              user.profilPicture.startsWith("file://"))
-              ? { uri: user.profilPicture }
-              : require("../assets/images/whiteUser.png")
-          }
-          style={styles.avatarImg}
-        />
+
         <TouchableOpacity
           style={styles.addPostInputContainer}
           onPress={() => setModalVisible(true)}
         >
-          <Text style={{ color: "#777" }}>
+          <Text style={{ color: "grey", textAlign: "center", top: 10 }}>
             {post
               ? post.slice(0, 40) + (post.length > 40 ? "…" : "")
-              : "Ecrire..."}
+              : "Partager vos idées ...   "}
+              <FontAwesome5 name="book" size={16} color="grey" />
           </Text>
         </TouchableOpacity>
         <View style={styles.addBtnContainer}>
           <TouchableOpacity onPress={() => addPost()}>
-            <FontAwesome5 name="paper-plane" size={30} color="#fff" />
+            <FontAwesome5 name="paper-plane" size={30} color="white" />
           </TouchableOpacity>
         </View>
       </View>
@@ -157,6 +229,21 @@ export default function GeneralScreen() {
         </View>
       </Modal>
       <StatusBar style="auto" />
+      <Modal
+        transparent
+        animationType="fade"
+        visible={photoPreviewVisible}
+        onRequestClose={() => setPhotoPreviewVisible(false)}
+      >
+        <Pressable
+          style={styles.previewOverlay}
+          onPress={() => setPhotoPreviewVisible(false)}
+        >
+          {storyPhoto && (
+            <Image source={{ uri: storyPhoto }} style={styles.previewImage} />
+          )}
+        </Pressable>
+      </Modal>
     </SafeAreaView>
   );
 }
@@ -164,19 +251,22 @@ export default function GeneralScreen() {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#FCF8F1" },
   userPostContainer: {
-    top: 100,
     flexDirection: "row",
     justifyContent: "space-around",
     alignItems: "center",
     height: 150,
     width: "100%",
+    top: 10,
+    
   },
   addPostInputContainer: {
+    width:240,
+    height:100,
     padding: 30,
-    width: 150,
     borderRadius: 15,
-    borderColor: "#E8DCCA",
+    borderColor: "#0E0E66",
     borderWidth: 1,
+    backgroundColor: "white",
   },
   txtBtn: { color: "#fff", fontFamily: "Inter_400Regular" },
   addBtnContainer: {
@@ -194,15 +284,16 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 5,
   },
-  separator: { top: 100, width: "100%", height: 2, backgroundColor: "black" },
+  separator: { top: 10, width: "100%", height: 1.5, backgroundColor: "#0E0E66" },
   miniStoriesContainer: {
     flexDirection: "row",
     justifyContent: "space-around",
     alignItems: "center",
   },
   miniStory: {
-    marginTop: 20,
-    backgroundColor: "grey",
+    marginTop: 30,
+    borderWidth: 1.5,
+    borderColor: "#0E0E66",
     borderRadius: 40,
     height: 80,
     width: 80,
@@ -216,7 +307,7 @@ const styles = StyleSheet.create({
     borderWidth: 0.5,
     borderColor: "#E8DCCA",
   },
-  scrollContainer: { paddingHorizontal: 10, marginTop: 110 },
+  scrollContainer: { paddingHorizontal: 10, marginTop: 10 },
   content: { paddingBottom: 40 },
   modalOverlay: {
     flex: 1,
@@ -267,4 +358,47 @@ const styles = StyleSheet.create({
     borderRadius: 6,
     alignItems: "center",
   },
+  plusButton: {
+    position: "absolute",
+    top: 90,
+    right: 2,
+    width: 15,
+    height: 20,
+    borderRadius: 12,
+    backgroundColor: "#0E0E66",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+
+  plus: {
+    color: "#ffffff",
+    fontSize: 16,
+    fontFamily: interFontsToUse.bold,
+    alignItems: "center",
+    lineHeight: 8,
+  },
+  
+  storyItem: {
+    alignItems: "center",
+  },
+  miniStoryWithName: {
+    marginBottom: 4,
+  },
+  storyName: {
+    fontSize: 12,
+    color: "#0E0E66",
+    fontFamily: interFontsToUse.boldItalic,
+  },
+  previewOverlay: {
+  flex: 1,
+  backgroundColor: "rgba(0,0,0,0.9)",
+  justifyContent: "center",
+  alignItems: "center",
+},
+previewImage: {
+  width: "90%",
+  height: "70%",
+  resizeMode: "contain",
+  borderRadius: 10,
+},
 });

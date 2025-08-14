@@ -12,6 +12,7 @@ import {
 import { useSelector } from "react-redux";
 import { FontAwesome } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+import { Feather } from "@expo/vector-icons";
 
 const myip = process.env.MY_IP;
 const backendAdress = `${myip}`;
@@ -30,7 +31,7 @@ export default function Posts({
   const [liked, setLiked] = useState({});
   const [list, setList] = useState(posts);
 
-  //useEffect(() => setList(posts), [posts]);
+  useEffect(() => setList(posts), [posts]);
   const user = useSelector((state) => state.user.value);
 
   //liker un post
@@ -39,7 +40,9 @@ export default function Posts({
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ token: userToken }),
-    }).then(() => {});
+    }).then(() => {
+      if (onRefresh) onRefresh();
+    });
   };
 
   // publier un commentaire
@@ -111,14 +114,23 @@ export default function Posts({
                         userId: post?.author,
                         username: post?.authorUsername,
                         profilPicture: post?.authorProfilePicture,
-                        // statut: statut?.authorStatut,
+                        statut: post?.authorStatut,
                       });
                     }
                   }}
                 >
-                  <Text style={styles.username}>
-                    {post?.authorUsername || "Utilisateur"}
-                  </Text>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      alignItems: "center",
+                      gap: 5,
+                    }}
+                  >
+                    <Text style={styles.username}>{post.authorUsername}</Text>
+                    {post.authorStatut === "AUTEUR" && (
+                      <Feather name="feather" size={18} color="#0E0E66" />
+                    )}
+                  </View>
                 </TouchableOpacity>
 
                 {isUser && (
@@ -159,7 +171,7 @@ export default function Posts({
                   color={liked[post._id] ? "#E63946" : "grey"}
                 />
                 <Text style={styles.actionCount}>
-                  {(post.likes?.length || 0) + (liked[post._id] ? 1 : 0)} Likes
+                  {post.likes?.length || 0} Likes
                 </Text>
               </TouchableOpacity>
 
