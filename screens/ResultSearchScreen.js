@@ -34,30 +34,6 @@ export default function ResultSearchScreen({navigation}) {
       });
   }, []);
 
-  
-  // const books = [
-  //   {
-  //     title: "L’ART DE LA GUERRE",
-  //     author: "@SUN TZU",
-  //     publishedDate: "600 ans av. J-C",
-  //     count: 46,
-  //     cover: require("../assets/images/couvlartdelaguerre.jpg"),
-  //   },
-  //   {
-  //     title: "HARRY POTTER ET L’ENFANT MAUDIT",
-  //     author: "@J.K. ROWLING",
-  //     publishedDate: "14/10/2016",
-  //     count: 255,
-  //     cover: require("../assets/images/couvharrypotter.jpg"),
-  //   },
-  //   {
-  //     title: "AP CHEMISTRY POUR LES NULS",
-  //     author: "@PETER J. MIKULECKY",
-  //     publishedDate: "23/01/2015",
-  //     count: 5,
-  //     cover: require("../assets/images/couvchemistryfordummies.jpg"),
-  //   }
-  // ];
 
   return (
     <View style={styles.container}>

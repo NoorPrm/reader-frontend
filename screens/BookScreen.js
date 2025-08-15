@@ -352,6 +352,7 @@ export default function BookScreen({ navigation }) {
               style={styles.inputAvis}
               multiline
               placeholder="Écrivez votre avis ici..."
+              placeholderTextColor="#bfbfceff"
               value={review}
               onChangeText={setReview}
             />
@@ -569,7 +570,7 @@ const styles = StyleSheet.create({
     marginBottom: 100,
   },
   modalClose: {
-    left: 310,
+    left: 270,
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "#ffffffff",

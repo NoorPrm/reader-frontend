@@ -10,7 +10,6 @@ import {
   KeyboardAvoidingView,
   Platform,
   Dimensions,
-  SafeAreaView,
 } from "react-native";
 import { interFontsToUse } from "../assets/fonts/fonts";
 import { useState } from "react";
@@ -25,9 +24,6 @@ const myip = process.env.MY_IP;
 const backendAdress = `${myip}`;
 
 export default function HomeScreen({ navigation }) {
-  // const handleSubmit = () => {
-  //   navigation.navigate("TabNavigator");
-  // };
 
   const dispatch = useDispatch();
 

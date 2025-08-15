@@ -20,7 +20,7 @@ import { login } from "../reducers/user";
 const myip = process.env.MY_IP;
 const backendAdress = `${myip}`;
 
-export default function Inscription({ navigation }) {
+export default function InscriptionScreen({ navigation }) {
   const [statut, setStatut] = useState("LECTEUR");
   const [username, setUsername] = useState("");
   const [usernameError, setUsernameError] = useState("");
@@ -38,7 +38,6 @@ export default function Inscription({ navigation }) {
     }
 
     // si erreur : pas de fetch
-    // console.log("hasError:", hasError);
     if (hasError) {
       return;
     }

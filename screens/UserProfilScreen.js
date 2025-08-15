@@ -55,7 +55,6 @@ export default function UserProfilScreen({ navigation }) {
       .then((data) => {
         setPosts(data.posts || []);
       })
-      .catch((error) => console.log("error posts:", error));
   };
 
   // Premier chargement
@@ -123,9 +122,6 @@ export default function UserProfilScreen({ navigation }) {
             setRefreshKey((k) => k + 1);
           });
       })
-      .catch((err) => {
-        console.log("error: ", err.message);
-      });
   };
 
   return (

@@ -117,6 +117,7 @@ export default function GeneralScreen({ navigation }) {
           </TouchableOpacity>
 
           <Text style={styles.storyName}>{user.username}</Text>
+          <Text style={styles.storyName}>{user.username}</Text>
 
           <TouchableOpacity style={styles.plusButton}>
             <Text style={styles.plus} onPress={openSystemCamera}>+</Text>
@@ -145,10 +146,10 @@ export default function GeneralScreen({ navigation }) {
 
         <View style={styles.storyItem}>
           <Image
-            source={require("../assets/images/RowlingStory.png")}
+            source={require("../assets/images/AmelieNothomb.png")}
             style={[styles.miniStory, styles.miniStoryWithName]}
           />
-          <Text style={styles.storyName}> JK.Rowling <Feather name="feather" size={18} color="#0E0E66" /> </Text>
+          <Text style={styles.storyName}> A.Nothomb<Feather name="feather" size={18} color="#0E0E66" /> </Text>
         </View>
       </View>
 
@@ -268,7 +269,7 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     borderColor: "#0E0E66",
     borderWidth: 1,
-    backgroundColor: "white",
+    backgroundColor: "#FCF8F1",
   },
   txtBtn: { color: "#fff", fontFamily: "Inter_400Regular" },
   addBtnContainer: {
@@ -363,7 +364,7 @@ const styles = StyleSheet.create({
   plusButton: {
     position: "absolute",
     top: 90,
-    right: 2,
+    right: 10,
     width: 15,
     height: 20,
     borderRadius: 12,
@@ -377,7 +378,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: interFontsToUse.bold,
     alignItems: "center",
-    lineHeight: 8,
+
   },
   
   storyItem: {
