@@ -70,10 +70,6 @@ export default function Posts({
         setModalVisible(null);
         if (data.result && onRefresh) onRefresh();
       })
-      .catch((err) => {
-        console.log("delete err:", err.message);
-        setModalVisible(null);
-      });
   };
 
   return (
