@@ -15,9 +15,9 @@ import { login } from "../reducers/user";
 //const backendAdress = process.env.EXPO_PUBLIC_URL_BACKEND;
 const myip = process.env.MY_IP;
 const backendAdress = `${myip}`;
-//console.log("Backend URL:", backendAdress);
 
-export default function Parametres({ navigation }) {
+
+export default function SettingsScreen({ navigation }) {
   const user = useSelector((state) => state.user.value);
   const statut = user.statut;
   const dispatch = useDispatch();
@@ -28,7 +28,7 @@ export default function Parametres({ navigation }) {
   const [password, setPassword] = useState("");
   const [isPublic, setIsPublic] = useState(true);
 
-    // Fetch UPDATE 
+
     const handleUpdate = () => {
         fetch(`${backendAdress}/users/${user.token}`, {
             method: 'PUT',
@@ -59,7 +59,7 @@ export default function Parametres({ navigation }) {
             });
     };
 
-  // FETCH DELETE
+ 
   const handleDelete = () => {
     fetch(`${backendAdress}/users/${user.email}`, {
       method: "DELETE",

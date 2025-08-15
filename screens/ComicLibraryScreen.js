@@ -77,30 +77,6 @@ export default function ComicLibraryScreen({ navigation }) {
       });
   };
 
-  // const books = [
-  //   {
-  //     title: "L’ART DE LA GUERRE",
-  //     author: "@SUN TZU",
-  //     date: "600 ans av. J-C",
-  //     counter: 46,
-  //     image: require("../assets/images/couvlartdelaguerre.jpg"),
-  //   },
-  //   {
-  //     title: "HARRY POTTER ET L’ENFANT MAUDIT",
-  //     author: "@J.K. ROWLING",
-  //     date: "14/10/2016",
-  //     counter: 255,
-  //     image: require("../assets/images/couvharrypotter.jpg"),
-  //   },
-  //   {
-  //     title: "AP CHEMISTRY POUR LES NULS",
-  //     author: "@PETER J. MIKULECKY",
-  //     date: "23/01/2015",
-  //     counter: 5,
-  //     image: require("../assets/images/couvchemistryfordummies.jpg"),
-  //   }
-  // ];
-
   return (
     <View style={styles.container}>
       <View style={styles.titleMyLibraryGlobalContent}>
@@ -115,15 +91,6 @@ export default function ComicLibraryScreen({ navigation }) {
           </View>
         </TouchableOpacity>
       </View>
-
-      {/* <TouchableOpacity
-        style={styles.buttonNavigateToNextScreen}
-        onPress={() => navigation.navigate("BookInfos")}
-      >
-        <View style={styles.titleSectionContent}>
-          <Text style={styles.titleSectionText}>BookInfos</Text>
-        </View>
-      </TouchableOpacity> */}
 
       <ScrollView
         contentContainerStyle={styles.content}
@@ -158,7 +125,7 @@ export default function ComicLibraryScreen({ navigation }) {
                 <Text style={styles.author}>{book.author}</Text>
                 <Text style={styles.parutionDate}>{book.publishedDate}</Text>
                 <Text style={styles.counter}>
-                  PRÉSENT DANS <Text style={styles.counterBold}>{book.count}</Text>BIBLIOTHÈQUE{book.count > 1 ? 'S' : ''} SUR READER.
+                  PRÉSENT DANS <Text style={styles.counterBold}>{book.count}</Text> BIBLIOTHÈQUE{book.count > 1 ? 'S' : ''} SUR READER.
                 </Text>
               </View>
               {book.cover ? (

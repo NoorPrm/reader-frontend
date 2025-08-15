@@ -139,7 +139,7 @@ export default function GeneralScreen({ navigation }) {
 
         <View style={styles.storyItem}>
           <Image
-            source={require("../assets/images/RowlingStory.png")}
+            source={require("../assets/images/AmelieNothomb.png")}
             style={[styles.miniStory, styles.miniStoryWithName]}
           />
           <Text style={styles.storyName}>
@@ -263,7 +263,7 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     borderColor: "#0E0E66",
     borderWidth: 1,
-    backgroundColor: "white",
+    backgroundColor: "#FCF8F1",
   },
   txtBtn: { color: "#fff", fontFamily: "Inter_400Regular" },
   addBtnContainer: {
@@ -363,7 +363,7 @@ const styles = StyleSheet.create({
   plusButton: {
     position: "absolute",
     top: 90,
-    right: 2,
+    right: 10,
     width: 15,
     height: 20,
     borderRadius: 12,

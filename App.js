@@ -1,5 +1,4 @@
 import React from "react";
-import { View, Text } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -21,8 +20,8 @@ import BookScreen from "./screens/BookScreen";
 import BookedexScreen from "./screens/BookedexScreen";
 import { Provider } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
-import Inscription from "./screens/Inscription";
-import Parametres from "./screens/Parametres";
+import InscriptionScreen from "./screens/InscriptionScreen";
+import SettingsScreen from "./screens/SettingsScreen";
 import user from "./reducers/user";
 import bookSelected from "./reducers/bookSelected";
 import PublicProfileScreen from "./screens/PublicProfileScreen";
@@ -78,7 +77,7 @@ export default function App() {
       <NavigationContainer>
         <Stack.Navigator screenOptions={{ headerShown: false }}>
           <Stack.Screen name="Home" component={HomeScreen} />
-          <Stack.Screen name="Inscription" component={Inscription} />
+          <Stack.Screen name="Inscription" component={InscriptionScreen} />
           <Stack.Screen name="TabNavigator" component={TabNavigator} />
           <Stack.Screen name="ResultSearch" component={ResultSearchScreen} />
           <Stack.Screen name="BookLibrary" component={BookLibraryScreen} />
@@ -86,7 +85,7 @@ export default function App() {
           <Stack.Screen name="MangaLibrary" component={MangaLibraryScreen} />
           <Stack.Screen name="BookInfos" component={BookScreen} />
           <Stack.Screen name="Bookedex" component={BookedexScreen} />
-          <Stack.Screen name="Parametres" component={Parametres} />
+          <Stack.Screen name="Parametres" component={SettingsScreen} />
           <Stack.Screen name="PublicProfile" component={PublicProfileScreen} />
         </Stack.Navigator>
       </NavigationContainer>
