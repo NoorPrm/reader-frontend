@@ -20,7 +20,7 @@ export default function PublicProfileScreen({ route, navigation }) {
                 style={styles.back}
                 onPress={() => navigation.navigate("TabNavigator")}
             >
-                <Text style={styles.backText}>Retour au Profil Utilisateur</Text>
+                <Text style={styles.backText}>Retour à l'acceuil </Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.menuButton} onPress={() => { }}>
                 <Text style={styles.menuText}>⋯</Text>

@@ -116,7 +116,7 @@ export default function GeneralScreen({ navigation }) {
             />
           </TouchableOpacity>
 
-          <Text style={styles.storyName}>Vous</Text>
+          <Text style={styles.storyName}>{user.username}</Text>
 
           <TouchableOpacity style={styles.plusButton}>
             <Text style={styles.plus} onPress={openSystemCamera}>+</Text>
@@ -162,7 +162,7 @@ export default function GeneralScreen({ navigation }) {
           <Text style={{ color: "grey", textAlign: "center", top: 10 }}>
             {post
               ? post.slice(0, 40) + (post.length > 40 ? "…" : "")
-              : "Écrivez ici et..."}
+              : "Écrivez ici et...  "}
               <FontAwesome5 name="book" size={16} color="grey" />
           </Text>
         </TouchableOpacity>
@@ -286,7 +286,7 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 5,
   },
-  separator: { top: 10, width: "100%", height: 1.5, backgroundColor: "#0E0E66" },
+  separator: { top: 10, width: "100%", height: 2.5, backgroundColor: "#E8DCCA" },
   miniStoriesContainer: {
     flexDirection: "row",
     justifyContent: "space-around",
